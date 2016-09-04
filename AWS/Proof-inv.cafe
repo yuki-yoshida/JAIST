@@ -1,0 +1,275 @@
+require Proof Proof.cafe
+
+--> ***************************
+--> (5) init(S) implies inv(S).
+--> (6) inv(S) implies inv(SS).
+--> ***************************
+
+module! ProofInv {
+  pr(PROOFbase)
+  pr(STATERules)
+  pred invS : State
+
+  pred initinv : State
+  eq initinv(S:State)
+     = init(S) implies invS(S) .
+
+  pred iinv : State State .
+  eq iinv(S:State,SS:State)
+     = wfs(S) and inv(S) and invS(S) 
+       implies invS(SS) .
+  pred invinv : State
+  eq invinv(S:State)
+     = not (S =(*,1)=>+ SS:State if CC:Bool suchThat
+            not ((CC implies iinv(S,SS)) == true)
+     	   { S => SS !! CC ! wfs(S) ! inv(S) ! invS(S) ! invS(SS) }) .
+}
+
+--> *************************************************************
+--> Proof of inv-ifRSStartedThenPRReady.
+-->  eq inv-ifRSStartedThenPRReady(< SetRS,SetPR >)
+-->     = ifRSInStatesThenPRInStates(SetRS,started,SetPR,ready) .
+--> *************************************************************
+--> Proof of inv(S) implies inv(SS)
+module! Proofinv-ifRSStartedThenPRReady {
+  pr(ProofInv)
+  eq invS(S:State) = inv-ifRSStartedThenPRReady(S) .
+
+  var SetRS : SetOfResource
+  var SetPR : SetOfProperty
+  vars IDRS IDRRS : RSID
+  var IDPR : PRID
+  var TPR : PRType
+
+  -- Instantiating m2o-lemma06:
+  eq [m2o-lemma06]:
+      (allRSInStates(SetRS,initial) and 
+       ifRSInStatesThenPRInStates(SetRS,started,SetPR,ready))
+    = allRSInStates(SetRS,initial) .
+
+  -- Instantiating m2o-lemma11:
+  eq [m2o-lemma11]:
+     (ifRSInStatesThenPRInStates(SetRS, started, (prop(TPR,IDPR,notready,IDRS,IDRRS) SetPR), ready) and
+      ifRSInStatesThenPRInStates(SetRS, started, (prop(TPR,IDPR,   ready,IDRS,IDRRS) SetPR), ready))
+    = ifRSInStatesThenPRInStates(SetRS, started, (prop(TPR,IDPR,notready,IDRS,IDRRS) SetPR), ready) .
+}
+
+select Proofinv-ifRSStartedThenPRReady
+--> ***************************
+--> (5) init(S) implies inv(S).
+--> ***************************
+:goal {
+  eq initinv(< sRS,sPR >) = true .
+}
+:apply (rd) -- goal
+show proof
+
+--> ***************************
+--> (6) inv(S) implies inv(SS).
+--> ***************************
+--> ********************************************
+-->  ctrans [R01]:
+-->     < (res(TRS,IDRS,initial) SetRS), SetPR >
+-->  => < (res(TRS,IDRS,started) SetRS), SetPR > 
+-->     if allPROfRSInStates(SetPR,IDRS,ready) .
+--> ********************************************
+:goal {
+  eq invinv(< (res(trs,idRS,initial) sRS), sPR >) = true .
+}
+:ctf {
+  eq allPROfRSInStates(sPR,idRS,ready) = true .
+}
+:ctf {
+  eq sPR = empPR .
+}
+:apply (rd) -- 1-1
+:apply (rd) -- 1-2
+:apply (rd) -- 2
+show proof
+
+--> ****************************************************
+-->  trans [R02]:
+-->     < (res(TRS,IDRRS,started) SetRS), 
+-->       (prop(TPR,IDPR,notready,IDRS,IDRRS) SetPR) >
+-->  => < (res(TRS,IDRRS,started) SetRS), 
+-->       (prop(TPR,IDPR,ready   ,IDRS,IDRRS) SetPR) > .
+--> ****************************************************
+:goal {
+  eq invinv(< (res(trs,idRRS,started) sRS), (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
+}
+:apply (rd) -- goal
+show proof
+select
+
+--> ***********************************
+--> Proof of wfs-allPRHaveRS.
+-->  eq wfs-allPRHaveRS(< SetRS,SetPR >)
+-->     = allPRHaveRS(SetPR,SetRS) .
+--> ***********************************
+--> Proof of inv(S) implies inv(SS)
+module! Proofwfs-allPRHaveRS {
+  pr(ProofInv)
+  eq invS(S:State) = wfs-allPRHaveRS(S) .
+
+  var SetRS : SetOfResource
+  var SetPR : SetOfProperty
+  var TRS : RSType
+  var IDRS : RSID
+
+  -- Instantiating m2o-lemma05:
+  eq [m2o-lemma05]:
+     (allPRHaveRS(SetPR,(res(TRS,IDRS,initial) SetRS))
+      and allPRHaveRS(SetPR,(res(TRS,IDRS,started) SetRS)))
+    = allPRHaveRS(SetPR,(res(TRS,IDRS,initial) SetRS)) .
+}
+
+select Proofwfs-allPRHaveRS 
+--> ***************************
+--> (5) init(S) implies inv(S).
+--> ***************************
+-- Since wfs(S) is imposed by init(S), init(S) implies wfs(S) always holds.
+
+--> ***************************
+--> (6) inv(S) implies inv(SS).
+--> ***************************
+--> ********************************************
+-->  ctrans [R01]:
+-->     < (res(TRS,IDRS,initial) SetRS), SetPR >
+-->  => < (res(TRS,IDRS,started) SetRS), SetPR > 
+-->     if allPROfRSInStates(SetPR,IDRS,ready) .
+--> ********************************************
+:goal {
+  eq invinv(< (res(trs,idRS,initial) sRS), sPR >) = true .
+}
+:ctf {
+  eq allPROfRSInStates(sPR,idRS,ready) = true .
+}
+:apply (rd) -- 1
+:apply (rd) -- 2
+show proof
+
+--> ****************************************************
+-->  trans [R02]:
+-->     < (res(TRS,IDRRS,started) SetRS), 
+-->       (prop(TPR,IDPR,notready,IDRS,IDRRS) SetPR) >
+-->  => < (res(TRS,IDRRS,started) SetRS), 
+-->       (prop(TPR,IDPR,ready   ,IDRS,IDRRS) SetPR) > .
+--> ****************************************************
+:goal {
+  eq invinv(< (res(trs,idRRS,started) sRS), (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
+}
+:apply (rd) -- goal
+show proof
+select
+
+--> ***********************************
+--> Proof of wfs-allPRHaveRRS.
+-->  eq wfs-allPRHaveRRS(< SetRS,SetPR >)
+-->     = allPRHaveRRS(SetPR,SetRS) .
+--> ***********************************
+--> Proof of inv(S) implies inv(SS)
+module! Proofwfs-allPRHaveRRS {
+  pr(ProofInv)
+  eq invS(S:State) = wfs-allPRHaveRRS(S) .
+
+  var SetRS : SetOfResource
+  var SetPR : SetOfProperty
+  var IDRS : RSID
+  var TRS : RSType
+
+  -- Instantiating m2o-lemma05:
+  eq [m2o-lemma05]:
+     (allPRHaveRRS(SetPR,(res(TRS,IDRS,initial) SetRS))
+      and allPRHaveRRS(SetPR,(res(TRS,IDRS,started) SetRS)))
+    = allPRHaveRRS(SetPR,(res(TRS,IDRS,initial) SetRS)) .
+}
+
+select Proofwfs-allPRHaveRRS 
+--> ***************************
+--> (5) init(S) implies inv(S).
+--> ***************************
+-- Since wfs(S) is imposed by init(S), init(S) implies wfs(S) always holds.
+
+--> ***************************
+--> (6) inv(S) implies inv(SS).
+--> ***************************
+--> ********************************************
+-->  ctrans [R01]:
+-->     < (res(TRS,IDRS,initial) SetRS), SetPR >
+-->  => < (res(TRS,IDRS,started) SetRS), SetPR > 
+-->     if allPROfRSInStates(SetPR,IDRS,ready) .
+--> ********************************************
+:goal {
+  eq invinv(< (res(trs,idRS,initial) sRS), sPR >) = true .
+}
+:ctf {
+  eq allPROfRSInStates(sPR,idRS,ready) = true .
+}
+:apply (rd) -- 1
+:apply (rd) -- 2
+show proof
+
+--> ****************************************************
+-->  trans [R02]:
+-->     < (res(TRS,IDRRS,started) SetRS), 
+-->       (prop(TPR,IDPR,notready,IDRS,IDRRS) SetPR) >
+-->  => < (res(TRS,IDRRS,started) SetRS), 
+-->       (prop(TPR,IDPR,ready   ,IDRS,IDRRS) SetPR) > .
+--> ****************************************************
+:goal {
+  eq invinv(< (res(trs,idRRS,started) sRS), (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
+}
+:apply (rd) -- goal
+show proof
+select
+
+--> ***********************************
+--> Proof of wfs-atLeastOneRS.
+-->  eq wfs-atLeastOneRS(< SetRS,SetPR >)
+-->     = atLeastOneRS(SetPR,SetRS) .
+--> ***********************************
+--> Proof of inv(S) implies inv(SS)
+module! Proofwfs-atLeastOneRS {
+  pr(ProofInv)
+  eq invS(S:State) = wfs-atLeastOneRS(S) .
+}
+
+select Proofwfs-atLeastOneRS 
+--> ***************************
+--> (5) init(S) implies inv(S).
+--> ***************************
+-- Since wfs(S) is imposed by init(S), init(S) implies wfs(S) always holds.
+
+--> ***************************
+--> (6) inv(S) implies inv(SS).
+--> ***************************
+--> ********************************************
+-->  ctrans [R01]:
+-->     < (res(TRS,IDRS,initial) SetRS), SetPR >
+-->  => < (res(TRS,IDRS,started) SetRS), SetPR > 
+-->     if allPROfRSInStates(SetPR,IDRS,ready) .
+--> ********************************************
+:goal {
+  eq invinv(< (res(trs,idRS,initial) sRS), sPR >) = true .
+}
+:ctf {
+  eq allPROfRSInStates(sPR,idRS,ready) = true .
+}
+:apply (rd) -- 1
+:apply (rd) -- 2
+show proof
+
+--> ****************************************************
+-->  trans [R02]:
+-->     < (res(TRS,IDRRS,started) SetRS), 
+-->       (prop(TPR,IDPR,notready,IDRS,IDRRS) SetPR) >
+-->  => < (res(TRS,IDRRS,started) SetRS), 
+-->       (prop(TPR,IDPR,ready   ,IDRS,IDRRS) SetPR) > .
+--> ****************************************************
+:goal {
+  eq invinv(< (res(trs,idRRS,started) sRS), (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
+}
+:apply (rd) -- goal
+show proof
+select
+

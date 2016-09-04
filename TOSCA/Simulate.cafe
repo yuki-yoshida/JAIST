@@ -1,0 +1,180 @@
+require DomainModel DomainModel.cafe
+
+--> Sample Simulation
+open STATERules .
+eq wfs(S:State) = wfs0(S) .
+
+ops VMApache
+    OSApache
+    ApacheWebServer
+    CRMApp
+    PhpModule
+    VMMySQL
+    OSMySQL
+    MySQL
+    CRMDB : -> NDIDLt .
+ops VMApacheOS
+    OSApacheSoftware
+    ApacheWebServerWebapps
+    ApacheWebServerModules
+    PhpModulePhpApps
+    VMMySQLOS
+    OSMySQLSoftware
+    MySQLDatabases
+    CRMDBClients : -> CPIDLt .
+ops OSApacheContainer
+    ApacheWebServerContainer
+    CRMAppPhpRuntime
+    CRMAppDatabase
+    CRMAppContainer
+    PhpModuleContainer
+    OSMySQLContainer
+    MySQLContainer
+    CRMDBContainer : -> RQIDLt .
+ops OSApacheHostedOnVMApache
+    ApacheHostedOnOSApache
+    CRMAppHostedOnApache
+    PhpModuleHostedOnApache
+    CRMAppDependsOnPhpModule
+    OSMySQLHostedOnVMMySQL
+    MySQLHostedOnOSMySQL
+    CRMDBHostedOnMySQL
+    CRMAppConnectsToCRMDB : -> RLIDLt .
+
+op s0 : -> State .
+eq s0 =
+   < (node(VM, VMApache, initial)
+      node(OS, OSApache, initial)),
+     (cap(hostedOn, VMApacheOS, closed, VMApache)),
+     (req(hostedOn, OSApacheContainer, unbound, OSApache)),
+     (rel(hostedOn, OSApacheHostedOnVMApache,VMApacheOS,OSApacheContainer)),
+     empMsg > .
+      
+red s0 .
+red wfs(s0) .
+red init(s0) .
+red final(s0) = false .
+exec s0 .
+exec wfs(s0) .
+exec init(s0) = false .
+exec final(s0) .
+
+op s1 : -> State .
+eq s1 =
+   < (node(VM, VMApache, initial)
+      node(SC, CRMApp, initial)
+      node(VM, VMMySQL, initial)),
+     (cap(hostedOn, VMApacheOS, closed, VMApache)
+      cap(connectsTo, VMMySQLOS, closed, VMMySQL)),
+     (req(connectsTo, CRMAppDatabase, unbound, CRMApp)
+      req(hostedOn, CRMAppContainer, unbound, CRMApp)),
+     (rel(hostedOn, OSApacheHostedOnVMApache,VMApacheOS,CRMAppContainer)
+      rel(connectsTo, OSMySQLHostedOnVMMySQL,VMMySQLOS,CRMAppDatabase)),
+     empMsg > .
+      
+red s1 .
+exec s1 .
+
+red wfs-uniqND(s1) .
+red wfs-uniqCP(s1) .
+red wfs-uniqRQ(s1) .
+red wfs-uniqRL(s1) .
+red wfs-allCPHaveND(s1) .
+red wfs-allRQHaveND(s1) .
+red wfs-allRLHaveCP(s1) .
+red wfs-allRLHaveRQ(s1) .
+red wfs-allRLNotInSameND(s1) .
+red wfs-allRLHoldLocality(s0) .
+red wfs-allRLHoldLocality(s1) .
+red wfs-allNDHaveAtMostOneHost(s1) .
+red noHostedOnNDCycleStruct(s1) .
+red noNDCycleStruct(s1) .
+
+red final(s1) = false .
+exec final(s1) .
+red init(s1) .
+exec init(s1) = false .
+red wfs(s1) .
+exec wfs(s1) .
+
+op s2 : -> State .
+eq s2 =
+   < (node(VM, VMApache, initial)
+      node(OS, OSApache, initial)
+      node(SC, CRMApp, initial)
+      node(VM, VMMySQL, initial)
+      node(OS, OSMySQL, initial)),
+     (cap(hostedOn, VMApacheOS, closed, VMApache)
+      cap(hostedOn, OSApacheSoftware, closed, OSApache)
+      cap(hostedOn, VMMySQLOS, closed, VMMySQL)
+      cap(connectsTo, OSMySQLSoftware, closed, OSMySQL)),
+     (req(hostedOn, OSApacheContainer, unbound, OSApache)
+      req(connectsTo, CRMAppDatabase, unbound, CRMApp)
+      req(hostedOn, CRMAppContainer, unbound, CRMApp)
+      req(hostedOn, OSMySQLContainer, unbound, OSMySQL)),
+     (rel(hostedOn, OSApacheHostedOnVMApache,VMApacheOS,OSApacheContainer)
+      rel(hostedOn, ApacheHostedOnOSApache,OSApacheSoftware,CRMAppContainer)
+      rel(hostedOn, OSMySQLHostedOnVMMySQL,VMMySQLOS,OSMySQLContainer)
+      rel(connectsTo, MySQLHostedOnOSMySQL,OSMySQLSoftware,CRMAppDatabase)),
+     empMsg > .
+      
+red s2 .
+exec s2 .
+
+red final(s2) = false .
+exec final(s2) .
+red init(s2) .
+exec init(s2) = false .
+red wfs(s2) .
+exec wfs(s2) .
+
+op s3 : -> State .
+eq s3 =
+   < (node(VM, VMApache, initial)
+      node(OS, OSApache, initial)
+      node(MW, ApacheWebServer, initial)
+      node(SC, CRMApp, initial)
+      node(SC, PhpModule, initial)
+      node(VM, VMMySQL, initial)
+      node(OS, OSMySQL, initial)
+      node(MW, MySQL, initial)
+      node(SC, CRMDB, initial)),
+     (cap(hostedOn, VMApacheOS, closed, VMApache)
+      cap(hostedOn, OSApacheSoftware, closed, OSApache)
+      cap(hostedOn, ApacheWebServerWebapps, closed, ApacheWebServer)
+      cap(hostedOn, ApacheWebServerModules, closed, ApacheWebServer)
+      cap(dependsOn, PhpModulePhpApps, closed, PhpModule)
+      cap(hostedOn, VMMySQLOS, closed, VMMySQL)
+      cap(hostedOn, OSMySQLSoftware, closed, OSMySQL)
+      cap(hostedOn, MySQLDatabases, closed, MySQL)
+      cap(connectsTo, CRMDBClients, closed, CRMDB)),
+     (req(hostedOn, OSApacheContainer, unbound, OSApache)
+      req(hostedOn, ApacheWebServerContainer, unbound, ApacheWebServer)
+      req(dependsOn, CRMAppPhpRuntime, unbound, CRMApp)
+      req(connectsTo, CRMAppDatabase, unbound, CRMApp)
+      req(hostedOn, CRMAppContainer, unbound, CRMApp)
+      req(hostedOn, PhpModuleContainer, unbound, PhpModule)
+      req(hostedOn, OSMySQLContainer, unbound, OSMySQL)
+      req(hostedOn, MySQLContainer, unbound, MySQL)
+      req(hostedOn, CRMDBContainer, unbound, CRMDB)),
+     (rel(hostedOn, OSApacheHostedOnVMApache,VMApacheOS,OSApacheContainer)
+      rel(hostedOn, ApacheHostedOnOSApache,OSApacheSoftware,ApacheWebServerContainer)
+      rel(hostedOn, CRMAppHostedOnApache,ApacheWebServerWebapps,CRMAppContainer)
+      rel(hostedOn, PhpModuleHostedOnApache,ApacheWebServerModules,PhpModuleContainer)
+      rel(dependsOn, CRMAppDependsOnPhpModule,PhpModulePhpApps,CRMAppPhpRuntime)
+      rel(hostedOn, OSMySQLHostedOnVMMySQL,VMMySQLOS,OSMySQLContainer)
+      rel(hostedOn, MySQLHostedOnOSMySQL,OSMySQLSoftware,MySQLContainer)
+      rel(hostedOn, CRMDBHostedOnMySQL,MySQLDatabases,CRMDBContainer)
+      rel(connectsTo, CRMAppConnectsToCRMDB,CRMDBClients,CRMAppDatabase)),
+     empMsg > .
+      
+red s3 .
+exec s3 .
+
+red init(s3) .
+red final(s3) = false .
+exec init(s3) = false .
+exec final(s3) .
+red wfs(s3) .
+exec wfs(s3) .
+close .

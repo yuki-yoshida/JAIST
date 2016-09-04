@@ -1,0 +1,48 @@
+module! SET(X :: TRIV) {
+ protecting(NAT)
+ [Elt.X < Set]
+ op emp : -> Set {constr}
+ op _ _ : Set Set -> Set {constr assoc comm idem id: emp}
+ op #_ : Set -> Nat
+ var E : Elt.X     var S : Set
+ eq # emp = 0 .    eq # (E S) = 1 + (# S) . }
+
+module! SERVICE {
+ protecting(NAT)
+ [LocalState Service]
+ ops closed open ready : -> LocalState {constr}
+ op sv : Nat LocalState -> Service {constr} }
+
+module! SV-SET {
+ protecting(SET(SERVICE{sort Elt -> Service})
+    * {sort Set -> SvSet, op emp -> empSvSet}) }
+
+module! UPDATE {
+ including(SV-SET)
+ [State]
+ op < _ > : SvSet -> State {constr}
+ var SVS : SvSet    var N : Nat
+ trans [c2o]: 
+  < sv(N,closed) SVS > => < sv(N,open) SVS > .
+ ctrans [o2r]: 
+  < sv(N,open) SVS > => < sv(N,ready) SVS >
+  if # SVS > 0 . }
+
+open UPDATE .
+ reduce < sv(1,closed) sv(2,open) > =(*,1)=>+ < SVS > == true .
+ reduce < sv(3,closed) sv(4,ready) > =(*,1)=>+ < SVS > == true .
+ reduce < sv(5,open) > =(*,1)=>+ < SVS > == false .
+close
+
+open UPDATE .
+op anyOpen : SvSet -> Bool .
+eq anyOpen(sv(N,open) SVS) = true .
+var CC : Bool .
+reduce 
+ < sv(1,closed) sv(2,open) > =(*,1)=>+ < SVS > if CC
+  suchThat CC implies anyOpen(SVS) { true } .
+reduce
+ (< sv(1,closed) sv(2,open) > =(*,1)=>+ < SVS > if CC
+   suchThat not ((CC implies anyOpen(SVS)) == true) { true }) 
+ = false .
+close

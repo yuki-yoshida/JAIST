@@ -1,0 +1,33 @@
+provide BAG
+
+mod! BAG(X :: TRIV) {
+  [Elt.X < Bag]
+  op empty : -> Bag {constr}
+  op _ _ : Bag Bag -> Bag {constr assoc comm id: empty}
+  eq ((E:Elt.X B1:Bag) = (E B2:Bag)) = (B1 = B2) .
+  --
+  op _U_ : Bag Bag -> Bag
+  op _\in_ : Elt.X Bag -> Bool
+  op _A_ : Bag Bag -> Bag
+  op _\\_ : Bag Bag -> Bag
+  --
+  vars B B1 B2 : Bag 
+  vars E E1 : Elt.X
+  -- for empty
+  eq ((E B) = empty) = false .
+  -- for _U_
+  eq B1 U B2 = B1 B2 .
+  -- for _\in_
+  eq E \in empty = false .
+  eq E \in (E B) = true .
+  ceq E \in (E1 B) = E \in B if not(E = E1) .
+  -- for _A_
+  eq empty A B2 = empty .
+  eq (E B1) A (E B2) = E (B1 A B2) .
+  ceq (E B1) A B2 = B1 A B2 if not(E \in B2) .
+  -- for _\\_ 
+  eq empty \\ E = empty .
+  eq (E B) \\ E = B .
+  ceq (E1 B) \\ E = (E1 (B \\ E)) if not (E = E1) .
+
+}

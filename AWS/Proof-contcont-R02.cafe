@@ -1,0 +1,113 @@
+require ProofContCont Proof-contcont.cafe
+
+--> **********************************************************************
+--> (2) inv(S) and cont(S) and not final(S) implies cont(SS) or final(SS).
+--> **********************************************************************
+
+--> ****************************************************
+-->  trans [R02]:
+-->     < (res(TRS,IDRRS,started) SetRS), 
+-->       (prop(TPR,IDPR,notready,IDRS,IDRRS) SetPR) >
+-->  => < (res(TRS,IDRRS,started) SetRS), 
+-->       (prop(TPR,IDPR,ready   ,IDRS,IDRRS) SetPR) > .
+--> ****************************************************
+select ProofContCont .
+-- When R02 can be applied to the state S:
+--> **************************************************************************
+--> Step 2-1: Begin with the cases each of which matches to LHS of each rules.
+--> **************************************************************************
+:goal {
+  eq contcont(< (res(trs,idRRS,started) sRS), (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
+}
+--> ***********************************************************
+--> Step 2-2: Split the most general case for a rule into cases
+-->  where the condition of the rule does or does not hold.
+--> ***********************************************************
+-- R02 is unconditional.
+--> ***************************************************************
+--> Step 2-3: Split the rule applied case into cases
+-->  where predicate final does or does not hold in the next state.
+--> ***************************************************************
+-- All of the other resources are or are not started.
+:ctf {
+  eq allRSInStates(sRS,started) = true .
+}
+-- Case 1: When all of the other resources are started:
+:apply (rd) -- 1
+-- Case 2: When all of the other resources are not started:
+--> ***********************************************************
+--> Step 1-5: When there is a dangling link, split the case
+-->  into cases where the linked object does or does not exist.
+--> ***********************************************************
+-- The parent resource of the property does or does not exist.
+:csp {
+  eq existRS(sRS,idRS) = false .
+  eq sRS = (res(trs',idRS,srs') sRS') .
+}
+-- Case 2-1: When the parent resource of the property does not exist:
+:apply (rd) -- 2-1
+-- Case 2-2: When the parent resource of the property exists:
+-- The parent resource is initial or started.
+:csp {
+  eq srs' = initial .
+  eq srs' = started .
+}
+-- Case 2-2-1: When the parent resource is initial:
+-- Cyclic Dependency Lemma ensures there is an initial resource R
+-- where DDS(R,S) does not include any initial nodes.
+:init ( eq SRS:SetOfResource = (initRS(SRS) resSRS(SRS)) . ) by {
+  SRS:SetOfResource <- sRS';
+}
+:init ( eq initRS(SRS:SetOfResource) = res(trs'',idRS1,initial) . ) by {
+  SRS:SetOfResource <- sRS';
+}
+--> ***************************************************************
+--> Step 2-4: Think which rule can be applied to the next state
+-->  and repeat case splitting similarly as Step 1-3, 1-4, and 1-5.
+--> ***************************************************************
+-- The next rule should be R01 for the resource of idRS1.
+--> ****************************************************
+--> Step 1-4: Split the first rule case into cases where
+-->  the condition of the rule does or does not hold.
+--> ****************************************************
+-- The condition of R01 does or does not hold for the resource o idRS1.
+:csp {
+  eq allPROfRSInStates(sPR,idRS1,ready) = true .
+  eq sPR = (prop(tpr',idPR1,notready,idRS1,idRRS1) sPR') .
+}
+-- Case 2-2-1-1: When all the properties of the resource idRS1 are ready.
+:apply (rd) -- 2-2-1-1
+-- Case 2-2-1-2: When one of properties of the resource idRS1 is not-ready.
+--> ***********************************************************
+--> Step 1-5: When there is a dangling link, split the case
+-->  into cases where the linked object does or does not exist.
+--> ***********************************************************
+-- The resource referred by the property does or does not exist.
+:csp {
+  eq existRS(resSRS(sRS'),idRRS1) = false .
+  eq resSRS(sRS') = (res(trs''',idRRS1,srs''') sRS''') .
+}
+-- Case 2-2-1-2-1: When the resource referred by the property does not exist:
+:apply (rd) -- 2-2-1-2-1
+-- Case 2-2-1-2-2: When the resource referred by the property exists:
+-- The state of the resource is initial or started.
+:csp { 
+  eq srs''' = initial .
+  eq srs''' = started .
+}
+-- Case 2-2-1-2-2-1: When the resource idRRS1 is initial:
+-- The Cyclic Dependency Lemma rejects this case.
+:init [CycleR01] by {
+  T:RSType <- trs'';
+  I:RSID <- idRS1; 
+  S:State <- < (res(trs, idRRS, started) sRS),
+               (prop(tpr,idPR,notready,idRS,idRRS) sPR) >;
+}
+:apply (rd) -- 2-2-1-2-2-1
+-- Case 2-2-1-2-2-2: When the resource idRRS1 is started:
+:apply (rd) -- 2-2-1-2-2-2
+-- Case 2-2-2: When the parent resource is started:
+:apply (rd) -- 2-2-2
+show proof
+
+select

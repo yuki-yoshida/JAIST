@@ -1,0 +1,95 @@
+require Proof Proof.cafe
+
+--> ****************************
+--> (1) init(S) implies cont(S).
+--> ****************************
+
+--> ******************************************
+--> Step 1-0: Define a predicate to be proved.
+--> ******************************************
+module! ProofInitCont {
+  pr(PROOFfuns)
+  pred initcont : State .
+  eq initcont(S:State) = init(S) implies cont(S) .
+}
+
+-- Proof of (1) init(S) implies cont(S).
+select ProofInitCont .
+
+--> *******************************************
+--> Step 1-1: Begin with the most general case. 
+--> *******************************************
+:goal {eq initcont(< sRS, sPR >) = true .}
+
+--> *******************************************************************
+--> Step 1-2: Think which rule is firstly applied to an initial state. 
+--> *******************************************************************
+-- The first rule is R01.
+--> ********************************************************************
+--> Step 1-3: Split the general case into cases which collectively cover
+-->  the general case and one of which matches to LHS of the first rule.
+--> ********************************************************************
+-- LHS of R01 requires at least one initial resource.
+:csp { 
+  eq sRS = empRS .
+  eq sRS = (res(trs,idRS,srs) sRS') .
+}
+-- Case 1: When there is no resource:
+:apply (rd) -- 1
+-- Case 2: When there is a resource:
+-- The state of the resource is initial or started.
+:csp { 
+  eq srs = initial .
+  eq srs = started .
+}
+-- Case 2-1: When the resource is initial:
+-- Note that res(trs,idRS,initial) is arbitrary selected.
+-- Thus, we can assume that all of DDSR01(res(trs,idRS,initial),S) are not initial,
+-- which the Cyclic Dependency Lemma assures.
+--> ****************************************************
+--> Step 1-4: Split the first rule case into cases where
+-->  the condition of the rule does or does not hold.
+--> ****************************************************
+-- The condition of R01 is allPROfRSInStates(sPR,idRS,ready) .
+:csp { 
+  eq allPROfRSInStates(sPR,idRS,ready) = true .
+  eq sPR = (prop(tpr,idPR,notready,idRS,idRRS) sPR') .
+}
+-- Case 2-1-1: When all of properties of the resource are ready.
+:apply (rd) -- 2-1-1
+-- Case 2-1-2: When there is a not-ready property of the resource:
+--> ***********************************************************
+--> Step 1-5: When there is a dangling link, split the case
+-->  into cases where the linked object does or does not exist.
+--> ***********************************************************
+-- The resource referred by the property does or does not exist.
+:csp {
+  eq existRS(sRS',idRRS) = false .
+  eq sRS' = (res(trs',idRRS,srs') sRS'') .
+}
+-- Case 2-1-2-1: When the resource referred by the property does not exist:
+:apply (rd) -- 2-1-2-1
+-- Case 2-1-2-2: When the resource referred by the property exists:
+-- The state of the resource is initial or started.
+:csp { 
+  eq srs' = initial .
+  eq srs' = started .
+}
+-- Case 2-1-2-2-1: When the resource idRRS is initial:
+--> ******************************************************************************
+--> Step 1-6: When falling in a cyclic situation, use the Cyclic Dependency Lemma.
+--> ******************************************************************************
+-- The Cyclic Dependency Lemma rejects this case.
+:init [CycleR01] by {
+  T:RSType <- trs;
+  I:RSID <- idRS; 
+  S:State <- < sRS, sPR >;
+}
+:apply (rd) -- 2-1-2-2-1
+-- Case 2-1-2-2-2: When the resource idRRS is started:
+:apply (rd) -- 2-1-2-2-2
+-- Case 2-2: When the resource idRS is started:
+:apply (rd) -- 2-2
+show proof
+
+select

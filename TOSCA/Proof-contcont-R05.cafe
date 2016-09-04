@@ -1,0 +1,50 @@
+require ProofContCont Proof-contcont.cafe
+
+--> *********************************************************************************
+--> (2) inv(S) and wfs(S) and cont(S) and not final(S) implies cont(SS) or final(SS).
+--> *********************************************************************************
+
+--> ************************************************************************
+-->  ctrans [R05]:
+-->     < SetND, (cap(dependsOn,IDCP,closed,IDND) SetCP), SetRQ, SetRL, MP >
+-->  => < SetND, (cap(dependsOn,IDCP,open,  IDND) SetCP), SetRQ, SetRL, MP >
+-->     if isCreated(state(getNode(SetND,IDND))) .
+--> ************************************************************************
+select ProofContCont .
+-- When R05 can be applied to the state S:
+--> **************************************************************************
+--> Step 2-1: Begin with the cases each of which matches to LHS of each rules.
+--> **************************************************************************
+:goal {
+  eq contcont(< sND, (cap(dependsOn,idCP,closed,idND) sCP), sRQ, sRL, mp >) = true .
+}
+--> ***********************************************************
+--> Step 1-5: When there is a dangling link, split the case
+-->  into cases where the linked object does or does not exist.
+--> ***********************************************************
+-- The node of the capability of idCP does or does not exist.
+:csp {
+  eq existND(sND,idND) = false .
+  eq sND = (node(tnd,idND,snd) sND') .
+}
+-- Case 1: The node of the capability of idCP does not exist:
+:apply (rd) -- 1
+-- Case 2: The node of the capability of idCP exists:
+--> ***********************************************************
+--> Step 2-2: Split the most general case for a rule into cases
+-->  where the condition of the rule does or does not hold.
+--> ***********************************************************
+-- The condition of R05 does or does not hold for the node of idND.
+:csp {
+  eq snd = initial .
+  eq snd = created .
+  eq snd = started .
+}
+-- Case 2-1: The node is initial:
+:apply (rd) -- 2-1
+-- Case 2-2: The node is created:
+:apply (rd) -- 2-2
+-- Case 2-3: The node is started:
+:apply (rd) -- 2-3
+show proof
+select

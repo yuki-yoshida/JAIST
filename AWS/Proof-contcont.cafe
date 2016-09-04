@@ -1,0 +1,23 @@
+require Proof Proof.cafe
+provide ProofContCont
+
+--> **********************************************************
+--> (2) inv(S) and not final(S) implies cont(SS) or final(SS).
+--> **********************************************************
+
+--> ******************************************
+--> Step 2-0: Define a predicate to be proved.
+--> ******************************************
+module! ProofContCont {
+  pr(PROOFfuns)
+  pred ccont : State State
+  pred contcont : State
+  eq ccont(S:State,SS:State)
+     = wfs(S) and inv(S) and not final(S) 
+       implies cont(SS) or final(SS) .
+  eq contcont(S:State)
+     = not (S =(*,1)=>+ SS:State if CC:Bool suchThat
+            not ((CC implies ccont(S,SS)) == true)
+     	   { S => SS !! CC ! wfs(S) ! inv(S) ! final(S) ! cont(SS) ! final(SS) }) .
+}
+

@@ -1,0 +1,106 @@
+require DomainModel DomainModel.cafe
+provide Proof
+
+module! PROOFbase {
+  pr(STATEfuns)
+
+  op _!_ : Bool Bool -> Bool {constr assoc}
+  op _=>_!!_ : State State Bool -> Bool {constr}
+
+  -- Constants for Proofs.
+  ops idRS idRS' idRS1 idRS2 idRS3 : -> RSIDLt
+  ops idRRS idRRS' idRRS1 idRRS2 idRRS3 : -> RSIDLt
+  ops idPR idPR' idPR1 idPR2 idPR3 : -> PRIDLt
+  ops sRS sRS' sRS'' sRS''' : -> SetOfResource
+  ops sPR sPR' sPR'' sPR''' : -> SetOfProperty
+  ops trs trs' trs'' trs''' : -> RSType
+  ops tpr tpr' tpr'' tpr''' : -> PRType
+  ops srs srs' srs'' srs''' : -> RSState
+  ops spr spr' spr'' spr''' : -> PRState
+  op stRS : -> SetOfRSState
+  op stPR : -> SetOfPRState
+
+  var SetRS : SetOfResource
+  var SetPR : SetOfProperty
+
+  pred inv : State
+  -- The invariant should be defined as the conjunction of all inv-* and all wfs-*.
+  -- But this definition causes costly computations.
+
+  pred inv-ifRSStartedThenPRReady : State
+  eq inv-ifRSStartedThenPRReady(< SetRS,SetPR >)
+     = ifRSInStatesThenPRInStates(SetRS,started,SetPR,ready) .
+}
+
+module! PROOFfuns {
+  pr(PROOFbase)
+  pr(STATERules)
+
+  var SetRS : SetOfResource
+  var SetPR : SetOfProperty
+  var S : State
+
+--> *************************
+--> Step 0-1: Define cont(S).
+--> *************************
+  pred cont : State
+  eq cont(S:State)
+     = (S =(*,1)=>+ SS:State) .
+
+--> **********************
+--> Step 0-2: Define m(S).
+--> **********************
+  op m : State -> Nat.PNAT
+  eq m(< SetRS,SetPR >)
+     = #ResourceInStates(initial,SetRS) + #PropertyInStates(notready,SetPR) .
+
+  -- inv(S):
+  ceq inv(S) = false if not inv-ifRSStartedThenPRReady(S) .
+
+  -- wfs(S):
+  ceq wfs(S) = false if not wfs-atLeastOneRS(S) .
+  ceq wfs(S) = false if not wfs-allPRHaveRS(S) .
+  ceq wfs(S) = false if not wfs-allPRHaveRRS(S) .
+
+  -- From Cyclic Dependency Lemma
+  -- There is an initial resource whose DDS includes no initial resourecs.
+  ceq [CycleR01 :nonexec]: 
+     true = false if someRSInStates(DDSR01(res(T:RSType, I:RSID, initial),S:State),initial) .
+
+  -- Skolem Functions for Cyclic Dependncy Lemma
+  -- A set of resource may include a specific initial resource
+  op initRS : SetOfResource -> Resource {strat (0)} .
+  -- and there is a rest of the set of resources.
+  op resSRS : SetOfResource -> SetOfResource {strat (0)} .
+}
+
+-- *************************************************************************
+-- (1) init(S) implies cont(S).
+-- (2) inv(S) and cont(S) and not final(S) implies cont(SS) or final(SS).
+-- (3) inv(S) and cont(S) and not final(S) implies measure(S) > measure(SS).
+-- (4) inv(S) and cont(S) or final(S)) and measure(S) = 0 implies final(S).
+-- (5) init(S) implies inv(S).
+-- (6) inv(S) implies inv(SS).
+-- *************************************************************************
+
+-- ****************************
+-- (1) init(S) implies cont(S).
+-- ****************************
+-- in Proof-initcont.cafe
+
+-- **********************************************************************
+-- (2) inv(S) and cont(S) and not final(S) implies cont(SS) or final(SS).
+-- **********************************************************************
+-- in Proof-contcont.cafe
+
+-- *************************************************************************
+-- (3) inv(S) and cont(S) and not final(S) implies measure(S) > measure(SS).
+-- (4) inv(S) and (cont(S) or final(S)) and measure(S) = 0 implies final(S).
+-- *************************************************************************
+-- in Proof-measure.cafe
+
+-- ***************************
+-- (5) init(S) implies inv(S).
+-- (6) inv(S) implies inv(SS).
+-- ***************************
+-- in Proof-inv.cafe

@@ -1,0 +1,69 @@
+require ProofContCont Proof-contcont.cafe
+
+--> *********************************************************************************
+--> (2) inv(S) and wfs(S) and cont(S) and not final(S) implies cont(SS) or final(SS).
+--> *********************************************************************************
+
+--> ***************************************************************************
+-->  trans [R08]:
+-->     < SetND, (cap(dependsOn,IDCP,available,IDND1) SetCP), 
+-->  	      (req(dependsOn,IDRQ,waiting,IDND2) SetRQ), (rel(dependsOn,IDRL,IDCP,IDRQ) SetRL), MP >
+-->  => < SetND, (cap(dependsOn,IDCP,available,IDND1) SetCP), 
+-->  	      (req(dependsOn,IDRQ,ready,  IDND2) SetRQ), (rel(dependsOn,IDRL,IDCP,IDRQ) SetRL), MP > .
+--> ***************************************************************************
+select ProofContCont .
+-- When R08 can be applied to the state S:
+--> **************************************************************************
+--> Step 2-1: Begin with the cases each of which matches to LHS of each rules.
+--> **************************************************************************
+:goal {
+  eq contcont(< sND, 
+                (cap(dependsOn,idCP,available,idND) sCP), 
+                (req(dependsOn,idRQ,waiting,idND')  sRQ), 
+                (rel(dependsOn,idRL,idCP,idRQ)      sRL), mp >) = true .
+}
+--> ***********************************************************
+--> Step 1-5: When there is a dangling link, split the case
+-->  into cases where the linked object does or does not exist.
+--> ***********************************************************
+-- The node of the requirement of idRQ does or does not exist.
+:csp {
+  eq existND(sND,idND') = false .
+  eq sND = (node(tnd,idND',snd) sND') .
+}
+-- Case 1: The node of the requirement of idRQ does not exist:
+:apply (rd) -- 1
+-- Case 2: The node of the requriement of idRQ exists:
+--> ***********************************************************
+--> Step 2-2: Split the most general case for a rule into cases
+-->  where the condition of the rule does or does not hold.
+--> ***********************************************************
+-- R08 is unconditional
+--> ***************************************************************
+--> Step 2-3: Split the rule applied case into cases
+-->  where predicate final does or does not hold in the next state.
+--> ***************************************************************
+-- We know that final(S') never holds in this case.
+--> ***************************************************************
+--> Step 2-4: Think which rule can be applied to the next state
+-->  and repeat case splitting similarly as Step 1-3, 1-4, and 1-5.
+--> ***************************************************************
+-- The next rule should be R02 for the node of idND'.
+--> ********************************************************************
+--> Step 1-3: Split the general case into cases which collectively cover
+-->  the general case and one of which matches to LHS of the first rule.
+--> ********************************************************************
+-- LHS of R02 requires that the node is created.
+:csp {
+  eq snd = initial .
+  eq snd = created .
+  eq snd = started .
+}
+-- Case 2-1: The node is initial:
+:apply (rd) -- 2-1
+-- Case 2-2: The node is created:
+:apply (rd) -- 2-2
+-- Case 2-3: The node is started:
+:apply (rd) -- 2-3
+show proof
+select

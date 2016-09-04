@@ -1,0 +1,270 @@
+require Template Template.cafe
+provide DomainModel
+
+-- An abstract model for AWS CloudFormation
+
+-- There are two kinds of objects:
+-- Resource(RS): a resource of which a cloud system composes.
+-- Property(PR): a property of a resource.
+
+-- There are typical types of resources, 
+--   EC2(Elastic Compute), EIP(Elastic IP), ...
+-- There are typical types of properties.
+
+module! RESOURCE {
+
+  extending(OBJECTBASE
+	* {sort ObjIDLt -> RSIDLt,
+	   sort ObjID -> RSID,
+	   sort ObjTypeLt -> RSTypeLt,
+	   sort ObjType -> RSType,
+	   sort ObjStateLt -> RSStateLt,
+	   sort ObjState -> RSState,
+	   sort Object -> Resource,
+	   sort SetOfObject -> SetOfResource,
+	   sort SetOfObjState -> SetOfRSState,
+	   op empObj -> empRS,
+	   op empState -> empSRS,
+	   op theObjInStates -> idRSInStates,
+	   op existObj -> existRS,
+	   op uniqObj -> uniqRS,
+	   op #ObjInStates -> #ResourceInStates,
+	   op getObject -> getResource,
+	   op allObjInStates -> allRSInStates,
+	   op allObjNotInStates -> allRSNotInStates,
+	   op someObjInStates -> someRSInStates})
+
+  -- res(RSType, RSID, RSState) is a Resource.
+  op res : RSType RSID RSState -> Resource {constr}
+
+  var TRS : RSType
+  var IDRS : RSID
+  var SRS : RSState
+
+  eq type(res(TRS,IDRS,SRS)) = TRS .
+  eq id(res(TRS,IDRS,SRS)) = IDRS .
+  eq state(res(TRS,IDRS,SRS)) = SRS .
+
+  ops initial started : -> RSStateLt {constr}
+}
+
+module! PROPERTY {
+  pr(RESOURCE)
+
+  extending(OBJECTBASE
+	* {sort ObjIDLt -> PRIDLt,
+	   sort ObjID -> PRID,
+	   sort ObjTypeLt -> PRTypeLt,
+	   sort ObjType -> PRType,
+	   sort ObjStateLt -> PRStateLt,
+	   sort ObjState -> PRState,
+	   sort Object -> Property,
+	   sort SetOfObject -> SetOfProperty,
+	   sort SetOfObjState -> SetOfPRState,
+	   op empObj -> empPR,
+	   op empState -> empSPR,
+	   op theObjInStates -> idPRInStates,
+	   op existObj -> existPR,
+	   op uniqObj -> uniqPR,
+	   op #ObjInStates -> #PropertyInStates,
+	   op getObject -> getProperty,
+	   op allObjInStates -> allPRInStates,
+	   op allObjNotInStates -> allPRNotInStates,
+	   op someObjInStates -> somePRInStates})
+
+  -- prop(PRType, PRID, PRState, RSID, RSID) is a Property of a Resource.
+  op prop : PRType PRID PRState RSID RSID -> Property {constr}
+  op parent : Property -> RSID
+  op refer : Property -> RSID
+
+  var TPR : PRType
+  var IDPR : PRID
+  var SPR : PRState
+  vars IDRS1 IDRS2 : RSID
+
+  eq type(prop(TPR,IDPR,SPR,IDRS1,IDRS2)) = TPR .
+  eq id(prop(TPR,IDPR,SPR,IDRS1,IDRS2)) = IDPR .
+  eq state(prop(TPR,IDPR,SPR,IDRS1,IDRS2)) = SPR .
+  eq parent(prop(TPR,IDPR,SPR,IDRS1,IDRS2)) = IDRS1 .
+  eq refer(prop(TPR,IDPR,SPR,IDRS1,IDRS2)) = IDRS2 .
+
+  ops notready ready : -> PRStateLt {constr}
+}
+
+module! LINKS {
+  extending(OBJLINKMANY2ONE(
+	PROPERTY {sort Object -> Property,
+  		  sort ObjID -> PRID,
+  		  sort ObjType -> PRType,
+  		  sort ObjState -> PRState,
+  		  sort SetOfObject -> SetOfProperty,
+  		  sort SetOfObjState -> SetOfPRState,
+		  sort LObject -> Resource,
+		  sort LObjID -> RSID,
+  	          sort LObjState -> RSState,
+  	          sort SetOfLObject -> SetOfResource,
+  	          sort SetOfLObjState -> SetOfRSState,
+		  op getLObject -> getResource,
+		  op existLObj -> existRS,
+		  op empLObj -> empRS,
+		  op link -> parent,
+		  op theLObjInStates -> idRSInStates})
+	* {op hasLObj -> hasParent,
+	   op getXOfZ -> getRSOfPR,
+	   op getZsOfX -> getPRsOfRS,
+	   op getZsOfXInStates -> getPRsOfRSInStates,
+	   op getXsOfZs -> getRSsOfPRs,
+	   op getXsOfZsInStates -> getRSsOfPRsInStates,
+	   op getZsOfXs -> getPRsOfRSs,
+	   op getZsOfXsInStates -> getPRsOfRSsInStates,
+	   op allZHaveX -> allPRHaveRS,
+	   op allZOfXInStates -> allPROfRSInStates,
+	   op ifOfXThenInStates -> ifOfRSThenInStates,
+	   op ifXInStatesThenZInStates -> ifRSInStatesThenPRInStates}
+	)
+
+  extending(OBJLINKMANY2ONE(
+  	PROPERTY {sort Object -> Property,
+  		  sort ObjID -> PRID,
+		  sort ObjType -> PRType,
+  		  sort ObjState -> PRState,
+  		  sort SetOfObject -> SetOfProperty,
+  		  sort SetOfObjState -> SetOfPRState,
+  		  sort LObject -> Resource,
+  		  sort LObjID -> RSID,
+  	          sort LObjState -> RSState,
+  	          sort SetOfLObject -> SetOfResource,
+  	          sort SetOfLObjState -> SetOfRSState,
+  		  op getLObject -> getResource,
+  		  op existLObj -> existRS,
+  		  op empLObj -> empRS,
+  		  op link -> refer,
+  		  op theLObjInStates -> idRSInStates})
+	* {op hasLObj -> hasRefRS,
+  	   op getXOfZ -> getRRSOfPR,
+  	   op getZsOfX -> getPRsOfRRS,
+  	   op getZsOfXInStates -> getPRsOfRRSInStates,
+  	   op getXsOfZs -> getRRSsOfPRs,
+  	   op getXsOfZsInStates -> getRRSsOfPRsInStates,
+  	   op getZsOfXs -> getPRsOfRRSs,
+  	   op getZsOfXsInStates -> getPRsOfRRSsInStates,
+  	   op allZHaveX -> allPRHaveRRS,
+  	   op allZOfXInStates -> allPROfRRSInStates,
+	   op ifOfXThenInStates -> ifOfRRSThenInStates,
+  	   op ifXInStatesThenZInStates -> ifRRSInStatesThenPRInStates}
+  	)
+}
+
+module! STATE {
+  pr(LINKS)
+
+  [State]
+  op <_,_> : SetOfResource SetOfProperty -> State {constr}
+}
+
+module! STATECyclefuns {
+  pr(STATE)
+
+  var RS : Resource
+  var SetRS : SetOfResource
+  var SetPR : SetOfProperty
+
+  op getAllRSInState : State -> SetOfResource
+  eq getAllRSInState(< SetRS,SetPR >) = SetRS .
+
+  op DDSR01 : Resource State -> SetOfResource
+  eq DDSR01(RS,< SetRS,SetPR >)
+     = getRRSsOfPRs(SetRS,getPRsOfRS(SetPR,RS)) .
+}
+
+module! STATEfuns {
+  pr(STATE)
+
+  var SetRS : SetOfResource
+  var SetPR : SetOfProperty
+  var S : State
+
+  extending(CYCLEPRED(
+  	STATECyclefuns {sort Object -> Resource,
+  	                sort ObjStateLt -> RSStateLt,
+  	       		sort ObjState -> RSState,
+  	       		sort SetOfObject -> SetOfResource,
+  	       		op empObj -> empRS,
+  	       		op getAllObjInState -> getAllRSInState,
+  	       		op DDS -> DDSR01,
+  	       		op sx -> initial})
+  	* {op noCycle -> noRSCycle,
+  	   op noCycleStructure -> noRSCycleStruct}
+  	)
+
+  pred wfs-atLeastOneRS : State
+  eq wfs-atLeastOneRS(< SetRS,SetPR >) = not (SetRS = empRS) .
+  pred wfs-uniqRS : State
+  eq wfs-uniqRS(< SetRS,SetPR >) = uniqRS(SetRS) .
+  pred wfs-uniqPR : State
+  eq wfs-uniqPR(< SetRS,SetPR >) = uniqPR(SetPR) .
+  pred wfs-allPRHaveRS : State
+  eq wfs-allPRHaveRS(< SetRS,SetPR >) = allPRHaveRS(SetPR,SetRS) .
+  pred wfs-allPRHaveRRS : State
+  eq wfs-allPRHaveRRS(< SetRS,SetPR >) = allPRHaveRRS(SetPR,SetRS) .
+  pred wfs-noRSCycleStruct : State
+  eq wfs-noRSCycleStruct(S) = noRSCycleStruct(S) .
+  
+  -- wfs is a conjunction of invariants which are intentionally imposed by the init condition.
+  -- Since too long wfs causes a large evalutaion cost, define wfs minimally for each use case.
+  pred wfs : State
+  pred wfs0 : State
+  eq wfs0(S)
+     = wfs-atLeastOneRS(S) and
+       wfs-uniqRS(S) and wfs-uniqPR(S) and 
+       wfs-allPRHaveRS(S) and wfs-allPRHaveRRS(S) and
+       wfs-noRSCycleStruct(S) .
+
+  pred init : State
+  eq init(< SetRS,SetPR >)
+     = wfs(< SetRS,SetPR >) and
+       allRSInStates(SetRS,initial) and 
+       allPRInStates(SetPR,notready) .
+
+  pred final : State
+  eq final(< SetRS,SetPR >)
+     = allRSInStates(SetRS,started) .
+}
+
+module! STATERuleResourceStart {
+  pr(STATEfuns)
+
+  var TRS : RSType
+  var IDRS : RSID 
+  var SetRS : SetOfResource
+  var SetPR : SetOfProperty
+
+-- Start an initial resource if all of its properties are ready.
+  ctrans [R01]:
+     < (res(TRS,IDRS,initial) SetRS), SetPR >
+  => < (res(TRS,IDRS,started) SetRS), SetPR > 
+     if allPROfRSInStates(SetPR,IDRS,ready) .
+}
+
+module! STATERulePropReady {
+  pr(STATEfuns)
+
+  vars IDRS IDRRS : RSID 
+  var IDPR : PRID
+  var TRS : RSType
+  var TPR : PRType
+  var SetRS : SetOfResource
+  var SetPR : SetOfProperty
+
+-- Let a not-ready property be ready if its refering resource is started.
+  trans [R02]:
+     < (res(TRS,IDRRS,started) SetRS), 
+       (prop(TPR,IDPR,notready,IDRS,IDRRS) SetPR) >
+  => < (res(TRS,IDRRS,started) SetRS), 
+       (prop(TPR,IDPR,ready   ,IDRS,IDRRS) SetPR) > .
+}
+
+module! STATERules {
+protecting(  STATERuleResourceStart
+	   + STATERulePropReady)
+}

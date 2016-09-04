@@ -1,0 +1,66 @@
+provide PNAT
+
+mod! PNAT principal-sort Nat {
+  [Zero NzNat < Nat]
+  op 0 : -> Zero {constr}
+  op s : Nat -> NzNat {constr}
+  op _=_ : Nat Nat -> Bool {comm}
+  op _<_ : Nat Nat -> Bool
+  op _>_ : Nat Nat -> Bool
+  op _+_ : Nat Nat -> Nat {assoc comm prec: 30}
+  op _*_ : Nat Nat -> Nat {assoc comm prec: 29}
+  op sd : Nat Nat -> Nat
+  op _quo_ : Nat NzNat -> Nat
+
+  vars M N : Nat
+
+  eq (N = N) = true .
+  eq (0 = s(N)) = false .
+  eq (s(M) = s(N)) = (M = N) .
+
+  eq 0 < 0 = false .
+  eq 0 < s(N) = true .
+  eq s(M) < 0 = false .
+  eq s(M) < s(N) = M < N .
+
+  eq M > N = N < M .
+
+  eq 0 + N = N .
+  eq s(M) + N = s(M + N) .
+
+  eq 0 * N = 0 .
+  eq s(M) * N = N + (M * N) .
+
+  eq sd(0,N) = N .
+  eq sd(s(M),0) = s(M) .
+  eq sd(s(M),s(N)) = sd(M,N) .
+
+  eq M quo s(N) = (if M < s(N) then 0 else s(sd(M,s(N)) quo s(N)) fi) .
+
+  ops 1 2 3 : -> Nat
+  eq 1 = s(0) .
+  eq 2 = s(1) .
+  eq 3 = s(2) .
+}
+
+--> ********************
+--> Prove that N < s(N).
+--> ********************
+open PNAT .
+  --> case 1: Basic case, N = 0.
+  red 0 < s(0) .
+
+  --> case 2: Induction case, not N = 0.
+  -- Assuming that n < s(n).
+  ops n n' : -> Nat .
+  eq (n < s(n)) = true .
+  eq n' = s(n) .
+  red n' < s(n') .
+close
+
+mod! PNAT+ {
+  pr(PNAT)
+  -- Theorem proved.
+  eq (N:Nat < s(N)) = true .
+}
+

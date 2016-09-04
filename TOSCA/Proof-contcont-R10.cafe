@@ -1,0 +1,147 @@
+require ProofContCont Proof-contcont.cafe
+
+--> *********************************************************************************
+--> (2) inv(S) and wfs(S) and cont(S) and not final(S) implies cont(SS) or final(SS).
+--> *********************************************************************************
+
+--> ***************************************************************************
+-->  ctrans [R10]:
+-->     < SetND, (cap(connectsTo,IDCP,open,     IDND) SetCP), SetRQ, SetRL, MP >
+-->  => < SetND, (cap(connectsTo,IDCP,available,IDND) SetCP), SetRQ, SetRL, (avMsg(IDCP) MP) >
+-->     if state(getNode(SetND,IDND)) = started .
+--> ***************************************************************************
+select ProofContCont .
+-- When R10 can be applied to the state S:
+--> **************************************************************************
+--> Step 2-1: Begin with the cases each of which matches to LHS of each rules.
+--> **************************************************************************
+:goal {
+  eq contcont(< sND, (cap(connectsTo,idCP,open,idND) sCP), sRQ, sRL, mp >) = true .
+}
+--> ***********************************************************
+--> Step 1-5: When there is a dangling link, split the case
+-->  into cases where the linked object does or does not exist.
+--> ***********************************************************
+-- The node of the capability of idCP does or does not exist.
+:csp {
+  eq existND(sND,idND) = false .
+  eq sND = (node(tnd,idND,snd) sND') .
+}
+-- Case 1: The node of the capability of idCP does not exist:
+:apply (rd) -- 1
+-- Case 2: The node of the capability of idCP exists:
+--> ***********************************************************
+--> Step 2-2: Split the most general case for a rule into cases
+-->  where the condition of the rule does or does not hold.
+--> ***********************************************************
+-- The condition of R10 does or does not hold for the node of idND.
+:csp {
+  eq snd = initial .
+  eq snd = created .
+  eq snd = started .
+}
+-- Case 2-1: The node is initial:
+:apply (rd) -- 2-1
+-- Case 2-2: The node is created:
+:apply (rd) -- 2-2
+-- Case 2-3: The node is started:
+--> ***************************************************************
+--> Step 2-3: Split the rule applied case into cases
+-->  where predicate final does or does not hold in the next state.
+--> ***************************************************************
+-- We know that final(S') never holds in this case.
+--> ***************************************************************
+--> Step 2-4: Think which rule can be applied to the next state
+-->  and repeat case splitting similarly as Step 1-3, 1-4, and 1-5.
+--> ***************************************************************
+-- The next rule should be R12 for the available message of idCP.
+--> ********************************************************************
+--> Step 1-3: Split the general case into cases which collectively cover
+-->  the general case and one of which matches to LHS of the first rule.
+--> ********************************************************************
+-- LHS of R12 requires a corresponding relationship.
+-- There is or is not a corresponding relationship.
+:csp {
+  eq onlyOneRLOfCP(sRL,idCP) = false .
+  eq sRL = (rel(trl,idRL,idCP,idRQ) sRL') .
+}
+-- Case 2-3-1: There is not a corresponding relationship:
+:apply (rd) -- 2-3-1
+-- Case 2-3-2: There is a corresponding relationship:
+-- The type of the relationship is hostedOn, dependsOn, or connectsTo.
+:csp {
+  eq trl = hostedOn .
+  eq trl = dependsOn .
+  eq trl = connectsTo .
+}
+-- Case 2-3-2-1: The relationship is hostedOn:
+:apply (rd) -- 2-3-2-1
+-- Case 2-3-2-2: The relationship is dependsOn:
+:apply (rd) -- 2-3-2-2
+-- Case 2-3-2-3: The relationship is connectsTo:
+-- There is or is not a corresponding requirement.
+:csp {
+  eq existRQ(sRQ,idRQ) = false .
+  eq sRQ = (req(trl',idRQ,srq,idND') sRQ') .
+}
+-- Case 2-3-2-3-1: There is not a corresponding requirement:
+:apply (rd) -- 2-3-2-3-1
+-- Case 2-3-2-3-2: There is a corresponding requirement:
+-- The type of the requirement is hostedOn, dependsOn, or connectsTo.
+:csp {
+  eq trl' = hostedOn .
+  eq trl' = dependsOn .
+  eq trl' = connectsTo .
+}
+-- Case 2-3-2-3-2-1: The requirement is hostedOn:
+:apply (rd) -- 2-3-2-3-2-1
+-- Case 2-3-2-3-2-2: The requirement is dependsOn:
+:apply (rd) -- 2-3-2-3-2-2
+-- Case 2-3-2-3-2-3: The requirement is conenctsTo:
+-- The requirement is unbound, waiting, or ready.
+:csp {
+  eq srq = unbound .
+  eq srq = waiting .
+  eq srq = ready .
+}
+-- Case 2-3-2-3-2-3-1: The requirement is unbound:
+--> ***************************************************************
+--> Step 2-4: Think which rule can be applied to the next state
+-->  and repeat case splitting similarly as Step 1-3, 1-4, and 1-5.
+--> ***************************************************************
+-- The next rule should be R11 for the requirement of idRQ.
+--> ***********************************************************
+--> Step 1-5: When there is a dangling link, split the case
+-->  into cases where the linked object does or does not exist.
+--> ***********************************************************
+-- The node of the requirement of idRQ does or does not exist.
+:csp {
+  eq existND(sND',idND') = false .
+  eq sND' = (node(tnd',idND',snd') sND'') .
+}
+-- Case 2-3-2-3-2-3-1-1: The node of the requirement of idRQ does not exist:
+:apply (rd) -- 2-3-2-3-2-3-1-1
+-- Case 2-3-2-3-2-3-1-2: The node of the requirement of idRQ exists:
+--> ****************************************************
+--> Step 1-4: Split the first rule case into cases where
+-->  the condition of the rule does or does not hold.
+--> ****************************************************
+-- The condition of R07 does or does not hold for the requirement of idRQ.
+-- The states of the node of the requirement of idRQ is or is not created.
+:csp {
+  eq snd' = initial .
+  eq snd' = created .
+  eq snd' = started .
+}
+-- Case 2-3-2-3-2-3-1-2-1: The node is initial:
+:apply (rd) -- 2-3-2-3-2-3-1-2-1
+-- Case 2-3-2-3-2-3-1-2-2: The node is created:
+:apply (rd) -- 2-3-2-3-2-3-1-2-2
+-- Case 2-3-2-3-2-3-1-2-3: The node is started:
+:apply (rd) -- 2-3-2-3-2-3-1-2-3
+-- Case 2-3-2-3-2-3-2: The requirement is waiting:
+:apply (rd) -- 2-3-2-3-2-3-2
+-- Case 2-3-2-3-2-3-3: The requirement is ready:
+:apply (rd) -- 2-3-2-3-2-3-3
+show proof
+select

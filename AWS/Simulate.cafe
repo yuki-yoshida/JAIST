@@ -1,0 +1,57 @@
+require DomainModel DomainModel.cafe
+
+--> Sample Simulation
+open STATERules .
+eq wfs(S:State) = wfs0(S) .
+
+ops myInstance myEIP rs0 : -> RSIDLt .
+ops prm1 prm2 : -> PRIDLt .
+ops ec2Instance eip : -> RSTypeLt .
+ops instanceId ptype : -> PRTypeLt .
+
+op s0 : -> State .
+eq s0 =
+   < (res(ec2Instance, myInstance,initial) res(eip,myEIP,initial)),
+     (prop(instanceId,prm1,notready,myEIP,myInstance)) > .
+      
+red s0 .
+red wfs(s0) .
+red init(s0) .
+red final(s0) = false .
+exec s0 .
+exec wfs(s0) .
+exec init(s0) = false .
+exec final(s0) .
+
+op s1 : -> State .
+eq s1 =
+   < (res(ec2Instance, myInstance,initial) res(eip,myEIP,initial)),
+     (prop(instanceId,prm1,notready,myEIP,myInstance)
+      prop(ptype,prm2,notready,myInstance,myEIP)) > .
+      
+red s1 .
+red wfs(s1) = false . -- It is cyclic!
+red init(s1) = false . -- It is cyclic!
+red final(s1) = false .
+exec s1 .
+exec wfs(s1) = false . -- It is cyclic!
+exec init(s1) = false . -- It is cyclic!
+exec final(s1) = false .
+
+op s2 : -> State .
+eq s2 =
+   < (res(ec2Instance,myInstance,initial) res(eip,myEIP,initial)
+      res(ec2Instance,rs0,initial)),
+     (prop(instanceId,prm1,notready,myEIP,myInstance)
+      prop(ptype,prm2,notready,myInstance,rs0)) > .
+      
+red s2 .
+red wfs(s2) .
+red init(s2) .
+red final(s2) = false .
+exec s2 .
+exec wfs(s2) .
+exec init(s2) = false .
+exec final(s2)  .
+
+close

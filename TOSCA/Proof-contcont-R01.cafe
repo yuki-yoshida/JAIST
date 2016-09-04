@@ -1,0 +1,33 @@
+require ProofContCont Proof-contcont.cafe
+
+--> *********************************************************************************
+--> (2) inv(S) and wfs(S) and cont(S) and not final(S) implies cont(SS) or final(SS).
+--> *********************************************************************************
+
+--> **************************************************************************
+-->  ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
+-->             => < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP >
+-->	      if allRQOfTypeOfNDInStates(SetRQ,hostedOn,IDND,ready) .
+--> **************************************************************************
+select ProofContCont .
+-- When R01 can be applied to the state S:
+--> **************************************************************************
+--> Step 2-1: Begin with the cases each of which matches to LHS of each rules.
+--> **************************************************************************
+:goal {
+  eq contcont(< (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >) = true .
+}
+--> ***********************************************************
+--> Step 2-2: Split the most general case for a rule into cases
+-->  where the condition of the rule does or does not hold.
+--> ***********************************************************
+-- The condition of R01 does or does not hold for the node of idND.
+:ctf {
+  eq allRQOfTypeOfNDInStates(sRQ,hostedOn,idND,ready) = true .
+}
+-- Case 1: When the condition of R01 holds for the node of idND:
+:apply (rd) -- 1
+-- Case 2: When the condition of R01 does not hold for the node of idND:
+:apply (rd) -- 2
+show proof
+select

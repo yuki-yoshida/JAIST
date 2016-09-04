@@ -1,0 +1,56 @@
+require Proof Proof.cafe
+
+--> ****************************
+--> (1) init(S) implies cont(S).
+--> ****************************
+
+--> ******************************************
+--> Step 1-0: Define a predicate to be proved.
+--> ******************************************
+module! ProofInitCont {
+  pr(PROOFfuns)
+  pred initcont : State .
+  eq initcont(S:State) = init(S) implies cont(S) .
+
+  -- initial-cont lemma: 
+  eq cont(< (node(T:NDType, I:NDID, initial) SetND:SetOfNode), 
+	     SetCP:SetOfCapability, SetRQ:SetOfRequirement, SetRL:SetOfRelationship, M:PoolOfMsg >)
+     = true .
+}
+
+--> Proof of (1) init(S) implies cont(S).
+select ProofInitCont .
+
+--> *******************************************
+--> Step 1-1: Begin with the most general case. 
+--> *******************************************
+:goal {eq initcont(< sND, sCP, sRQ, sRL, mp >) = true .}
+
+--> *******************************************************************
+--> Step 1-2: Think which rule is firstly applied to an initial state. 
+--> *******************************************************************
+-- The first rule is R01.
+
+--> ********************************************************************
+--> Step 1-3: Split the general case into cases which collectively cover
+-->  the general case and one of which matches to LHS of the first rule.
+--> ********************************************************************
+-- LHS of R01 requires at least one initial node.
+:csp { 
+  eq sND = empND .
+  eq sND = (node(tnd,idND,snd) sND') .
+}
+-- Case 1: When there is no node:
+:apply (rd) -- 1
+-- Case 2: When there is a node:
+-- The state of the node is initial, created, or started.
+:csp { 
+  eq snd = initial .
+  eq snd = created .
+  eq snd = started .
+}
+:apply (rd)
+:apply (rd)
+:apply (rd)
+show proof
+select
