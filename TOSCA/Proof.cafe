@@ -3,7 +3,7 @@ require DomainModel DomainModel.cafe
 provide Proof
 
 module! PROOFbase {
-  pr(STATEfuns)
+  pr(STATERules)
 
   op _!_ : Bool Bool -> Bool {constr assoc}
   op _=>_!!_ : State State Bool -> Bool {constr}
@@ -32,7 +32,15 @@ module! PROOFbase {
   var SetCP : SetOfCapability
   var SetRQ : SetOfRequirement
   var SetRL : SetOfRelationship
+  vars IDND IDND1 IDND2 : NDID 
+  vars IDCP IDCP1 IDCP2 : CPID 
+  var IDRQ  : RQID 
+  var IDRL  : RLID 
+  var SCP : CPState
+  var SRL : RLState
   var MP : PoolOfMsg
+  var S : State
+
 
   pred inv : State
   -- The invariant should be defined as the conjunction of all inv-* and all wfs-*.
@@ -80,24 +88,6 @@ module! PROOFbase {
   pred inv-ifAvailableMsgThenCPAvailable : State
   eq inv-ifAvailableMsgThenCPAvailable(< SetND,SetCP,SetRQ,SetRL,MP >)
      = ifAvailableMsgThenCPInStates(MP,SetCP,available) .
-}
-
-module! PROOFfuns {
-  pr(PROOFbase)
-  pr(STATERules)
-
-  vars IDND IDND1 IDND2 : NDID 
-  vars IDCP IDCP1 IDCP2 : CPID 
-  var IDRQ  : RQID 
-  var IDRL  : RLID 
-  var SetND : SetOfNode
-  var SetCP : SetOfCapability
-  var SetRQ : SetOfRequirement
-  var SetRL : SetOfRelationship
-  var SCP : CPState
-  var SRL : RLState
-  var MP : PoolOfMsg
-  var S : State
 
 --> *************************
 --> Step 0-1: Define cont(S).
@@ -128,8 +118,8 @@ module! PROOFfuns {
   ceq inv(S) = false if not inv-ifConnectsToCPAvailableThenRQWaitingReadyOrOpenMsg(S) .
   ceq inv(S) = false if not inv-ifConnectsToCPAvailableThenRQReadyOrAvailableMsg(S) .
   -- Problem specific invariants for proving other invariants.
-  -- ceq inv(S) = false if not inv-ifOpenMsgThenCPActivated(S) .
-  -- ceq inv(S) = false if not inv-ifAvailableMsgThenCPAvailable(S).
+  ceq inv(S) = false if not inv-ifOpenMsgThenCPActivated(S) .
+  ceq inv(S) = false if not inv-ifAvailableMsgThenCPAvailable(S).
 
   -- wfs(S):
   ceq wfs(S) = false if not wfs-uniqND(S) .

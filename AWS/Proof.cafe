@@ -2,7 +2,7 @@ require DomainModel DomainModel.cafe
 provide Proof
 
 module! PROOFbase {
-  pr(STATEfuns)
+  pr(STATERules)
 
   op _!_ : Bool Bool -> Bool {constr assoc}
   op _=>_!!_ : State State Bool -> Bool {constr}
@@ -22,6 +22,7 @@ module! PROOFbase {
 
   var SetRS : SetOfResource
   var SetPR : SetOfProperty
+  var S : State
 
   pred inv : State
   -- The invariant should be defined as the conjunction of all inv-* and all wfs-*.
@@ -30,15 +31,6 @@ module! PROOFbase {
   pred inv-ifRSStartedThenPRReady : State
   eq inv-ifRSStartedThenPRReady(< SetRS,SetPR >)
      = ifRSInStatesThenPRInStates(SetRS,started,SetPR,ready) .
-}
-
-module! PROOFfuns {
-  pr(PROOFbase)
-  pr(STATERules)
-
-  var SetRS : SetOfResource
-  var SetPR : SetOfProperty
-  var S : State
 
 --> *************************
 --> Step 0-1: Define cont(S).

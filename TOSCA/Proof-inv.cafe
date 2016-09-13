@@ -7,7 +7,6 @@ require Proof Proof.cafe
 
 module! ProofInv {
   pr(PROOFbase)
-  pr(STATERules)
   pred invS : State
 
   pred initinv : State
@@ -48,11 +47,6 @@ module! Proofinv-ifNDInitialThenCPClosed {
   var STND : SetOfNDState
   var SCP  : CPState
   var STCP : SetOfCPState
-
-  var S : State
-  -- wfs(S)
-  ceq wfs(S) = false if not wfs-allCPHaveND(S) .
-  ceq wfs(S) = false if not wfs-uniqND(S) .
 
   -- changeLObjState(ND,ND') holds and is omitted.
   ceq [m2o-lemma06]:
@@ -414,11 +408,6 @@ module! Proofinv-ifNDInitialThenRQUnboundReady {
   var SRQ  : RQState
   var STRQ : SetOfRQState
 
-  var S : State
-  -- wfs(S)
-  ceq wfs(S) = false if not wfs-allRQHaveND(S) .
-  ceq wfs(S) = false if not wfs-uniqND(S) .
-
   ceq [m2o-lemma06]:
      (allRQInStates(SetRQ,SRQ) and
       ifNDInStatesThenRQInStates(SetND,STND,SetRQ,STRQ))
@@ -716,11 +705,6 @@ module! Proofinv-ifNDCreatedThenHostedOnRQReady {
   var STND : SetOfNDState
   var SRQ  : RQState
   var STRQ : SetOfRQState
-
-  var S : State
-  -- wfs(S)
-  ceq wfs(S) = false if not wfs-allRQHaveND(S) .
-  ceq wfs(S) = false if not wfs-uniqND(S) .
 
   -- changeLObjState(ND,ND') holds and is omitted.
   ceq [m2o-lemma15]:
@@ -1274,12 +1258,7 @@ module! Proofinv-ifCPClosedThenRQUnbound {
   var STRQ : SetOfRQState 
   var S : State
 
-  -- inv(S)
   -- This proof requires inv-ifOpenMsgThenCPActivated.
-  ceq inv(S) = false if not inv-ifOpenMsgThenCPActivated(S) .
-  -- wfs(S)
-  ceq wfs(S) = false if not wfs-uniqCP(S) .
-  ceq wfs(S) = false if not wfs-allRLHaveCP(S) .
 
   -- Since wfs-allCPHaveRL and wfs-allRLHaveRQ(SetRL,SetRQ) always hold
   -- they are omitted from the antecedent.
@@ -1584,17 +1563,7 @@ module! Proofinv-ifCPOpenThenRQUnboundWaiting {
   vars SRQ SRQ1 SRQ2 : RQState
   var STRQ : SetOfRQState
 
-  var S : State
-  -- inv(S)
   -- This proof requires inv-ifCPClosedThenRQUnbound, inv-ifAvailableMsgThenCPAvailable.
-  ceq inv(S) = false if not inv-ifCPClosedThenRQUnbound(S) .
-  ceq inv(S) = false if not inv-ifAvailableMsgThenCPAvailable(S) .
-  -- wfs(S)
-  ceq wfs(S) = false if not wfs-uniqCP(S) .
-  ceq wfs(S) = false if not wfs-allCPHaveRL(S) .
-  ceq wfs(S) = false if not wfs-allRLHaveRQ(S) .
-  ceq wfs(S) = false if not wfs-allRQHaveRL(S) .
-  ceq wfs(S) = false if not wfs-allRLHaveCP(S) .
 
   -- Since wfs-allCPHaveRL and wfs-allRLHaveRQ(SetRL,SetRQ) always hold
   -- they are omitted from the antecedent.
@@ -2388,13 +2357,6 @@ module! Proofinv-ifConnectsToCPOpenThenRQWaitingOrOpenMsg {
   var STRQ : SetOfRQState
   var MP : PoolOfMsg
   
-  var S : State
-  -- wfs(S)
-  ceq wfs(S) = false if not wfs-uniqCP(S) .
-  ceq wfs(S) = false if not wfs-allRLHaveCP(S) .
-  --> This proof requires inv-ifAvailableMsgThenCPAvailable.
-  ceq inv(S) = false if not inv-ifAvailableMsgThenCPAvailable(S) .
-
   ceq [tosca-lemma09]:
       (allCPInStates(SetCP,SCP) and
        ifConnectsToCPInStatesThenRQInStatesOrOpenMsg(SetCP,STCP,SetRQ,STRQ,SetRL,MP) )
@@ -2717,14 +2679,7 @@ module! Proofinv-ifConnectsToCPAvailableThenRQWaitingReadyOrOpenMsg {
   var STRQ : SetOfRQState
   var MP : PoolOfMsg
 
-  var S : State
-  -- wfs(S)
-  ceq wfs(S) = false if not wfs-uniqCP(S) .
-  ceq wfs(S) = false if not wfs-allCPHaveRL(S) .
-  ceq wfs(S) = false if not wfs-allRLHaveRQ(S) .
-
   --> This proof requires inv-ifConnectsToCPOpenThenRQWaitingOrOpenMsg.
-  ceq inv(S) = false if not inv-ifConnectsToCPOpenThenRQWaitingOrOpenMsg(S) .
 
   ceq [tosca-lemma09]:
       (allCPInStates(SetCP,SCP) and

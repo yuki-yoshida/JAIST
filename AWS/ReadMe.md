@@ -207,11 +207,9 @@
 
 ## Condtion (5)(6): init(S) implies inv(S) . inv(S) implies inv(SS) .の証明譜 (Proof-inv.cafe)
  - 各invariantはinv-AAA、各wfsはwfs-BBBという述語として定義しておく。
- - Condition (1)(2)(3)(4)の証明に対してはCITPテクニック(1)を使ってすべてのinv-AAAとwfs-BBBを有効にしておく。
- - Condition (5)(6)の証明に際しては、invariant間に依存関係があるので注意が必要。
-   - (5)(6)はinvariant毎に一つずつ証明するが、証明するinvariantをinvS(S)とし、依存する（証明済みの）invariantをCITPテクニック(1)を使って有効にしておく。
-   - Condition (5)のゴールは、initinv = init implies invS .
-   - Condition (6)のゴールは、iinv = wfs and inv and invS implies invS'.とし、invinvを二重否定イディオムを使って定義する。
+ - (5)(6)はinvariant毎に一つずつ証明するが、証明するinvariantをinvS(S)とする。
+ - Condition (5)のゴールは、initinv = init implies invS .
+ - Condition (6)のゴールは、iinv = wfs and inv and invS implies invS'.とし、invinvを二重否定イディオムを使って定義する。
  - 抽象レベルで証明済みのLemmaを利用するには、具象レベルにインスタンシエートする必要があるが、現在のところ、インスタンシエーションはCafeOBJの機能を利用するように整備されていないので、手作業が必要である。
 
 ## inv-ifRSStartedThenPRReadyのCondtion (5)(6)の証明譜
