@@ -548,9 +548,13 @@ module! STATECyclefuns {
   var SetRQ : SetOfRequirement
   var SetRL : SetOfRelationship
   var MP : PoolOfMsg
+  var S : State
 
   op getAllNDInState : State -> SetOfNode
   eq getAllNDInState(< SetND,SetCP,SetRQ,SetRL,MP >) = SetND .
+
+  op DWSR01 : Node State -> SetOfNode
+  eq DWSR01(ND,S) = DDSR01(ND,S) .
 
   op DDSR01 : Node State -> SetOfNode
   eq DDSR01(ND,< SetND,SetCP,SetRQ,SetRL,MP >)
@@ -559,6 +563,8 @@ module! STATECyclefuns {
 			       getRLsOfRQs(SetRL,
 				           getHostedOnRQsOfND(SetRQ,
        			       				      ND)))) .
+  op DWSR02 : Node State -> SetOfNode
+  eq DWSR02(ND,S) = DDSR02(ND,S) .
 
   op DDSR02 : Node State -> SetOfNode
   eq DDSR02(ND,< SetND,SetCP,SetRQ,SetRL,MP >)
@@ -581,26 +587,22 @@ module STATEfuns {
 
   extending(CYCLEPRED(
 	STATECyclefuns {sort Object -> Node,
-	                sort ObjStateLt -> NDStateLt,
-	       		sort ObjState -> NDState,
 	       		sort SetOfObject -> SetOfNode,
 	       		op empObj -> empND,
 	       		op getAllObjInState -> getAllNDInState,
-	       		op DDS -> DDSR01,
-	       		op sx -> initial})
+	       		op DWS -> DWSR01,
+	       		op DDS -> DDSR01})
 	* {op noCycle -> noHostedOnNDCycle,
 	   op noCycleStructure -> noHostedOnNDCycleStruct}
 	)
 
   extending(CYCLEPRED(
 	STATECyclefuns {sort Object -> Node,
-	                sort ObjStateLt -> NDStateLt,
-	       		sort ObjState -> NDState,
 	       		sort SetOfObject -> SetOfNode,
 	       		op empObj -> empND,
 	       		op getAllObjInState -> getAllNDInState,
-	       		op DDS -> DDSR02,
-	       		op sx -> created})
+	       		op DWS -> DWSR02,
+	       		op DDS -> DDSR02})
 	* {op noCycle -> noNDCycle,
 	   op noCycleStructure -> noNDCycleStruct}
 	)

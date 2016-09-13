@@ -172,6 +172,10 @@ module! STATECyclefuns {
   op getAllRSInState : State -> SetOfResource
   eq getAllRSInState(< SetRS,SetPR >) = SetRS .
 
+  op DWSR01 : Resource State -> SetOfResource
+  eq DWSR01(RS,< SetRS,SetPR >)
+     = DDSR01(RS,< SetRS,SetPR >) .
+
   op DDSR01 : Resource State -> SetOfResource
   eq DDSR01(RS,< SetRS,SetPR >)
      = getRRSsOfPRs(SetRS,getPRsOfRS(SetPR,RS)) .
@@ -186,13 +190,11 @@ module! STATEfuns {
 
   extending(CYCLEPRED(
   	STATECyclefuns {sort Object -> Resource,
-  	                sort ObjStateLt -> RSStateLt,
-  	       		sort ObjState -> RSState,
   	       		sort SetOfObject -> SetOfResource,
   	       		op empObj -> empRS,
   	       		op getAllObjInState -> getAllRSInState,
-  	       		op DDS -> DDSR01,
-  	       		op sx -> initial})
+  	       		op DWS -> DWSR01,
+  	       		op DDS -> DDSR01})
   	* {op noCycle -> noRSCycle,
   	   op noCycleStructure -> noRSCycleStruct}
   	)

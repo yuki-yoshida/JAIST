@@ -574,17 +574,17 @@ module* PRMCYCLE {
   op _\in_ : Object SetOfObject -> Bool
 
   [State]
-
-  [ObjStateLt < ObjState]
-  -- sx is the target state
-  op state : Object -> ObjState
-  op sx : -> ObjStateLt
   op getAllObjInState : State -> SetOfObject
 
-  -- DDS means get Direct Depending Set
+  -- DWS means get Direct Waitinging Set of the same class.
+  -- DWS is required to have the following properties.
+  --   (O \in DDS(O,S)) = false .
+  op DWS : Object State -> SetOfObject
+
+  -- DDS means get Direct Depending Set of the same class.
   -- DDS is required to have the following properties.
   --   (O \in DDS(O,S)) = false .
-  --   (O' \in DDS(O,S)) implies (state(O') = sx) = false .
+  --   X \in DDS(O,S) implies X \in DWS(O,S)
   op DDS : Object State -> SetOfObject
 }
 
@@ -609,7 +609,7 @@ module! CYCLEPRED(P :: PRMCYCLE) {
   eq noCycle(empObj,V,S)
      = true .
   eq noCycle((O OS),V,S)
-     = (not (state(O) = sx) or if O \in V then false else noCycle(DDS(O,S),(O V),S) fi)
+     = if O \in V then false else noCycle(DWS(O,S),(O V),S) fi
        and noCycle(OS,V,S) .
 
   eq noCycleStructure(S)

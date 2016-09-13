@@ -54,7 +54,7 @@ select ProofContCont .
 }
 -- Case 2-2-1: When the parent resource is initial:
 -- Cyclic Dependency Lemma ensures there is an initial resource R
--- where DDS(R,S) does not include any initial nodes.
+-- where DWS(R,S) does not include any initial nodes.
 :init ( eq SRS:SetOfResource = (initRS(SRS) resSRS(SRS)) . ) by {
   SRS:SetOfResource <- sRS';
 }

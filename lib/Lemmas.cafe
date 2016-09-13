@@ -1139,24 +1139,43 @@ module! CYCLE-LEMMAS {
   -- if it holds in initial states and DDS(O,S) is the same in any reachable states.
   -- Then, cyc-lemma01 ensures noCycle(S) is also an invariant.
 
+  var S : State
+  var O : Object
+  vars SetO SetO' V V' : SetOfObject
+
+  pred subsetOf : SetOfObject SetOfObject
+
   pred cyc-lemma01 : State
-  eq cyc-lemma01(S:State)
+  eq cyc-lemma01(S)
      = noCycleStructure(S) implies noCycle(S) .
 
-  pred lemma : SetOfObject SetOfObject State
-  eq lemma(SetO:SetOfObject,V:SetOfObject,S:State)
-     = noCycleStructure(SetO,V,S) implies noCycle(SetO,V,S) .
+  pred lemma : SetOfObject SetOfObject SetOfObject SetOfObject State
+  -- Assuming SetO includes SetO' and V includes V'
+  eq lemma(SetO,V,SetO',V',S)
+     = subsetOf(SetO',SetO) and subsetOf(V',V) and 
+       noCycleStructure(SetO,V,S) implies noCycle(SetO',V',S) .
 
   ops s s' : -> State
   op o : -> Object
-  ops setO v : -> SetOfObject
+  ops setO setO' setO1 v v' : -> SetOfObject
 
   -- Axioms
   eq (o \in empObj) = false .
   eq (o empObj) = o .
 
-  eq [assumption :nonexec]: 
-    lemma(DDS(o,s),(o v),s) = true .
+  eq subsetOf(V,V) = true .
+
+  ceq subsetOf(V,empObj)  = false 
+     if not (V = empObj) .
+
+  ceq subsetOf(V',V) = false 
+     if not (O \in V) and (O \in V') .
+
+  eq (subsetOf(V',(O V)) and subsetOf(V',V))
+     = subsetOf(V',(O V)) .
+
+  eq [inductive-assumption]: 
+    lemma(DDS(o,s),(o v),DWS(o,s),(o v'),s) = true .
 }
 
 --> ***********************************************
@@ -1165,7 +1184,8 @@ module! CYCLE-LEMMAS {
 --> ***********************************************
 select CYCLE-LEMMAS
 :goal {
-  eq lemma(getAllObjInState(s),empObj,s) implies cyc-lemma01(s) = true .
+  eq lemma(getAllObjInState(s),empObj,getAllObjInState(s),empObj,s) 
+     implies cyc-lemma01(s) = true .
 }
 :apply (rd)
 show proof
@@ -1175,19 +1195,24 @@ show proof
 -->       = noCycleStructure(SetO,V,S) implies noCycle(SetO,V,S) .
 --> **************************************************************
 select CYCLE-LEMMAS
+-- Note that if setO = empObj then setO' = empObj because setO includes setO'
 :goal {
-  eq lemma(empObj,v,s) = true .
-  eq lemma(setO,v,s) implies lemma((o setO),v,s) = true .
+  eq lemma(empObj,v,setO',v',s) = true .
+  eq lemma(setO1,v,setO',v',s) 
+     implies lemma((o setO1),v,setO',v',s) = true .
 }
 :ctf {
-  eq state(o) = sx .
+  eq setO' = empObj .
 }
+:apply (rd) -- 1
 :ctf {
   eq (o \in v) = true .
 }
-:apply (rd)
-:imply [assumption] .
-:apply (rd)
-:apply (rd)
+:apply (rd) -- 2-1
+:ctf {
+  eq (o \in v) = true .
+}
+:apply (rd) -- 2-2-1
+:apply (rd) -- 2-2-2
 show proof
 select

@@ -141,13 +141,13 @@ module! PROOFbase {
   ceq wfs(S) = false if not wfs-allNDHaveAtMostOneHost(S) .
 
   -- From Cyclic Dependency Lemma
-  -- There is an initial resource whose DDSR01 includes no initial resourecs.
+  -- There is an initial resource whose DWSR01 includes no initial resourecs.
   ceq [CycleR01 :nonexec]: 
-     true = false if someNDInStates(DDSR01(node(T:NDType,I:NDID,initial),S:State),initial) .
+     true = false if someNDInStates(DWSR01(node(T:NDType,I:NDID,initial),S:State),initial) .
 
-  -- There is a created resource whose DDSR02 includes no created resourecs.
+  -- There is a created resource whose DWSR02 includes no created resourecs.
   ceq [CycleR02 :nonexec]: 
-     true = false if someNDInStates(DDSR02(node(T:NDType,I:NDID,created),S:State),created) .
+     true = false if someNDInStates(DWSR02(node(T:NDType,I:NDID,created),S:State),created) .
 
   -- Skolem Functions for Cyclic Dependncy Lemma
   -- A set of resource may include a specific initial node, of

@@ -17,9 +17,9 @@ select ProofInitialCont .
 --> Proof of the initialcont lemma
 --> When there is an initial node in state S
 --> Cyclic Dependency Theorem ensures there is an initial node N
---> where DDSR01(N,S) does not include any initial nodes.
+--> where DWSR01(N,S) does not include any initial nodes.
 --> So, we can assume that S = < (node(tnd, idND, initial) sND), sCP, sRQ, sRL, mp >
---> and someNDInStates(DDSR01(node(tnd, idND, initial),S),initial) = false .
+--> and someNDInStates(DWSR01(node(tnd, idND, initial),S),initial) = false .
 --> **************************************************************************
 --> Step 2-1: Begin with the cases each of which matches to LHS of each rules.
 --> **************************************************************************
@@ -163,9 +163,9 @@ select ProofCreatedCont .
 --> Proof of the createdcont lemma
 --> When there is a created node in state S
 --> Cyclic Dependency Theorem ensures there is a created node N
---> where DDSR02(N,S) does not include any created nodes.
+--> where DWSR02(N,S) does not include any created nodes.
 --> So, we can assume that S = < (node(tnd, idND, created) sND), sCP, sRQ, sRL, mp >
---> and someNDInStates(DDSR02(node(tnd, idND, created),S),created) = false .
+--> and someNDInStates(DWSR02(node(tnd, idND, created),S),created) = false .
 --> **************************************************************************
 --> Step 2-1: Begin with the cases each of which matches to LHS of each rules.
 --> **************************************************************************

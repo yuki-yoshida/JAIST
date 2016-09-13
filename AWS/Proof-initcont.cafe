@@ -44,7 +44,7 @@ select ProofInitCont .
 }
 -- Case 2-1: When the resource is initial:
 -- Note that res(trs,idRS,initial) is arbitrary selected.
--- Thus, we can assume that all of DDSR01(res(trs,idRS,initial),S) are not initial,
+-- Thus, we can assume that all of DWSR01(res(trs,idRS,initial),S) are not initial,
 -- which the Cyclic Dependency Lemma assures.
 --> ****************************************************
 --> Step 1-4: Split the first rule case into cases where
