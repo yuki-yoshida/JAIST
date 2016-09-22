@@ -2,9 +2,10 @@ provide SET
 
 mod! SET(X :: TRIV) {
   [Elt.X < Set]
+
   op empty : -> Set {constr}
   op _ _ : Set Set -> Set {constr assoc comm idem id: empty}
-  eq ((E:Elt.X S1:Set) = (E S2:Set)) = (S1 = S2) .
+
   --
   op _U_ : Set Set -> Set
   op _\in_ : Elt.X Set -> Bool
@@ -13,6 +14,9 @@ mod! SET(X :: TRIV) {
   --
   vars S S1 S2 : Set
   vars E E1 : Elt.X
+
+  -- for =
+  eq ((E S1) = (E S2)) = (S1 = S2) .
   -- for empty
   eq ((E S) = empty) = false .
   -- for _U_

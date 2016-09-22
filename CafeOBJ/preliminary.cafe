@@ -1,48 +1,148 @@
-module! SET(X :: TRIV) {
- protecting(NAT)
- [Elt.X < Set]
- op emp : -> Set {constr}
- op _ _ : Set Set -> Set {constr assoc comm idem id: emp}
- op #_ : Set -> Nat
- var E : Elt.X     var S : Set
- eq # emp = 0 .    eq # (E S) = 1 + (# S) . }
+require SET SET.cafe
 
 module! SERVICE {
  protecting(NAT)
  [LocalState Service]
  ops closed open ready : -> LocalState {constr}
- op sv : Nat LocalState -> Service {constr} }
+ op sv : Nat LocalState -> Service {constr}
+}
 
 module! SV-SET {
- protecting(SET(SERVICE{sort Elt -> Service})
-    * {sort Set -> SvSet, op emp -> empSvSet}) }
+ protecting(
+  SET(SERVICE{sort Elt -> Service})
+   * {sort Set -> SvSet,
+      op empty -> empSvSet})
+}
+
+open SV-SET .
+ reduce #(sv(1,closed) sv(2,open)) . -- to 2.
+
+ op svs : -> SvSet .
+ reduce #(sv(1,closed) svs) = # svs + 1 . -- to true.
+close
 
 module! UPDATE {
- including(SV-SET)
+ using(SV-SET)
+
  [State]
+
  op < _ > : SvSet -> State {constr}
- var SVS : SvSet    var N : Nat
+
+ var SVS : SvSet
+ var N : Nat
+
  trans [c2o]: 
   < sv(N,closed) SVS > => < sv(N,open) SVS > .
+
  ctrans [o2r]: 
   < sv(N,open) SVS > => < sv(N,ready) SVS >
-  if # SVS > 0 . }
+  if # SVS > 0 .
+}
 
 open UPDATE .
- reduce < sv(1,closed) sv(2,open) > =(*,1)=>+ < SVS > == true .
- reduce < sv(3,closed) sv(4,ready) > =(*,1)=>+ < SVS > == true .
- reduce < sv(5,open) > =(*,1)=>+ < SVS > == false .
+ execute < sv(1,closed) sv(2,open) > .
+   -- to < sv(1,ready)  sv(2,ready) > .
+ execute < sv(1,closed) > .
+   -- to < sv(1,open) > .
 close
 
 open UPDATE .
-op anyOpen : SvSet -> Bool .
-eq anyOpen(sv(N,open) SVS) = true .
-var CC : Bool .
-reduce 
- < sv(1,closed) sv(2,open) > =(*,1)=>+ < SVS > if CC
-  suchThat CC implies anyOpen(SVS) { true } .
-reduce
- (< sv(1,closed) sv(2,open) > =(*,1)=>+ < SVS > if CC
-   suchThat not ((CC implies anyOpen(SVS)) == true) { true }) 
- = false .
+ reduce < sv(1,closed) sv(2,open) > =(*,1)=>+ < SVS > .
+   -- to true.
+ reduce < sv(3,closed) sv(4,ready) > =(*,1)=>+ < SVS > .
+   -- to true.
+ reduce < sv(5,open) > =(*,1)=>+ < SVS > .
+   -- to false.
 close
+
+open UPDATE .
+ pred anyOpen : SvSet .
+   -- The same as: op anyOpen : SvSet -> Bool .
+ eq anyOpen(sv(N,open) SVS) = true .
+ var CC : Bool .
+ reduce 
+  < sv(1,closed) sv(2,open) > =(*,1)=>+ < SVS > if CC
+    suchThat CC implies anyOpen(SVS) { true } . -- to true.
+ reduce not (
+  < sv(1,closed) sv(2,open) > =(*,1)=>+ < SVS > if CC
+    suchThat not ((CC implies anyOpen(SVS)) == true) { true } ) . -- to false.
+
+ reduce anyOpen(sv(1,closed)) == true . -- to false.
+ reduce anyOpen(sv(1,closed)) = true .  -- to anyOpen(sv(1,closed)) = true .
+
+close
+
+module! ProofUPDATE {
+ protecting(UPDATE)
+
+ -- Theorem to be proved.
+ pred theorem : State
+
+ vars N N1 N2 : Nat
+ vars Lst1 Lst2 : LocalState .
+ vars SVS SVS' : SvSet
+
+ eq theorem(< sv(N1,Lst1) sv(N2,Lst2) SVS >)
+   = ((Lst1 == ready) = false and (Lst2 == ready) = false)
+     implies < sv(N1,Lst1) sv(N2,Lst2) SVS > =(*,1)=>+ < SVS' > .
+
+ -- Axiom of Nat
+ eq (1 + N > 0) = true .
+
+ -- Arbitrary constants.
+ op s : -> State
+ ops sv1 sv2 : -> Service
+ ops st1 st2 : -> LocalState
+ ops n1 n2 : -> Nat
+ op svs : -> SvSet
+}
+
+-- The most general case.
+open ProofUPDATE .
+ eq s = < sv1 sv2 svs > .
+ reduce theorem(s) . -- to false.
+close
+
+-- Case 1: Both services are closed.
+open ProofUPDATE .
+ eq s = < sv1 sv2 svs > .
+ eq sv1 = sv(n1,closed) .
+ eq sv2 = sv(n2,closed) .
+ reduce theorem(s) . -- to true.
+close
+
+-- Case 2: Both services are open.
+open ProofUPDATE .
+ eq s = < sv1 sv2 svs > .
+ eq sv1 = sv(n1,open) .
+ eq sv2 = sv(n2,open) .
+ reduce theorem(s) . -- to true.
+close
+
+-- Case 3: A closed service and an open service.
+open ProofUPDATE .
+ eq s = < sv1 sv2 svs > .
+ eq sv1 = sv(n1,closed) .
+ eq sv2 = sv(n2,open) .
+ reduce theorem(s) . -- to true.
+close
+
+select ProofUPDATE .
+:goal {
+  eq theorem(< sv(n1,st1) sv(n2,st2) svs >) = true .
+}
+:def csp-st1 = :csp {
+ eq st1 = closed .
+ eq st1 = open .
+ eq st1 = ready .
+}
+:def csp-st2 = :csp {
+ eq st2 = closed .
+ eq st2 = open .
+ eq st2 = ready .
+}
+:apply (csp-st1 csp-st2 rd)
+describe proof
+
+select
+

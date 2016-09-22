@@ -37,11 +37,22 @@ mod! PNAT principal-sort Nat {
 
   eq M quo s(N) = (if M < s(N) then 0 else s(sd(M,s(N)) quo s(N)) fi) .
 
-  ops 1 2 3 : -> Nat
+  ops 1 2 3 4 5 6 : -> Nat
   eq 1 = s(0) .
   eq 2 = s(1) .
   eq 3 = s(2) .
+  eq 4 = s(3) .
+  eq 5 = s(4) .
+  eq 6 = s(5) .
 }
+
+mod! PNAT+ {
+  pr(PNAT)
+  -- Theorem proved.
+  eq (N:Nat < s(N)) = true .
+}
+
+eof
 
 --> ********************
 --> Prove that N < s(N).
@@ -57,10 +68,4 @@ open PNAT .
   eq n' = s(n) .
   red n' < s(n') .
 close
-
-mod! PNAT+ {
-  pr(PNAT)
-  -- Theorem proved.
-  eq (N:Nat < s(N)) = true .
-}
 

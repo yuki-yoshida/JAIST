@@ -32,8 +32,8 @@ module! NODE {
 	   sort SetOfObjState -> SetOfNDState,
 	   op empObj -> empND,
 	   op empState -> empSND,
-	   op theObjInStates -> idNDInStates,
 	   op existObj -> existND,
+	   op existObjInStates -> existNDInStates,
 	   op uniqObj -> uniqND,
 	   op #ObjInStates -> #NodeInStates,
 	   op getObject -> getNode,
@@ -76,8 +76,8 @@ module! CAPABILITY {
 	   sort SetOfObjState -> SetOfCPState,
 	   op empObj -> empCP,
 	   op empState -> empSCP,
-	   op theObjInStates -> idCPInStates,
 	   op existObj -> existCP,
+	   op existObjInStates -> existCPInStates,
 	   op uniqObj -> uniqCP,
 	   op #ObjInStates -> #CapabilityInStates,
 	   op getObject -> getCapability,
@@ -121,8 +121,8 @@ module! REQUIREMENT {
 	   sort SetOfObjState -> SetOfRQState,
 	   op empObj -> empRQ,
 	   op empState -> empSRQ,
-	   op theObjInStates -> idRQInStates,
 	   op existObj -> existRQ,
+	   op existObjInStates -> existRQInStates,
 	   op uniqObj -> uniqRQ,
 	   op #ObjInStates -> #RequirementInStates,
 	   op getObject -> getRequirement,
@@ -208,7 +208,7 @@ module! LINKS {
 		    op existLObj -> existND,
 		    op empLObj -> empND,
 		    op link -> node,
-		    op theLObjInStates -> idNDInStates})
+		    op existLObjInStates -> existNDInStates})
 	* {op getXOfZ -> getNDOfCP,
 	   op getZsOfX -> getCPsOfND,
 	   op getZsOfTypeOfX -> getCPsOfTypeOfND,
@@ -242,7 +242,7 @@ module! LINKS {
 		     op existLObj -> existND,
 		     op empLObj -> empND,
 		     op link -> node,
-		     op theLObjInStates -> idNDInStates})
+		     op existLObjInStates -> existNDInStates})
 	* {op getXOfZ -> getNDOfRQ,
 	   op getXsOfZs -> getNDsOfRQs,
 	   op getXsOfZsInStates -> getNDsOfRQsInStates,
@@ -276,7 +276,7 @@ module! LINKS {
 		      op existLObj -> existCP,
 		      op empLObj -> empCP,
 		      op link -> cap,
-		      op theLObjInStates -> idCPInStates})
+		      op existLObjInStates -> existCPInStates})
 	* {op existX -> existCP,
 	   op getXOfY -> getCPOfRL,
 	   op getXsOfYs -> getCPsOfRLs,
@@ -310,7 +310,7 @@ module! LINKS {
 		      op existLObj -> existRQ,
 		      op empLObj -> empRQ,
 		      op link -> req,
-		      op theLObjInStates -> idRQInStates})
+		      op existLObjInStates -> existRQInStates})
 	* {op existX -> existRQ,
 	   op getXOfY -> getRQOfRL,
 	   op getXsOfYs -> getRQsOfRLs,
@@ -478,7 +478,7 @@ module! UtilFuns {
      = isAtMostOne(getRQsOfTypeOfND(SetRQ,hostedOn,ND))
        and allNDHaveAtMostOneHost(SetND,SetRQ) .
   eq isAtMostOne(SetRQ)
-     = card(SetRQ) = 0 or card(SetRQ) = 1 .
+     = (# SetRQ) = 0 or (# SetRQ) = 1 .
 
   pred ifOpenMsgThenCPInStates : PoolOfMsg SetOfCapability SetOfCPState
   eq ifOpenMsgThenCPInStates(empMsg,SetCP,StCP)
