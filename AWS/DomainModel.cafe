@@ -12,21 +12,21 @@ provide DomainModel
 -- There are typical types of properties.
 
 module! RESOURCE {
-
+  -- Instantiation of Template
   extending(OBJECTBASE
-	* {sort ObjIDLt -> RSIDLt,
+	* {sort Object -> Resource,
+	   sort ObjIDLt -> RSIDLt,
 	   sort ObjID -> RSID,
 	   sort ObjTypeLt -> RSTypeLt,
 	   sort ObjType -> RSType,
 	   sort ObjStateLt -> RSStateLt,
 	   sort ObjState -> RSState,
-	   sort Object -> Resource,
 	   sort SetOfObject -> SetOfResource,
 	   sort SetOfObjState -> SetOfRSState,
 	   op empObj -> empRS,
 	   op empState -> empSRS,
-	   op theObjInStates -> idRSInStates,
 	   op existObj -> existRS,
+	   op existObjInStates -> existRSInStates,
 	   op uniqObj -> uniqRS,
 	   op #ObjInStates -> #ResourceInStates,
 	   op getObject -> getResource,
@@ -34,37 +34,42 @@ module! RESOURCE {
 	   op allObjNotInStates -> allRSNotInStates,
 	   op someObjInStates -> someRSInStates})
 
+  -- Constructor
   -- res(RSType, RSID, RSState) is a Resource.
   op res : RSType RSID RSState -> Resource {constr}
 
+  -- Variables
   var TRS : RSType
   var IDRS : RSID
   var SRS : RSState
 
+  -- Selectors
   eq type(res(TRS,IDRS,SRS)) = TRS .
   eq id(res(TRS,IDRS,SRS)) = IDRS .
   eq state(res(TRS,IDRS,SRS)) = SRS .
 
+  -- Local States
   ops initial started : -> RSStateLt {constr}
 }
 
 module! PROPERTY {
-  pr(RESOURCE)
+  protecting(RESOURCE)
 
+  -- Instantiation of Template
   extending(OBJECTBASE
-	* {sort ObjIDLt -> PRIDLt,
+	* {sort Object -> Property,
+	   sort ObjIDLt -> PRIDLt,
 	   sort ObjID -> PRID,
 	   sort ObjTypeLt -> PRTypeLt,
 	   sort ObjType -> PRType,
 	   sort ObjStateLt -> PRStateLt,
 	   sort ObjState -> PRState,
-	   sort Object -> Property,
 	   sort SetOfObject -> SetOfProperty,
 	   sort SetOfObjState -> SetOfPRState,
 	   op empObj -> empPR,
 	   op empState -> empSPR,
-	   op theObjInStates -> idPRInStates,
 	   op existObj -> existPR,
+	   op existObjInStates -> existPRInStates,
 	   op uniqObj -> uniqPR,
 	   op #ObjInStates -> #PropertyInStates,
 	   op getObject -> getProperty,
@@ -72,22 +77,26 @@ module! PROPERTY {
 	   op allObjNotInStates -> allPRNotInStates,
 	   op someObjInStates -> somePRInStates})
 
+  -- Constructor
   -- prop(PRType, PRID, PRState, RSID, RSID) is a Property of a Resource.
   op prop : PRType PRID PRState RSID RSID -> Property {constr}
-  op parent : Property -> RSID
-  op refer : Property -> RSID
 
+  -- Variables
   var TPR : PRType
   var IDPR : PRID
   var SPR : PRState
   vars IDRS1 IDRS2 : RSID
 
+  -- Selectors
+  op parent : Property -> RSID
+  op refer : Property -> RSID
   eq type(prop(TPR,IDPR,SPR,IDRS1,IDRS2)) = TPR .
   eq id(prop(TPR,IDPR,SPR,IDRS1,IDRS2)) = IDPR .
   eq state(prop(TPR,IDPR,SPR,IDRS1,IDRS2)) = SPR .
   eq parent(prop(TPR,IDPR,SPR,IDRS1,IDRS2)) = IDRS1 .
   eq refer(prop(TPR,IDPR,SPR,IDRS1,IDRS2)) = IDRS2 .
 
+  -- Local States
   ops notready ready : -> PRStateLt {constr}
 }
 
@@ -104,11 +113,11 @@ module! LINKS {
   	          sort LObjState -> RSState,
   	          sort SetOfLObject -> SetOfResource,
   	          sort SetOfLObjState -> SetOfRSState,
-		  op getLObject -> getResource,
-		  op existLObj -> existRS,
-		  op empLObj -> empRS,
 		  op link -> parent,
-		  op theLObjInStates -> idRSInStates})
+		  op empLObj -> empRS,
+		  op existLObj -> existRS,
+		  op existLObjInStates -> existRSInStates,
+		  op getLObject -> getResource})
 	* {op hasLObj -> hasParent,
 	   op getXOfZ -> getRSOfPR,
 	   op getZsOfX -> getPRsOfRS,
@@ -135,11 +144,11 @@ module! LINKS {
   	          sort LObjState -> RSState,
   	          sort SetOfLObject -> SetOfResource,
   	          sort SetOfLObjState -> SetOfRSState,
-  		  op getLObject -> getResource,
-  		  op existLObj -> existRS,
-  		  op empLObj -> empRS,
   		  op link -> refer,
-  		  op theLObjInStates -> idRSInStates})
+  		  op empLObj -> empRS,
+  		  op existLObj -> existRS,
+  		  op existLObjInStates -> existRSInStates,
+  		  op getLObject -> getResource})
 	* {op hasLObj -> hasRefRS,
   	   op getXOfZ -> getRRSOfPR,
   	   op getZsOfX -> getPRsOfRRS,
@@ -156,14 +165,14 @@ module! LINKS {
 }
 
 module! STATE {
-  pr(LINKS)
+  protecting(LINKS)
 
   [State]
   op <_,_> : SetOfResource SetOfProperty -> State {constr}
 }
 
 module! STATECyclefuns {
-  pr(STATE)
+  protecting(STATE)
 
   var RS : Resource
   var SetRS : SetOfResource
@@ -182,7 +191,7 @@ module! STATECyclefuns {
 }
 
 module! STATEfuns {
-  pr(STATE)
+  protecting(STATE)
 
   var SetRS : SetOfResource
   var SetPR : SetOfProperty
@@ -233,24 +242,10 @@ module! STATEfuns {
      = allRSInStates(SetRS,started) .
 }
 
-module! STATERuleResourceStart {
-  pr(STATEfuns)
+module! STATERules {
+  protecting(STATEfuns)
 
-  var TRS : RSType
-  var IDRS : RSID 
-  var SetRS : SetOfResource
-  var SetPR : SetOfProperty
-
--- Start an initial resource if all of its properties are ready.
-  ctrans [R01]:
-     < (res(TRS,IDRS,initial) SetRS), SetPR >
-  => < (res(TRS,IDRS,started) SetRS), SetPR > 
-     if allPROfRSInStates(SetPR,IDRS,ready) .
-}
-
-module! STATERulePropReady {
-  pr(STATEfuns)
-
+  -- Variables
   vars IDRS IDRRS : RSID 
   var IDPR : PRID
   var TRS : RSType
@@ -258,15 +253,16 @@ module! STATERulePropReady {
   var SetRS : SetOfResource
   var SetPR : SetOfProperty
 
--- Let a not-ready property be ready if its refering resource is started.
+  -- Start an initial resource if all of its properties are ready.
+  ctrans [R01]:
+     < (res(TRS,IDRS,initial) SetRS), SetPR >
+  => < (res(TRS,IDRS,started) SetRS), SetPR > 
+     if allPROfRSInStates(SetPR,IDRS,ready) .
+
+  -- Let a not-ready property be ready if its refering resource is started.
   trans [R02]:
      < (res(TRS,IDRRS,started) SetRS), 
        (prop(TPR,IDPR,notready,IDRS,IDRRS) SetPR) >
   => < (res(TRS,IDRRS,started) SetRS), 
        (prop(TPR,IDPR,ready   ,IDRS,IDRRS) SetPR) > .
-}
-
-module! STATERules {
-protecting(  STATERuleResourceStart
-	   + STATERulePropReady)
 }

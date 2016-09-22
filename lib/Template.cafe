@@ -29,9 +29,9 @@ module* OBJECT {
 module! SET+PNAT {
   pr(SET + PNAT+)
 
-  op card : Set -> Nat
-  eq card(empty) = 0 .
-  eq card((E:Elt.X S:Set)) = 1 + card(S) .
+  op #_ : Set -> Nat
+  eq # empty = 0 .
+  eq # (E:Elt.X S:Set) = 1 + # S .
 }
 
 module! SETOBJECT {
@@ -195,12 +195,16 @@ module! PRMOBJBASE {
 
   eq isInStates(O:Object,SetS:SetOfObjState)
      = state(O) \in SetS .
+
+  pred hasIDInStates : Object ObjID SetOfObjState
+  eq hasIDInStates(O:Object,ID:ObjID,SetS:SetOfObjState)
+     = hasID(O,ID) implies isInStates(O,SetS) .
+    
 }
 
 module! OBJECTBASE {
   pr(SETOBJECT)
 
-  pred theObjInStates : ObjID SetOfObject SetOfObjState
   pred uniqObj : SetOfObject
   op #ObjInStates : SetOfObjState SetOfObject -> Nat
   op getObject : SetOfObject ObjID -> Object
@@ -221,15 +225,10 @@ module! OBJECTBASE {
 		       op allObjNotP -> allObjNotInStates,
 		       op someObjP -> someObjInStates})
 
-  eq theObjInStates(ID,empObj,SetS)
-     = false .
-  eq theObjInStates(ID,(O S_O),SetS)
-     = if (id(O) = ID) then
-         (state(O) \in SetS)
-       else
-         theObjInStates(ID,S_O,SetS)
-       fi .
-    -- Why hasID or isInState cannot be used?
+  pr(ALLOBJPRED2(PRMOBJBASE {sort Arg1 -> ObjID,
+                             sort Arg2 -> SetOfObjState,
+  			       	op p -> hasIDInStates})
+                    * {op someObjP -> existObjInStates})
 
   eq uniqObj(empObj)
      = true .
@@ -261,7 +260,7 @@ module* PRMOBJLINK {
   op id : LObject -> LObjID
   op state : LObject -> LObjState
   op _\in_ : LObjState SetOfLObjState -> Bool
-  pred theLObjInStates : LObjID SetOfLObject SetOfLObjState
+  pred existLObjInStates : SetOfLObject LObjID SetOfLObjState
   -- Linking Objects which exist zero or many
   op link : Object -> LObjID
 }
@@ -390,7 +389,7 @@ module! OBJLINKONE2ONE {
   eq ifYInStatesThenXInStates(S_Y,St_Y,empLObj,St_X)
      = true .
   ceq ifYInStatesThenXInStates((Y S_Y),St_Y,S_X,St_X)
-     = ((state(Y) \in St_Y) implies theLObjInStates(link(Y),S_X,St_X))
+     = ((state(Y) \in St_Y) implies existLObjInStates(S_X,link(Y),St_X))
        and ifYInStatesThenXInStates(S_Y,St_Y,S_X,St_X)
      if not (S_X = empLObj) .
 
@@ -570,7 +569,6 @@ module* PRMCYCLE {
   [Object < SetOfObject]
   op empObj : -> SetOfObject
   op _ _ : SetOfObject SetOfObject -> SetOfObject
-  op _\\_ : SetOfObject SetOfObject -> SetOfObject
   op _\in_ : Object SetOfObject -> Bool
 
   [State]
@@ -578,7 +576,7 @@ module* PRMCYCLE {
 
   -- DWS means get Direct Waitinging Set of the same class.
   -- DWS is required to have the following properties.
-  --   (O \in DDS(O,S)) = false .
+  --   (O \in DWS(O,S)) = false .
   op DWS : Object State -> SetOfObject
 
   -- DDS means get Direct Depending Set of the same class.

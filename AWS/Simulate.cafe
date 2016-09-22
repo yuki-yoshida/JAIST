@@ -5,14 +5,14 @@ open STATERules .
 eq wfs(S:State) = wfs0(S) .
 
 ops myInstance myEIP rs0 : -> RSIDLt .
-ops prm1 prm2 : -> PRIDLt .
-ops ec2Instance eip : -> RSTypeLt .
+ops myEIP::InsID prop2 : -> PRIDLt .
+ops ec2Instance ec2Eip : -> RSTypeLt .
 ops instanceId ptype : -> PRTypeLt .
 
 op s0 : -> State .
 eq s0 =
-   < (res(ec2Instance, myInstance,initial) res(eip,myEIP,initial)),
-     (prop(instanceId,prm1,notready,myEIP,myInstance)) > .
+   < (res(ec2Instance, myInstance,initial) res(ec2Eip,myEIP,initial)),
+     (prop(instanceId,myEIP::InsID,notready,myEIP,myInstance)) > .
       
 red s0 .
 red wfs(s0) .
@@ -25,9 +25,9 @@ exec final(s0) .
 
 op s1 : -> State .
 eq s1 =
-   < (res(ec2Instance, myInstance,initial) res(eip,myEIP,initial)),
-     (prop(instanceId,prm1,notready,myEIP,myInstance)
-      prop(ptype,prm2,notready,myInstance,myEIP)) > .
+   < (res(ec2Instance, myInstance,initial) res(ec2Eip,myEIP,initial)),
+     (prop(instanceId,myEIP::InsID,notready,myEIP,myInstance)
+      prop(ptype,prop2,notready,myInstance,myEIP)) > .
       
 red s1 .
 red wfs(s1) = false . -- It is cyclic!
@@ -40,10 +40,10 @@ exec final(s1) = false .
 
 op s2 : -> State .
 eq s2 =
-   < (res(ec2Instance,myInstance,initial) res(eip,myEIP,initial)
+   < (res(ec2Instance,myInstance,initial) res(ec2Eip,myEIP,initial)
       res(ec2Instance,rs0,initial)),
-     (prop(instanceId,prm1,notready,myEIP,myInstance)
-      prop(ptype,prm2,notready,myInstance,rs0)) > .
+     (prop(instanceId,myEIP::InsID,notready,myEIP,myInstance)
+      prop(ptype,prop2,notready,myInstance,rs0)) > .
       
 red s2 .
 red wfs(s2) .
