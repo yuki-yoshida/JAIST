@@ -41,8 +41,8 @@ module! Proofinv-ifRSStartedThenPRReady {
   var IDPR : PRID
   var TPR : PRType
 
-  -- Instantiating m2o-lemma06:
-  eq [m2o-lemma06]:
+  -- Instantiating m2o-lemma07:
+  eq [m2o-lemma07]:
       (allRSInStates(SetRS,initial) and 
        ifRSInStatesThenPRInStates(SetRS,started,SetPR,ready))
     = allRSInStates(SetRS,initial) .

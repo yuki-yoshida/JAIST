@@ -259,7 +259,7 @@ module! STATERules {
   => < (res(TRS,IDRS,started) SetRS), SetPR > 
      if allPROfRSInStates(SetPR,IDRS,ready) .
 
-  -- Let a not-ready property be ready if its refering resource is started.
+  -- Let a not-ready property be ready if its referring resource is started.
   trans [R02]:
      < (res(TRS,IDRRS,started) SetRS), 
        (prop(TPR,IDPR,notready,IDRS,IDRRS) SetPR) >
