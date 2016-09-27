@@ -11,6 +11,7 @@ mod! SET(X :: TRIV) {
   op _\in_ : Elt.X Set -> Bool
   op _A_ : Set Set -> Set
   op _\\_ : Set Set -> Set
+  op subset : Set Set -> Bool
   --
   vars S S1 S2 : Set
   vars E E1 : Elt.X
@@ -33,5 +34,7 @@ mod! SET(X :: TRIV) {
   eq empty \\ E = empty .
   eq (E S) \\ E = S .
   ceq (E1 S) \\ E = (E1 (S \\ E)) if not (E = E1) .
-
+  -- for subset
+  eq subset(empty,S) = true .
+  eq subset((E S1),S2) = E \in S2 and subset(S1,S2) .
 }

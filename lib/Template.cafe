@@ -316,10 +316,14 @@ module! OBJLINKONE2ONE {
 
   op getXsOfYsInStates : SetOfLObject SetOfObject SetOfLObjState -> SetOfLObject
   op getXsOfYsInStates : SetOfLObject SetOfLObject SetOfObject SetOfLObjState -> SetOfLObject
+  eq getXsOfYsInStates(empLObj,S_Y,St_X)
+     = empLObj .
   eq getXsOfYsInStates(S_X,empObj,St_X)
      = empLObj .
-  eq getXsOfYsInStates(S_X,(Y S_Y),St_X)
-     = getXsOfYsInStates(getXOfY(S_X,Y),S_X,S_Y,St_X) .
+  ceq getXsOfYsInStates(S_X,(Y S_Y),St_X)
+     = getXsOfYsInStates(getXOfY(S_X,Y),S_X,S_Y,St_X) 
+     if not S_X = empLObj .
+
   eq getXsOfYsInStates(empLObj,S_X,S_Y,St_X)
      = getXsOfYsInStates(S_X,S_Y,St_X) .
   eq getXsOfYsInStates(X,S_X,S_Y,St_X)
@@ -346,10 +350,14 @@ module! OBJLINKONE2ONE {
 
   op getYsOfXsInStates : SetOfObject SetOfLObject SetOfObjState -> SetOfObject
   op getYsOfXsInStates : Object SetOfObject SetOfLObject SetOfObjState -> SetOfObject
+  eq getYsOfXsInStates(empObj,S_X,St_Y)
+     = empObj .
   eq getYsOfXsInStates(S_Y,empLObj,St_Y)
      = empObj .
-  eq getYsOfXsInStates(S_Y,(X S_X),St_Y)
-     = getYsOfXsInStates(getYOfX(S_Y,id(X)),S_Y,S_X,St_Y) .
+  ceq getYsOfXsInStates(S_Y,(X S_X),St_Y)
+     = getYsOfXsInStates(getYOfX(S_Y,id(X)),S_Y,S_X,St_Y) 
+     if not S_Y = empObj .
+
   eq getYsOfXsInStates(Y,S_Y,S_X,St_Y)
      = if (state(Y) \in St_Y) then
           (Y getYsOfXsInStates(S_Y,S_X,St_Y))
@@ -474,10 +482,14 @@ module! OBJLINKMANY2ONE {
 
   op getXsOfZsInStates : SetOfLObject SetOfObject SetOfLObjState -> SetOfLObject
   op getXsOfZsInStates : SetOfLObject SetOfLObject SetOfObject SetOfLObjState -> SetOfLObject
+  eq getXsOfZsInStates(empLObj,S_Z,St_X)
+     = empLObj .
   eq getXsOfZsInStates(S_X,empObj,St_X)
      = empLObj .
-  eq getXsOfZsInStates(S_X,(Z S_Z),St_X)
-     = getXsOfZsInStates(getXOfZ(S_X,Z),S_X,S_Z,St_X) .
+  ceq getXsOfZsInStates(S_X,(Z S_Z),St_X)
+     = getXsOfZsInStates(getXOfZ(S_X,Z),S_X,S_Z,St_X)
+     if not S_X = empLObj .
+
   eq getXsOfZsInStates(empLObj,S_X,S_Z,St_X)
      = getXsOfZsInStates(S_X,S_Z,St_X) .
   eq getXsOfZsInStates(X,S_X,S_Z,St_X)
@@ -552,10 +564,13 @@ module! OBJLINKMANY2ONE {
        fi .
 
   op getZsOfXsInStates : SetOfObject SetOfLObject SetOfObjState -> SetOfObject
+  eq getZsOfXsInStates(empObj,S_X,St_Z)
+     = empObj .
   eq getZsOfXsInStates(S_Z,empLObj,St_Z)
      = empObj .
-  eq getZsOfXsInStates(S_Z,(X S_X),St_Z)
-     = (getZsOfXInStates(S_Z,X,St_Z) getZsOfXsInStates(S_Z,S_X,St_Z)) .
+  ceq getZsOfXsInStates(S_Z,(X S_X),St_Z)
+     = (getZsOfXInStates(S_Z,X,St_Z) getZsOfXsInStates(S_Z,S_X,St_Z)) 
+     if not S_Z = empObj .
 
   op getZsOfTypeOfXsInStates : SetOfObject ObjType SetOfLObject SetOfObjState -> SetOfObject
   eq getZsOfTypeOfXsInStates(S_Z,OT,empLObj,St_Z)
