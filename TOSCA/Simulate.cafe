@@ -87,8 +87,7 @@ red wfs-allRLNotInSameND(s1) .
 red wfs-allRLHoldLocality(s0) .
 red wfs-allRLHoldLocality(s1) .
 red wfs-allNDHaveAtMostOneHost(s1) .
-red noHostedOnNDCycleStruct(s1) .
-red noNDCycleStruct(s1) .
+red noNDCycle(s1) .
 
 red final(s1) = false .
 exec final(s1) .

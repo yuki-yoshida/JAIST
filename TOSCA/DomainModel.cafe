@@ -425,12 +425,12 @@ module! UtilFuns {
      = head(getRQsOfTypeOfND(SetRQ,hostedOn,IDND)) .
   eq head((RQ SetRQ)) = RQ .
 
-  op getHostedOnRQsOfND : SetOfRequirement NDID -> SetOfRequirement
-  op getHostedOnRQsOfND : SetOfRequirement Node -> SetOfRequirement
-  eq getHostedOnRQsOfND(SetRQ,ND)
-     = getHostedOnRQsOfND(SetRQ,id(ND)) .
-  eq getHostedOnRQsOfND(SetRQ,IDND)
-     = getRQsOfTypeOfND(SetRQ,hostedOn,IDND) .
+  op getHostedOnRQsOfNDInStates : SetOfRequirement NDID SetOfRQState -> SetOfRequirement
+  op getHostedOnRQsOfNDInStates : SetOfRequirement Node SetOfRQState -> SetOfRequirement
+  eq getHostedOnRQsOfNDInStates(SetRQ,ND,StRQ)
+     = getHostedOnRQsOfNDInStates(SetRQ,id(ND),StRQ) .
+  eq getHostedOnRQsOfNDInStates(SetRQ,IDND,StRQ)
+     = getRQsOfTypeOfNDInStates(SetRQ,hostedOn,IDND,StRQ) .
 
   op VMOfND : NDID SetOfNode SetOfCapability SetOfRequirement SetOfRelationship -> NDID
   op VMOfND : Node SetOfNode SetOfCapability SetOfRequirement SetOfRelationship -> NDID
@@ -544,8 +544,8 @@ module! STATECyclefuns {
 
   var ND : Node
   var SetND : SetOfNode
-  var SetCP : SetOfCapability
-  var SetRQ : SetOfRequirement
+  vars SetCP SetCP1 : SetOfCapability
+  vars SetRQ SetRQ1 : SetOfRequirement
   var SetRL : SetOfRelationship
   var MP : PoolOfMsg
   var S : State
@@ -553,26 +553,19 @@ module! STATECyclefuns {
   op getAllNDInState : State -> SetOfNode
   eq getAllNDInState(< SetND,SetCP,SetRQ,SetRL,MP >) = SetND .
 
-  op DWSR01 : Node State -> SetOfNode
-  eq DWSR01(ND,S) = DDSR01(ND,S) .
-
-  op DDSR01 : Node State -> SetOfNode
-  eq DDSR01(ND,< SetND,SetCP,SetRQ,SetRL,MP >)
-     = getNDsOfCPs(SetND,
-                   getCPsOfRLs(SetCP,
-			       getRLsOfRQs(SetRL,
-				           getHostedOnRQsOfND(SetRQ,
-       			       				      ND)))) .
-  op DWSR02 : Node State -> SetOfNode
-  eq DWSR02(ND,S) = DDSR02(ND,S) .
-
-  op DDSR02 : Node State -> SetOfNode
-  eq DDSR02(ND,< SetND,SetCP,SetRQ,SetRL,MP >)
-     = getNDsOfCPs(SetND,
-                   getCPsOfRLs(SetCP,
-			       getRLsOfRQs(SetRL,
-				           getRQsOfND(SetRQ,
-						      ND)))) .
+  op DDSC : Node State -> SetOfNode
+  eq DDSC(ND,< SetND,SetCP,SetRQ,SetRL,MP >)
+    = if (state(ND) = initial) then
+        getNDsOfCPs(SetND,
+                    getCPsOfRLs(SetCP,
+	                        getRLsOfRQs(SetRL,
+			                    getHostedOnRQsOfNDInStates(SetRQ,ND,(unbound waiting)))))
+      else if (state(ND) = created) then
+        getNDsOfCPs(SetND,
+                    getCPsOfRLs(SetCP,
+			        getRLsOfRQs(SetRL,
+			                    getRQsOfNDInStates(SetRQ,ND,(unbound waiting)))))
+      else empND fi fi .
 }
 
 module STATEfuns {
@@ -589,22 +582,8 @@ module STATEfuns {
 	STATECyclefuns {sort Object -> Node,
 	       		sort SetOfObject -> SetOfNode,
 	       		op empObj -> empND,
-	       		op getAllObjInState -> getAllNDInState,
-	       		op DWS -> DWSR01,
-	       		op DDS -> DDSR01})
-	* {op noCycle -> noHostedOnNDCycle,
-	   op noCycleStructure -> noHostedOnNDCycleStruct}
-	)
-
-  extending(CYCLEPRED(
-	STATECyclefuns {sort Object -> Node,
-	       		sort SetOfObject -> SetOfNode,
-	       		op empObj -> empND,
-	       		op getAllObjInState -> getAllNDInState,
-	       		op DWS -> DWSR02,
-	       		op DDS -> DDSR02})
-	* {op noCycle -> noNDCycle,
-	   op noCycleStructure -> noNDCycleStruct}
+	       		op getAllObjInState -> getAllNDInState})
+	* {op noCycle -> noNDCycle}
 	)
 
   pred wfs-uniqND : State
@@ -635,8 +614,8 @@ module STATEfuns {
   eq wfs-allRLHoldLocality(< SetND,SetCP,SetRQ,SetRL,MP >) = allRLHoldLocality(SetRL,SetND,SetCP,SetRQ) .
   pred wfs-allNDHaveAtMostOneHost : State
   eq wfs-allNDHaveAtMostOneHost(< SetND,SetCP,SetRQ,SetRL,MP >) = allNDHaveAtMostOneHost(SetND,SetRQ) .
-  pred wfs-noNDCycleStruct : State
-  eq wfs-noNDCycleStruct(S) = noNDCycleStruct(S) .
+  pred wfs-noNDCycle : State
+  eq wfs-noNDCycle(S) = noNDCycle(S) .
   
   -- wfs is a conjunction of invariants which are intentionally imposed by the init condition.
   -- Since too long wfs causes a large evalutaion cost, define wfs minimally for each use case.
@@ -651,15 +630,14 @@ module STATEfuns {
        wfs-allRLNotInSameND(S) and
        wfs-allRLHoldLocality(S) and
        wfs-allNDHaveAtMostOneHost(S) and
-       wfs-noNDCycleStruct(S) .
+       wfs-noNDCycle(S) .
 
   pred init : State
   eq init(< SetND,SetCP,SetRQ,SetRL,MP >)
      = not (SetND = empND) and wfs(< SetND,SetCP,SetRQ,SetRL,MP >) and (MP = empMsg) and
        allNDInStates(SetND,initial) and 
        allCPInStates(SetCP,closed) and allRQInStates(SetRQ,unbound) and
-       noHostedOnNDCycleStruct(< SetND,SetCP,SetRQ,SetRL,MP >) and
-       noNDCycleStruct(< SetND,SetCP,SetRQ,SetRL,MP >) .
+       noNDCycle(< SetND,SetCP,SetRQ,SetRL,MP >) .
 
   pred final : State
   eq final(< SetND,SetCP,SetRQ,SetRL,MP >)
@@ -668,16 +646,19 @@ module STATEfuns {
 --     = (MP = empMsg) and
 --       allNDInStates(SetND,started) and allCPInStates(SetCP,available) and allRQInStates(SetRQ,ready) .
 }
-
-module! STATERuleNodeCreate {
+module! STATERules {
   pr(STATEfuns)
 
   var TND : NDType
-  var IDND : NDID 
+  vars IDND IDND1 IDND2 : NDID 
+  var IDCP : CPID
+  var IDRQ : RQID
+  var IDRL : RLID
   var SetND : SetOfNode
   var SetCP : SetOfCapability
   var SetRQ : SetOfRequirement
   var SetRL : SetOfRelationship
+  var SCP : CPState
   var MP : PoolOfMsg
 
 -- Create an initial node if all of its hostedOn requirements are ready.
@@ -685,56 +666,18 @@ module! STATERuleNodeCreate {
      < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
   => < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP > 
      if allRQOfTypeOfNDInStates(SetRQ,hostedOn,IDND,ready) .
-}
-
-module! STATERuleNodeStart {
-  pr(STATEfuns)
-
-  var TND : NDType
-  var IDND : NDID 
-  var SetND : SetOfNode
-  var SetCP : SetOfCapability
-  var SetRQ : SetOfRequirement
-  var SetRL : SetOfRelationship
-  var MP : PoolOfMsg
 
 -- Start a created node if all of its requirements are ready.
   ctrans [R02]:
      < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP >
   => < (node(TND,IDND,started) SetND), SetCP, SetRQ, SetRL, MP > 
      if allRQOfNDInStates(SetRQ,IDND,ready) .
-}
-
-module! STATERuleHostedOnCapAvail {
-  pr(STATEfuns)
-
-  var IDND : NDID 
-  var IDCP : CPID
-  var SetND : SetOfNode
-  var SetCP : SetOfCapability
-  var SetRQ : SetOfRequirement
-  var SetRL : SetOfRelationship
-  var MP : PoolOfMsg
 
 -- Let a closed hostedOn capability be available if its node is created.
   ctrans [R03]:
      < SetND, (cap(hostedOn,IDCP,closed,   IDND) SetCP), SetRQ, SetRL, MP >
   => < SetND, (cap(hostedOn,IDCP,available,IDND) SetCP), SetRQ, SetRL, MP >
      if isCreated(state(getNode(SetND,IDND))) .
-}
-
-module! STATERuleHostedOnReqReady {
-  pr(STATEfuns)
-
-  vars IDND1 IDND2 : NDID 
-  var IDCP : CPID
-  var IDRQ : RQID
-  var IDRL : RLID
-  var SetND : SetOfNode
-  var SetCP : SetOfCapability
-  var SetRQ : SetOfRequirement
-  var SetRL : SetOfRelationship
-  var MP : PoolOfMsg
 
 -- Let a unbound HostedOn requirement be ready if its the corresponding capability is available.
   trans [R04]:
@@ -742,57 +685,18 @@ module! STATERuleHostedOnReqReady {
   	      (req(hostedOn,IDRQ,unbound,IDND2) SetRQ), (rel(hostedOn,IDRL,IDCP,IDRQ) SetRL), MP >
   => < SetND, (cap(hostedOn,IDCP,available,IDND1) SetCP), 
   	      (req(hostedOn,IDRQ,ready,  IDND2) SetRQ), (rel(hostedOn,IDRL,IDCP,IDRQ) SetRL), MP > .
-}
-
-module! STATERuleDependsOnCapOpen {
-  pr(STATEfuns)
-
-  var IDND : NDID 
-  var IDCP : CPID
-  var SetND : SetOfNode
-  var SetCP : SetOfCapability
-  var SetRQ : SetOfRequirement
-  var SetRL : SetOfRelationship
-  var MP : PoolOfMsg
 
 -- Let a closed dependsOn capability be open if its node is created.
   ctrans [R05]:
      < SetND, (cap(dependsOn,IDCP,closed,IDND) SetCP), SetRQ, SetRL, MP >
   => < SetND, (cap(dependsOn,IDCP,open,  IDND) SetCP), SetRQ, SetRL, MP >
      if isCreated(state(getNode(SetND,IDND))) .
-}
-
-module! STATERuleDependsOnCapAvail {
-  pr(STATEfuns)
-
-  var IDND : NDID 
-  var IDCP : CPID
-  var SetND : SetOfNode
-  var SetCP : SetOfCapability
-  var SetRQ : SetOfRequirement
-  var SetRL : SetOfRelationship
-  var MP : PoolOfMsg
 
 -- Let a open dependsOn capability be available if its node is started.
   ctrans [R06]:
      < SetND, (cap(dependsOn,IDCP,open,     IDND) SetCP), SetRQ, SetRL, MP >
   => < SetND, (cap(dependsOn,IDCP,available,IDND) SetCP), SetRQ, SetRL, MP >
      if state(getNode(SetND,IDND)) = started .
-}
-
-module! STATERuleDependsOnReqWait {
-  pr(STATEfuns)
-
-  vars IDND1 IDND2 : NDID 
-  var IDCP : CPID
-  var IDRQ : RQID
-  var IDRL : RLID
-  var SCP : CPState
-  var SetND : SetOfNode
-  var SetCP : SetOfCapability
-  var SetRQ : SetOfRequirement
-  var SetRL : SetOfRelationship
-  var MP : PoolOfMsg
 
 -- Let a unbound DependsOn requirement be waiting 
 -- if its node is created and the corresponding capability is activated.
@@ -802,20 +706,6 @@ module! STATERuleDependsOnReqWait {
   => < SetND, (cap(dependsOn,IDCP,SCP,IDND1) SetCP), 
   	      (req(dependsOn,IDRQ,waiting,IDND2) SetRQ), (rel(dependsOn,IDRL,IDCP,IDRQ) SetRL), MP >
      if state(getNode(SetND,IDND2)) = created and isActivated(SCP) .
-}
-
-module! STATERuleDependsOnReqReady {
-  pr(STATEfuns)
-
-  vars IDND1 IDND2 : NDID 
-  var IDCP : CPID
-  var IDRQ : RQID
-  var IDRL : RLID
-  var SetND : SetOfNode
-  var SetCP : SetOfCapability
-  var SetRQ : SetOfRequirement
-  var SetRL : SetOfRelationship
-  var MP : PoolOfMsg
 
 -- Let a waiting dependsOn requirement be ready 
 -- if the corresponding capability is available.
@@ -824,18 +714,6 @@ module! STATERuleDependsOnReqReady {
   	      (req(dependsOn,IDRQ,waiting,IDND2) SetRQ), (rel(dependsOn,IDRL,IDCP,IDRQ) SetRL), MP >
   => < SetND, (cap(dependsOn,IDCP,available,IDND1) SetCP), 
   	      (req(dependsOn,IDRQ,ready,  IDND2) SetRQ), (rel(dependsOn,IDRL,IDCP,IDRQ) SetRL), MP > .
-}
-
-module! STATERuleConnectsToCapOpen {
-  pr(STATEfuns)
-
-  var IDND : NDID 
-  var IDCP : CPID
-  var SetND : SetOfNode
-  var SetCP : SetOfCapability
-  var SetRQ : SetOfRequirement
-  var SetRL : SetOfRelationship
-  var MP : PoolOfMsg
 
 -- Let a closed connectsTo capability be open if its node is created
 -- and send a open message.
@@ -843,18 +721,6 @@ module! STATERuleConnectsToCapOpen {
      < SetND, (cap(connectsTo,IDCP,closed,IDND) SetCP), SetRQ, SetRL, MP >
   => < SetND, (cap(connectsTo,IDCP,open,  IDND) SetCP), SetRQ, SetRL, (opMsg(IDCP) MP) >
      if isCreated(state(getNode(SetND,IDND))) .
-}
-
-module! STATERuleConnectsToCapAvail {
-  pr(STATEfuns)
-
-  var IDND : NDID 
-  var IDCP : CPID
-  var SetND : SetOfNode
-  var SetCP : SetOfCapability
-  var SetRQ : SetOfRequirement
-  var SetRL : SetOfRelationship
-  var MP : PoolOfMsg
 
 -- Let a open connectsTo capability be available if its node is started
 -- and send an available message.
@@ -862,20 +728,6 @@ module! STATERuleConnectsToCapAvail {
      < SetND, (cap(connectsTo,IDCP,open,     IDND) SetCP), SetRQ, SetRL, MP >
   => < SetND, (cap(connectsTo,IDCP,available,IDND) SetCP), SetRQ, SetRL, (avMsg(IDCP) MP) >
      if state(getNode(SetND,IDND)) = started .
-}
-
-module! STATERuleConnectsToReqWait {
-  pr(STATEfuns)
-
-  var IDND : NDID 
-  var IDCP : CPID
-  var IDRQ : RQID
-  var IDRL : RLID
-  var SetND : SetOfNode
-  var SetCP : SetOfCapability
-  var SetRQ : SetOfRequirement
-  var SetRL : SetOfRelationship
-  var MP : PoolOfMsg
 
 -- Let a unbound ConnectsTo requirement be waiting
 --     if its node is created and there is a open message of the corresponding capability.
@@ -886,20 +738,6 @@ module! STATERuleConnectsToReqWait {
   => < SetND, SetCP, 
        (req(connectsTo,IDRQ,waiting,IDND) SetRQ), (rel(connectsTo,IDRL,IDCP,IDRQ) SetRL), MP >
      if state(getNode(SetND,IDND)) = created .
-}
-
-module! STATERuleConnectsToReqReady {
-  pr(STATEfuns)
-
-  var IDND : NDID 
-  var IDCP : CPID
-  var IDRQ : RQID
-  var IDRL : RLID
-  var SetND : SetOfNode
-  var SetCP : SetOfCapability
-  var SetRQ : SetOfRequirement
-  var SetRL : SetOfRelationship
-  var MP : PoolOfMsg
 
 -- Let a waiting ConnectsTo requirement be ready
 -- if there is a available message of the corresponding capability.
@@ -909,19 +747,4 @@ module! STATERuleConnectsToReqReady {
        (avMsg(IDCP) MP) >
   => < SetND, SetCP, 
        (req(connectsTo,IDRQ,ready,  IDND) SetRQ), (rel(connectsTo,IDRL,IDCP,IDRQ) SetRL), MP > .
-}
-
-module! STATERules {
-protecting(  STATERuleNodeCreate
-	   + STATERuleNodeStart
-	   + STATERuleHostedOnCapAvail
-	   + STATERuleHostedOnReqReady
-	   + STATERuleDependsOnCapOpen
-	   + STATERuleDependsOnCapAvail
-	   + STATERuleDependsOnReqWait
-	   + STATERuleDependsOnReqReady
-	   + STATERuleConnectsToCapOpen
-	   + STATERuleConnectsToCapAvail
-	   + STATERuleConnectsToReqWait
-	   + STATERuleConnectsToReqReady)
 }

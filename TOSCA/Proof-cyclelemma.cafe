@@ -6,7 +6,7 @@ require Proof Proof.cafe
 --> Step 2-0: Define a predicate to be proved.
 --> ******************************************
 module! ProofInitialCont {
-  pr(PROOFfuns)
+  pr(PROOFbase)
 
   pred invcont : State
   eq invcont(S:State) = wfs(S) and inv(S) implies cont(S) .
@@ -147,7 +147,7 @@ select
 --> Step 2-0: Define a predicate to be proved.
 --> ******************************************
 module! ProofCreatedCont {
-  pr(PROOFfuns)
+  pr(PROOFbase)
 
   pred invcont : State
   eq invcont(S:State) = wfs(S) and inv(S) implies cont(S) .
