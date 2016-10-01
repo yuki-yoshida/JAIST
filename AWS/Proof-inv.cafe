@@ -273,3 +273,89 @@ show proof
 show proof
 select
 
+--> *************************************
+--> Proof of wfs-noRSCycle.
+-->  eq wfs-noRSCycle(S) = noRSCycle(S) .
+--> *************************************j
+--> Proof of inv(S) implies inv(SS)
+module! Proofwfs-noRSCycle {
+  pr(ProofInv)
+  -- When subset(DDSC(X,SS),DDSC(X,S)) holds for all X,
+  -- noCycle(S) implies noCycle(S'),
+  pred inv-noCycle : Resource State
+  eq inv-noCycle(X:Resource,S:State) 
+     = not (S =(*,1)=>+ SS:State if CC:Bool suchThat
+            not ((CC implies subset(DDSC(X,SS),DDSC(X,S))) == true)
+     	   { S => SS !! CC ! subset(DDSC(X,SS),DDSC(X,S)) }) .
+
+  var S_X : SetOfProperty
+  vars Z Z' : Resource
+  var S_Z : SetOfResource
+  var St_Z : SetOfRSState
+  ceq [m2o-lemma27]:
+    subset(getRRSsOfPRsInStates((Z' S_Z),S_X,St_Z),getRRSsOfPRsInStates((Z S_Z),S_X,St_Z))
+    = true
+    if id(Z) = id(Z') and not state(Z') \in St_Z .
+
+  op x : -> Resource
+}
+
+select Proofwfs-noRSCycle 
+--> ***************************
+--> (5) init(S) implies inv(S).
+--> ***************************
+-- Since wfs(S) is imposed by init(S), init(S) implies wfs(S) always holds.
+
+--> ***************************
+--> (6) inv(S) implies inv(SS).
+--> ***************************
+--> ********************************************
+-->  ctrans [R01]:
+-->     < (res(TRS,IDRS,initial) SetRS), SetPR >
+-->  => < (res(TRS,IDRS,started) SetRS), SetPR > 
+-->     if allPROfRSInStates(SetPR,IDRS,ready) .
+--> ********************************************
+:goal {
+  eq inv-noCycle(x,< (res(trs,idRS,initial) sRS), sPR >) = true .
+}
+:ctf {
+  eq allPROfRSInStates(sPR,idRS,ready) = true .
+}
+:ctf {
+  eq x = res(trs,idRS,initial) .
+}
+:apply (rd) -- 1-1
+:ctf {
+  eq state(x) = initial .
+}
+:apply (rd) -- 1-2-1
+:apply (rd) -- 1-2-2
+:apply (rd) -- 2
+show proof
+
+--> ****************************************************
+-->  trans [R02]:
+-->     < (res(TRS,IDRRS,started) SetRS), 
+-->       (prop(TPR,IDPR,notready,IDRS,IDRRS) SetPR) >
+-->  => < (res(TRS,IDRRS,started) SetRS), 
+-->       (prop(TPR,IDPR,ready   ,IDRS,IDRRS) SetPR) > .
+--> ****************************************************
+:goal {
+  eq inv-noCycle(x,< (res(trs,idRRS,started) sRS), (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
+}
+:ctf {
+  eq x = res(trs,idRRS,started) .
+}
+:apply (rd) -- 1
+:ctf {
+  eq state(x) = initial .
+}
+:ctf {
+  eq id(x) = idRS .
+}
+:apply (rd) -- 2-1-1
+:apply (rd) -- 2-1-2
+:apply (rd) -- 2-2
+show proof
+select
+

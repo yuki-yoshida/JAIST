@@ -181,13 +181,11 @@ module! STATECyclefuns {
   op getAllRSInState : State -> SetOfResource
   eq getAllRSInState(< SetRS,SetPR >) = SetRS .
 
-  op DWSR01 : Resource State -> SetOfResource
-  eq DWSR01(RS,< SetRS,SetPR >)
-     = DDSR01(RS,< SetRS,SetPR >) .
-
-  op DDSR01 : Resource State -> SetOfResource
-  eq DDSR01(RS,< SetRS,SetPR >)
-     = getRRSsOfPRs(SetRS,getPRsOfRS(SetPR,RS)) .
+  op DDSC : Resource State -> SetOfResource
+  eq DDSC(RS,< SetRS,SetPR >)
+    = if state(RS) = initial then
+         getRRSsOfPRsInStates(SetRS,getPRsOfRSInStates(SetPR,RS,notready),initial)
+      else empRS fi .
 }
 
 module! STATEfuns {
@@ -201,11 +199,8 @@ module! STATEfuns {
   	STATECyclefuns {sort Object -> Resource,
   	       		sort SetOfObject -> SetOfResource,
   	       		op empObj -> empRS,
-  	       		op getAllObjInState -> getAllRSInState,
-  	       		op DWS -> DWSR01,
-  	       		op DDS -> DDSR01})
-  	* {op noCycle -> noRSCycle,
-  	   op noCycleStructure -> noRSCycleStruct}
+  	       		op getAllObjInState -> getAllRSInState})
+  	* {op noCycle -> noRSCycle}
   	)
 
   pred wfs-atLeastOneRS : State
@@ -218,8 +213,8 @@ module! STATEfuns {
   eq wfs-allPRHaveRS(< SetRS,SetPR >) = allPRHaveRS(SetPR,SetRS) .
   pred wfs-allPRHaveRRS : State
   eq wfs-allPRHaveRRS(< SetRS,SetPR >) = allPRHaveRRS(SetPR,SetRS) .
-  pred wfs-noRSCycleStruct : State
-  eq wfs-noRSCycleStruct(S) = noRSCycleStruct(S) .
+  pred wfs-noRSCycle : State
+  eq wfs-noRSCycle(S) = noRSCycle(S) .
   
   -- wfs is a conjunction of invariants which are intentionally imposed by the init condition.
   -- Since too long wfs causes a large evalutaion cost, define wfs minimally for each use case.
@@ -229,7 +224,7 @@ module! STATEfuns {
      = wfs-atLeastOneRS(S) and
        wfs-uniqRS(S) and wfs-uniqPR(S) and 
        wfs-allPRHaveRS(S) and wfs-allPRHaveRRS(S) and
-       wfs-noRSCycleStruct(S) .
+       wfs-noRSCycle(S) .
 
   pred init : State
   eq init(< SetRS,SetPR >)

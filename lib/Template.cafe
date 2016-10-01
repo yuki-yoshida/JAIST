@@ -589,16 +589,10 @@ module* PRMCYCLE {
   [State]
   op getAllObjInState : State -> SetOfObject
 
-  -- DWS means get Direct Waitinging Set of the same class.
-  -- DWS is required to have the following properties.
-  --   (O \in DWS(O,S)) = false .
-  op DWS : Object State -> SetOfObject
-
-  -- DDS means get Direct Depending Set of the same class.
-  -- DDS is required to have the following properties.
-  --   (O \in DDS(O,S)) = false .
-  --   X \in DDS(O,S) implies X \in DWS(O,S)
-  op DDS : Object State -> SetOfObject
+  -- DDSC means get Direct Depending Set of the same class.
+  -- DDSC is required to have the following properties.
+  --   (O \in DDSC(O,S)) = false .
+  op DDSC : Object State -> SetOfObject
 }
 
 module! CYCLEPRED(P :: PRMCYCLE) {
@@ -610,8 +604,6 @@ module! CYCLEPRED(P :: PRMCYCLE) {
   pred noCycle : State
   pred noCycle : Object State
   pred noCycle : SetOfObject SetOfObject State
-  pred noCycleStructure : State
-  pred noCycleStructure : SetOfObject SetOfObject State
 
   eq noCycle(S)
      = noCycle(getAllObjInState(S),empObj,S) .
@@ -622,15 +614,7 @@ module! CYCLEPRED(P :: PRMCYCLE) {
   eq noCycle(empObj,V,S)
      = true .
   eq noCycle((O OS),V,S)
-     = if O \in V then false else noCycle(DWS(O,S),(O V),S) fi
+     = if O \in V then false else noCycle(DDSC(O,S),(O V),S) fi
        and noCycle(OS,V,S) .
-
-  eq noCycleStructure(S)
-     = noCycleStructure(getAllObjInState(S),empObj,S) .
-  eq noCycleStructure(empObj,V,S)
-     = true .
-  eq noCycleStructure((O OS),V,S)
-     = if O \in V then false else noCycleStructure(DDS(O,S),(O V),S) fi
-       and noCycleStructure(OS,V,S) .
 }
 

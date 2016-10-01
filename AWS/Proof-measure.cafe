@@ -8,7 +8,7 @@ require Proof Proof.cafe
 --> Step 3-0: Define a predicate to be proved.
 --> ******************************************
 module! ProofMeasure {
-  pr(PROOFfuns)
+  pr(PROOFbase)
   pred mmes : State State .
   eq mmes(S:State,SS:State)
      = wfs(S) and inv(S) and not final(S)
@@ -69,7 +69,7 @@ show proof
 --> (4) inv(S) and (cont(S) or final(S)) and m(S) = 0 implies final(S).
 --> *******************************************************************
 module! ProofMeasFinal {
-  pr(PROOFfuns)
+  pr(PROOFbase)
 
 --> ******************************************
 --> Step 4-0: Define a predicate to be proved.
