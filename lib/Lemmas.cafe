@@ -678,13 +678,13 @@ module! M2O-LEMMAS {
 
   pred m2o-lemma24 : LObject LObject SetOfLObject SetOfObject SetOfLObjState .
   eq m2o-lemma24(X,X',S_X,S_Z,St_X)
-     = changeLObjState(X,X') and not state(X') \in St_X implies
-       subset(getXsOfZsInStates((X' S_X),S_Z,St_X),getXsOfZsInStates((X S_X),S_Z,St_X)) .
+     = subset(getXsOfZsInStates((X' S_X),S_Z,St_X),getXsOfZsInStates((X S_X),S_Z,St_X))
+     when changeLObjState(X,X') and not state(X') \in St_X .
 
   pred m2o-lemma25 : LObject SetOfLObject SetOfObject SetOfObjState .
   eq m2o-lemma25(X,S_X,S_Z,St_Z)
-     = X \in S_X implies 
-       subset(getZsOfXInStates(S_Z,id(X),St_Z),getZsOfXsInStates(S_Z,S_X,St_Z)) .
+     = subset(getZsOfXInStates(S_Z,id(X),St_Z),getZsOfXsInStates(S_Z,S_X,St_Z))
+     when X \in S_X .
 
   pred m2o-lemma26 : SetOfLObject SetOfLObject SetOfObject SetOfObjState .
   eq m2o-lemma26(S_X,S_X',S_Z,St_Z)
@@ -693,13 +693,13 @@ module! M2O-LEMMAS {
 
   pred m2o-lemma27 : Object Object SetOfObject SetOfLObject SetOfObjState .
   eq m2o-lemma27(Z,Z',S_Z,S_X,St_Z)
-     = changeObjState(Z,Z') and not state(Z') \in St_Z implies
-       subset(getZsOfXsInStates((Z' S_Z),S_X,St_Z),getZsOfXsInStates((Z S_Z),S_X,St_Z)) .
+     = subset(getZsOfXsInStates((Z' S_Z),S_X,St_Z),getZsOfXsInStates((Z S_Z),S_X,St_Z))
+     when changeObjState(Z,Z') and not state(Z') \in St_Z .
 
   pred m2o-lemma28 : Object Object SetOfObject LObject SetOfObjState .
   eq m2o-lemma28(Z,Z',S_Z,X,St_Z)
-     = changeObjState(Z,Z') and not state(Z') \in St_Z implies
-       subset(getZsOfXInStates((Z' S_Z),X,St_Z),getZsOfXInStates((Z S_Z),X,St_Z)) .
+     = subset(getZsOfXInStates((Z' S_Z),X,St_Z),getZsOfXInStates((Z S_Z),X,St_Z))
+     when changeObjState(Z,Z') and not state(Z') \in St_Z .
 }
 
 --> ***********************************************************************
