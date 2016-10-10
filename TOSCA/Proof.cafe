@@ -8,26 +8,6 @@ module! PROOFbase {
   op _!_ : Bool Bool -> Bool {constr assoc}
   op _=>_!!_ : State State Bool -> Bool {constr}
 
-  -- Constants for Proofs.
-  ops idND idND' idND1 idND2 idND3 : -> NDIDLt
-  ops idCP idCP' idCP1 idCP2 idCP3 : -> CPIDLt
-  ops idRQ idRQ' idRQ1 idRQ2 idRQ3 : -> RQIDLt
-  ops idRL idRL' idRL1 idRL2 idRL3 : -> RLIDLt
-  ops sND sND' sND'' sND''' : -> SetOfNode
-  ops sCP sCP' sCP'' sCP''' : -> SetOfCapability
-  ops sRQ sRQ' sRQ'' sRQ''' : -> SetOfRequirement
-  ops sRL sRL' sRL'' sRL''' : -> SetOfRelationship
-  ops tnd tnd' tnd'' tnd''' : -> NDType
-  ops trl trl' trl'' trl''' : -> RLType
-  ops snd snd' snd'' : -> NDState
-  ops scp scp' scp'' : -> CPState
-  ops srq srq' srq'' : -> RQState
-  op stND : -> SetOfNDState
-  op stCP : -> SetOfCPState
-  op stRQ : -> SetOfRQState
-  ops mp mp' : -> PoolOfMsg
-  op msg : -> Msg
-
   var SetND : SetOfNode
   var SetCP : SetOfCapability
   var SetRQ : SetOfRequirement
@@ -41,8 +21,6 @@ module! PROOFbase {
   var MP : PoolOfMsg
   var S : State
 
-
-  pred inv : State
   -- The invariant should be defined as the conjunction of all inv-* and all wfs-*.
   -- But this definition causes costly computations.
 
@@ -90,14 +68,14 @@ module! PROOFbase {
      = ifAvailableMsgThenCPInStates(MP,SetCP,available) .
 
 --> *************************
---> Step 0-1: Define cont(S).
+--> Step 0-2: Define cont(S).
 --> *************************
   pred cont : State
   eq cont(S:State)
      = (S =(*,1)=>+ SS:State) .
 
 --> **********************
---> Step 0-2: Define m(S).
+--> Step 0-3: Define m(S).
 --> **********************
   op m : State -> Nat.PNAT
   eq m(< SetND,SetCP,SetRQ,SetRL,MP >)
@@ -105,7 +83,32 @@ module! PROOFbase {
      +  ( (#CapabilityInStates(closed,SetCP)    * 2) + #CapabilityInStates(open,SetCP)))
      +  ( (#RequirementInStates(unbound,SetRQ) * 2) + #RequirementInStates(waiting,SetRQ)) .
 
-  -- inv(S):
+
+--> *************************
+--> Step 0-4: Define inv(S).
+--> *************************
+  pred inv : State
+
+  -- wfs-*:
+  ceq inv(S) = false if not wfs-uniqND(S) .
+  ceq inv(S) = false if not wfs-uniqCP(S) .
+  ceq inv(S) = false if not wfs-uniqRQ(S) .
+  ceq inv(S) = false if not wfs-uniqRL(S) .
+  ceq inv(S) = false if not wfs-allCPHaveND(S) .
+  ceq inv(S) = false if not wfs-allRQHaveND(S) .
+  ceq inv(S) = false if not wfs-allRLHaveCP(S) .
+  ceq inv(S) = false if not wfs-allRLHaveRQ(S) .
+  ceq inv(S) = false if not wfs-allCPHaveRL(S) .
+  ceq inv(S) = false if not wfs-allRQHaveRL(S) .
+  ceq inv(S) = false if not wfs-noNDCycle(S) .
+  -- Problem specific wfs's for type constraint.
+  ceq inv(S) = false if not wfs-allRLHaveSameTypeCPRQ(S) .
+  -- Other problem specific wfs's.
+  ceq inv(S) = false if not wfs-allRLNotInSameND(S) .
+  ceq inv(S) = false if not wfs-allRLHoldLocality(S) .
+  ceq inv(S) = false if not wfs-allNDHaveAtMostOneHost(S) .
+
+  -- inv-*:
   ceq inv(S) = false if not inv-ifNDInitialThenRQUnboundReady(S) .
   ceq inv(S) = false if not inv-ifNDCreatedThenHostedOnRQReady(S) .
   ceq inv(S) = false if not inv-ifNDStartedThenRQReady(S) .
@@ -121,25 +124,9 @@ module! PROOFbase {
   ceq inv(S) = false if not inv-ifOpenMsgThenCPActivated(S) .
   ceq inv(S) = false if not inv-ifAvailableMsgThenCPAvailable(S).
 
-  -- wfs(S):
-  ceq wfs(S) = false if not wfs-uniqND(S) .
-  ceq wfs(S) = false if not wfs-uniqCP(S) .
-  ceq wfs(S) = false if not wfs-uniqRQ(S) .
-  ceq wfs(S) = false if not wfs-uniqRL(S) .
-  ceq wfs(S) = false if not wfs-allCPHaveND(S) .
-  ceq wfs(S) = false if not wfs-allRQHaveND(S) .
-  ceq wfs(S) = false if not wfs-allRLHaveCP(S) .
-  ceq wfs(S) = false if not wfs-allRLHaveRQ(S) .
-  ceq wfs(S) = false if not wfs-allCPHaveRL(S) .
-  ceq wfs(S) = false if not wfs-allRQHaveRL(S) .
-  ceq wfs(S) = false if not wfs-noNDCycle(S) .
-  -- Problem specific wfs's for type constraint.
-  ceq wfs(S) = false if not wfs-allRLHaveSameTypeCPRQ(S) .
-  -- Other problem specific wfs's.
-  ceq wfs(S) = false if not wfs-allRLNotInSameND(S) .
-  ceq wfs(S) = false if not wfs-allRLHoldLocality(S) .
-  ceq wfs(S) = false if not wfs-allNDHaveAtMostOneHost(S) .
-
+--> ********************************************************
+--> Step 0-5: Prepare for using the Cyclic Dependency Lemma.
+--> ********************************************************
   -- From Cyclic Dependency Lemma
   -- There is an initial resource whose DDSC includes no initial resourecs.
   ceq [CycleR01 :nonexec]: 
@@ -156,13 +143,35 @@ module! PROOFbase {
   op createdND : SetOfNode -> Node {strat (0)} .
   -- and there is a rest of the set of nodes.
   op resSND : SetOfNode -> SetOfNode {strat (0)} .
+
+--> **************************************
+--> Step 0-6: Prepare arbitrary constants.
+--> **************************************
+  ops idND idND' idND1 idND2 idND3 : -> NDIDLt
+  ops idCP idCP' idCP1 idCP2 idCP3 : -> CPIDLt
+  ops idRQ idRQ' idRQ1 idRQ2 idRQ3 : -> RQIDLt
+  ops idRL idRL' idRL1 idRL2 idRL3 : -> RLIDLt
+  ops sND sND' sND'' sND''' : -> SetOfNode
+  ops sCP sCP' sCP'' sCP''' : -> SetOfCapability
+  ops sRQ sRQ' sRQ'' sRQ''' : -> SetOfRequirement
+  ops sRL sRL' sRL'' sRL''' : -> SetOfRelationship
+  ops tnd tnd' tnd'' tnd''' : -> NDType
+  ops trl trl' trl'' trl''' : -> RLType
+  ops snd snd' snd'' : -> NDState
+  ops scp scp' scp'' : -> CPState
+  ops srq srq' srq'' : -> RQState
+  op stND : -> SetOfNDState
+  op stCP : -> SetOfCPState
+  op stRQ : -> SetOfRQState
+  ops mp mp' : -> PoolOfMsg
+  op msg : -> Msg
 }
 
 -- ***************************************************************************************
 -- (1) init(S) implies cont(S).
--- (2) inv(S) and wfs(S) and cont(S) and not final(S) implies cont(SS) or final(SS).
--- (3) inv(S) and wfs(S) and cont(S) and not final(S) implies measure(S) > measure(SS).
--- (4) inv(S) and wfs(S) and (cont(S) or final(S)) and measure(S) = 0 implies final(S).
+-- (2) inv(S) and not final(S) implies cont(SS) or final(SS).
+-- (3) inv(S) and not final(S) implies measure(S) > measure(SS).
+-- (4) inv(S) and (cont(S) or final(S)) and measure(S) = 0 implies final(S).
 -- (5) init(S) implies inv(S).
 -- (6) inv(S) implies inv(SS).
 -- ***************************************************************************************
@@ -173,13 +182,13 @@ module! PROOFbase {
 -- in Proof-initcont.cafe
 
 -- **************************************************************************************
--- (2) inv(S) and wfs(S) and cont(S) and not final(S) implies cont(SS) or final(SS).
+-- (2) inv(S) and not final(S) implies cont(SS) or final(SS).
 -- **************************************************************************************
 -- in Proof-contcont.cafe
 
 -- **************************************************************************************
--- (3) inv(S) and wfs(S) and cont(S) and not final(S) implies measure(S) > measure(SS).
--- (4) inv(S) and wfs(S) and (cont(S) or final(S)) and measure(S) = 0 implies final(S).
+-- (3) inv(S) and not final(S) implies measure(S) > measure(SS).
+-- (4) inv(S) and (cont(S) or final(S)) and measure(S) = 0 implies final(S).
 -- **************************************************************************************
 -- in Proof-measure.cafe
 

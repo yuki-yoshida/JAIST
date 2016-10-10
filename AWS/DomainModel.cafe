@@ -216,11 +216,13 @@ module! STATEfuns {
   pred wfs-noRSCycle : State
   eq wfs-noRSCycle(S) = noRSCycle(S) .
   
+--> **************************************
+--> Step 0-1: Define init(S) and final(S).
+--> **************************************
   -- wfs is a conjunction of invariants which are intentionally imposed by the init condition.
   -- Since too long wfs causes a large evalutaion cost, define wfs minimally for each use case.
   pred wfs : State
-  pred wfs0 : State
-  eq wfs0(S)
+  eq wfs(S)
      = wfs-atLeastOneRS(S) and
        wfs-uniqRS(S) and wfs-uniqPR(S) and 
        wfs-allPRHaveRS(S) and wfs-allPRHaveRRS(S) and

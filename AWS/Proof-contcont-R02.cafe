@@ -1,8 +1,8 @@
 require ProofContCont Proof-contcont.cafe
 
---> **********************************************************************
---> (2) inv(S) and cont(S) and not final(S) implies cont(SS) or final(SS).
---> **********************************************************************
+--> **********************************************************
+--> (2) inv(S) and not final(S) implies cont(SS) or final(SS).
+--> **********************************************************
 
 --> ****************************************************
 -->  trans [R02]:
@@ -54,12 +54,11 @@ select ProofContCont .
 }
 -- Case 2-2-1: When the parent resource is initial:
 -- Cyclic Dependency Lemma ensures there is an initial resource R
--- where DWS(R,S) does not include any initial nodes.
-:init ( eq SRS:SetOfResource = (initRS(SRS) resSRS(SRS)) . ) by {
+-- where DDSC(R,S) does not include any initial nodes.
+:init ( eq SRS:SetOfResource = (RS:Resource SRS':SetOfResource) . ) by {
   SRS:SetOfResource <- sRS';
-}
-:init ( eq initRS(SRS:SetOfResource) = res(trs'',idRS1,initial) . ) by {
-  SRS:SetOfResource <- sRS';
+  SRS':SetOfResource <- sRS'';
+  RS:Resource <- res(trs'',idRS1,initial);
 }
 --> ***************************************************************
 --> Step 2-4: Think which rule can be applied to the next state
@@ -84,8 +83,8 @@ select ProofContCont .
 --> ***********************************************************
 -- The resource referred by the property does or does not exist.
 :csp {
-  eq existRS(resSRS(sRS'),idRRS1) = false .
-  eq resSRS(sRS') = (res(trs''',idRRS1,srs''') sRS''') .
+  eq existRS(sRS'',idRRS1) = false .
+  eq sRS'' = (res(trs''',idRRS1,srs''') sRS''') .
 }
 -- Case 2-2-1-2-1: When the resource referred by the property does not exist:
 :apply (rd) -- 2-2-1-2-1
@@ -97,9 +96,8 @@ select ProofContCont .
 }
 -- Case 2-2-1-2-2-1: When the resource idRRS1 is initial:
 -- The Cyclic Dependency Lemma rejects this case.
-:init [CycleR01] by {
-  T:RSType <- trs'';
-  I:RSID <- idRS1; 
+:init [Cycle] by {
+  RS:Resource <- res(trs'',idRS1,initial);
   S:State <- < (res(trs, idRRS, started) sRS),
                (prop(tpr,idPR,notready,idRS,idRRS) sPR) >;
 }

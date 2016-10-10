@@ -2,7 +2,6 @@ require DomainModel DomainModel.cafe
 
 --> Sample Simulation
 open STATERules .
-eq wfs(S:State) = wfs0(S) .
 
 ops myInstance myEIP rs0 : -> RSIDLt .
 ops myEIP::InsID prop2 : -> PRIDLt .

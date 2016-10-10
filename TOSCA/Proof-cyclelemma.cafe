@@ -9,7 +9,7 @@ module! ProofInitialCont {
   pr(PROOFbase)
 
   pred invcont : State
-  eq invcont(S:State) = wfs(S) and inv(S) implies cont(S) .
+  eq invcont(S:State) = inv(S) implies cont(S) .
 }
 
 select ProofInitialCont .
@@ -150,7 +150,7 @@ module! ProofCreatedCont {
   pr(PROOFbase)
 
   pred invcont : State
-  eq invcont(S:State) = wfs(S) and inv(S) implies cont(S) .
+  eq invcont(S:State) = inv(S) implies cont(S) .
 
   -- This proof uses the Initial Cont Lemma: If there is an initail node, then there is an applicable rule.
   eq cont(< (node(T:NDType, I:NDID, initial) SetND:SetOfNode), 

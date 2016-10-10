@@ -48,9 +48,9 @@
 ### invariantとwell-formed stateの準備
  - wfs(well-formed state)とは、invariantの内でinitに現れるものである。wfsについてはcondition (5)の証明は不要。（以下、invariantとはwfsではないinvariantのこと）
  - 各invariantはinv-AAA、各wfsはwfs-BBBという述語として定義しておく。
- - condition (1)(2)(3)(4)の証明に対してはCITPテクニック(1)を使って、あらかじめ以下の定義を与えておく。
+ - CITPテクニック(1)を使って、あらかじめ以下の定義を与えておく。
    - eq inv(S) = false if not inv-AAA(S) .
-   - eq wfs(S) = false if not wfs-BBB(S) .
+   - eq inv(S) = false if not wfs-BBB(S) .
 
 ### Cyclic Dependency Lemma(CDL)適用の準備
 #### R01に対して
@@ -85,8 +85,7 @@
 
 ## Condtion (2): inv(S) and not final(S) implies cont(SS) or final(SS) の証明譜 (Proof-contcont.cafe)
 ### ステップ 2-0: 証明すべき述語を定義
- - ccont = wfs and inv and not final implies cont' or final'
- - wfsを、invと区別して定義しているので前件に加えておく。
+ - ccont = inv and not final implies cont' or final'
  - 次状態が存在する状態に関する条件なので、前件にcont(S)が不要であることに注意。
  - contcontを二重否定イディオムを使って定義する。
  - Initial Cont Lemmaを導入し、initial nodeがあればcont(S)はtrueになることを表明しておく。
@@ -378,8 +377,7 @@
 
 ## Condtion (3): inv(S) and not final(S) implies m(S) > m(SS) の証明譜 (Proof-measure.cafe)
 ### ステップ 3-0: 証明すべき述語を定義
- - mmes = wfs and inv and not final implies m > m'
- - wfsを、invと区別して定義しているので前件に加えておく。
+ - mmes = inv and not final implies m > m'
  - 次状態が存在する状態に関する条件なので、前件にcont(S)が不要であることに注意。
  - mesmesを二重否定イディオムを使って定義する。
  - 自然数に対するAxiomとして N < N+1, N < N+2, N < N+3, N < N+4, を定義しておく。
@@ -491,8 +489,7 @@
 
 ## Condtion (4): inv(S) and (cont(S) or final(S)) and m(S) = 0 implies final(S) の証明譜 (Proof-measure.cafe)
 ### ステップ 4-0: 証明すべき述語を定義
- - mesfinal = wfs and inv and (cont or final) and m = 0 implies final .
- - wfsを、invと区別して定義しているので前件に加えておく。
+ - mesfinal = inv and (cont or final) and m = 0 implies final .
 
 ### ステップ 4-1: m(S)用の一般Lemmaをインスタンシエート
  - initial nodeの数が0、かつcreated nodeの数が0ならば、すべてのnodeはstartedである。
@@ -504,13 +501,13 @@
  - 各invariantはinv-AAA、各wfsはwfs-BBBという述語として定義しておく。
  - (5)(6)はinvariant毎に一つずつ証明するが、証明するinvariantをinvS(S)とする。
  - Condition (5)のゴールは、initinv = init implies invS .
- - Condition (6)のゴールは、iinv = wfs and inv and invS implies invS'.とし、invinvを二重否定イディオムを使って定義する。
+ - Condition (6)のゴールは、iinv = inv and invS implies invS'.とし、invinvを二重否定イディオムを使って定義する。
  - 抽象レベルで証明済みのLemmaを利用するには、具象レベルにインスタンシエートする必要があるが、現在のところ、インスタンシエーションはCafeOBJの機能を利用するように整備されていないので、手作業が必要である。
  - 個々のinvariantの証明譜の説明は割愛する。
 
 ## Initial Cont Lemmaの証明譜(Proof-cyclelemma.cafe)
 ### ステップ 2-0: 証明すべき述語を定義
- - invcont = wfs and inv implies cont
+ - invcont = inv implies cont
  - Sにinitial nodeが含まれる時に、invcont(S)が成り立つことを証明する。
 
 ### ステップ 2-1: 最も一般的なケースから開始
@@ -564,7 +561,7 @@
 
 ## Created Cont Lemmaの証明譜(Proof-cyclelemma.cafe)
 ### ステップ 2-0: 証明すべき述語を定義
- - invcont = wfs and inv implies cont
+ - invcont = inv implies cont
  - Sにcreated nodeが含まれる時に、invcont(S)が成り立つことを証明する。
  - 上記で証明済みのInitial Cont Lemmaを導入しておく。 
 

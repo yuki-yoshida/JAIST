@@ -15,13 +15,12 @@ module! ProofInv {
 
   pred iinv : State State .
   eq iinv(S:State,SS:State)
-     = wfs(S) and inv(S) and invS(S) 
-       implies invS(SS) .
+     = inv(S) and invS(S) implies invS(SS) .
   pred invinv : State
   eq invinv(S:State)
      = not (S =(*,1)=>+ SS:State if CC:Bool suchThat
             not ((CC implies iinv(S,SS)) == true)
-     	   { S => SS !! CC ! wfs(S) ! inv(S) ! invS(S) ! invS(SS) }) .
+     	   { S => SS !! CC ! inv(S) ! invS(S) ! invS(SS) }) .
 }
 
 -- Note:

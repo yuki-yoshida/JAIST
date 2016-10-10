@@ -16,13 +16,12 @@ module! ProofInv {
 
   pred iinv : State State .
   eq iinv(S:State,SS:State)
-     = wfs(S) and inv(S) and invS(S) 
-       implies invS(SS) .
+     = inv(S) and invS(S) implies invS(SS) .
   pred invinv : State
   eq invinv(S:State)
      = not (S =(*,1)=>+ SS:State if CC:Bool suchThat
             not ((CC implies iinv(S,SS)) == true)
-     	   { S => SS !! CC ! wfs(S) ! inv(S) ! invS(S) ! invS(SS) }) .
+     	   { S => SS !! CC ! inv(S) ! invS(S) ! invS(SS) }) .
 }
 
 --> *************************************************************
@@ -127,7 +126,7 @@ select Proofwfs-allPRHaveRS
 --> ***************************
 --> (5) init(S) implies inv(S).
 --> ***************************
--- Since wfs(S) is imposed by init(S), init(S) implies wfs(S) always holds.
+-- Since wfs-* is imposed by init(S), init(S) implies wfs-* always holds.
 
 --> ***************************
 --> (6) inv(S) implies inv(SS).
@@ -188,7 +187,7 @@ select Proofwfs-allPRHaveRRS
 --> ***************************
 --> (5) init(S) implies inv(S).
 --> ***************************
--- Since wfs(S) is imposed by init(S), init(S) implies wfs(S) always holds.
+-- Since wfs-* is imposed by init(S), init(S) implies wfs-* always holds.
 
 --> ***************************
 --> (6) inv(S) implies inv(SS).
@@ -238,7 +237,7 @@ select Proofwfs-atLeastOneRS
 --> ***************************
 --> (5) init(S) implies inv(S).
 --> ***************************
--- Since wfs(S) is imposed by init(S), init(S) implies wfs(S) always holds.
+-- Since wfs-* is imposed by init(S), init(S) implies wfs-* always holds.
 
 --> ***************************
 --> (6) inv(S) implies inv(SS).
@@ -307,7 +306,7 @@ select Proofwfs-noRSCycle
 --> ***************************
 --> (5) init(S) implies inv(S).
 --> ***************************
--- Since wfs(S) is imposed by init(S), init(S) implies wfs(S) always holds.
+-- Since wfs-* is imposed by init(S), init(S) implies wfs-* always holds.
 
 --> ***************************
 --> (6) inv(S) implies inv(SS).

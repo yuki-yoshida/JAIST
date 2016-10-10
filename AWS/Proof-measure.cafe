@@ -11,8 +11,7 @@ module! ProofMeasure {
   pr(PROOFbase)
   pred mmes : State State .
   eq mmes(S:State,SS:State)
-     = wfs(S) and inv(S) and not final(S)
-       implies m(S) > m(SS) .
+     = inv(S) and not final(S) implies m(S) > m(SS) .
   pred mesmes : State .
   eq mesmes(S:State)
      = not (S =(*,1)=>+ SS:State if CC:Bool suchThat
@@ -76,7 +75,7 @@ module! ProofMeasFinal {
 --> ******************************************
   pred mesfinal : State .
   eq mesfinal(S:State)
-     = wfs(S) and inv(S) and (cont(S) or final(S)) and m(S) = 0 implies final(S) .
+     = inv(S) and (cont(S) or final(S)) and m(S) = 0 implies final(S) .
 
 --> ***************************************************
 --> Step 4-1: Instantiate a general lemma, base-lemma3.

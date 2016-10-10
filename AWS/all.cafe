@@ -1,4 +1,3 @@
-in Lemmas.cafe
 in DomainModel.cafe
 in Simulate.cafe
 in Proof.cafe               -- Reload everytime!
@@ -8,3 +7,4 @@ in Proof-contcont-R01.cafe
 in Proof-contcont-R02.cafe
 in Proof-measure.cafe
 in Proof-inv.cafe
+--> Totally 16 goals should be proved.

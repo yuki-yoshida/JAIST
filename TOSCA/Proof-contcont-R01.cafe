@@ -1,13 +1,14 @@
 require ProofContCont Proof-contcont.cafe
 
---> *********************************************************************************
---> (2) inv(S) and wfs(S) and cont(S) and not final(S) implies cont(SS) or final(SS).
---> *********************************************************************************
+--> **********************************************************
+--> (2) inv(S) and not final(S) implies cont(SS) or final(SS).
+--> **********************************************************
 
 --> **************************************************************************
--->  ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
--->             => < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP >
--->	      if allRQOfTypeOfNDInStates(SetRQ,hostedOn,IDND,ready) .
+-->  ctrans [R01]:
+-->     < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
+-->  => < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP > 
+-->     if allRQOfTypeOfNDInStates(SetRQ,hostedOn,IDND,ready) .
 --> **************************************************************************
 select ProofContCont .
 -- When R01 can be applied to the state S:

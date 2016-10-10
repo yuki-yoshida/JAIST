@@ -47,14 +47,13 @@
 ## 証明の準備　(Proof.cafe)
 ### invariantとwell-formed stateの準備
  - 各invariantはinv-AAA、各wfsはwfs-BBBという述語として定義しておく。
- - condition (1)(2)(3)(4)の証明に対してはCITPテクニック(1)を使って、あらかじめ以下の定義を与えておく。
+ - CITPテクニック(1)を使って、あらかじめ以下の定義を与えておく。
    - eq inv(S) = false if not inv-AAA(S) .
-   - eq wfs(S) = false if not wfs-BBB(S) .
+   - eq inv(S) = false if not wfs-BBB(S) .
 
 ### Cyclic Dependency Lemma(CDL)適用の準備
- - 「状態Sで、あるinitialリソースのDDSに、別のinitialリソースが含まれたら、矛盾する」という未実行(nonexec)lemma CycleR01を定義しておく。
- - CycleR01を適用するinitialリソースを導入するためのスコーレム関数を２つ(そのリソースと残り)用意しておく。
- - CDL適用可能な状態に対して、スコーレム関数を適用して対象リソースを導入し、initコマンドで矛盾lemmaを導入する。
+ - 「状態Sで、あるinitialリソースのDDSに、別のinitialリソースが含まれたら、矛盾する」という未実行(nonexec)lemma Cycleを定義しておく。
+ - CDL適用可能な状態に対して、initコマンドで対象リソースと矛盾lemmaを導入する。
 
 ## Condtion (1): init(S) implies cont(S) の証明譜 (Proof-initcont.cafe)
 ### ステップ 1-0: 証明すべき述語を定義
@@ -85,13 +84,12 @@
 
 ### ステップ 1-6: 循環する状況になったらCyclic Dependency Lemmaを適用
  - ここでCase 2-1には、任意に選択したinitialリソースがあるので、これをCDL適用対象と考えて良い (新規に導入不要)。
- - 用意しておいたCycleR01未実行lemmaを、このinitialリソースを対象として導入する。
+ - 用意しておいたCycle未実行lemmaを、このinitialリソースを対象として導入する。
  - このリソースのDDSに、referリンクの参照先リソースが含まれるので、矛盾が生じ、証明が完了する。
 
 ## Condtion (2): inv(S) and not final(S) implies cont(SS) or final(SS) の証明譜 (Proof-contcont.cafe)
 ### ステップ 2-0: 証明すべき述語を定義
- - ccont = wfs and inv and not final implies cont' or final'
- - wfsを、invと区別して定義しているので前件に加えておく。
+ - ccont = inv and not final implies cont' or final'
  - 次状態が存在する状態に関する条件なので、前件にcont(S)が不要であることに注意。
  - contcontを二重否定イディオムを使って定義する。
 
@@ -127,7 +125,7 @@
 
 ### ステップ 2-5: 循環する状況になったらCyclic Dependency Lemmaを適用
  - Case 1-2には、任意に選択したinitialリソースがあるので、これをCDL適用対象と考えて良い (新規に導入不要)。
- - 用意しておいたCycleR01未実行lemmaを、このinitialリソースを対象として導入する。
+ - 用意しておいたCycle未実行lemmaを、このinitialリソースを対象として導入する。
  - このリソースのDDSに、referリンクの参照先リソースが含まれるので、矛盾が生じ、証明が完了する。
 
 ## R02に対するCondtion (2)の証明譜 (Proof-contcont-R02.cafe)
@@ -150,7 +148,7 @@
 
 ### CDL適用の準備
  - ここでCase 2-2-1にはinitialリソースが存在するのでCDLを適用できるが、このinitialリソースは任意に選択したものではないので、CDL適用対象のinitialリソースを別に用意する必要がある。
- - スコーレム関数を利用してsRS'を分解し、CDL適用対象リソースidRS1を導入する。
+ - sRS'を分解してCDL適用対象リソースidRS1を導入する。
 
 ### ステップ 2-4: 次状態に適用されるルールを考察
  - initialリソースがあるので、適用されるルールはR01。
@@ -171,8 +169,7 @@
 
 ## Condtion (3): inv(S) and not final(S) implies m(S) > m(SS) の証明譜 (Proof-measure.cafe)
 ### ステップ 3-0: 証明すべき述語を定義
- - mmes = wfs and inv and not final implies m > m'
- - wfsを、invと区別して定義しているので前件に加えておく。
+ - mmes = inv and not final implies m > m'
  - 次状態が存在する状態に関する条件なので、前件にcont(S)が不要であることに注意。
  - mesmesを二重否定イディオムを使って定義する。
  - 自然数に対するAxiomとして N < N+1 を定義しておく。
@@ -196,8 +193,7 @@
 
 ## Condtion (4): inv(S) and (cont(S) or final(S)) and m(S) = 0 implies final(S) の証明譜 (Proof-measure.cafe)
 ### ステップ 4-0: 証明すべき述語を定義
- - mesfinal = wfs and inv and (cont or final) and m = 0 implies final .
- - wfsを、invと区別して定義しているので前件に加えておく。
+ - mesfinal = inv and (cont or final) and m = 0 implies final .
 
 ### ステップ 4-1: m(S)用の一般Lemmaをインスタンシエート
  - initialリソースの数が0ならば、すべてのリソースはstartedである。
@@ -209,7 +205,7 @@
  - 各invariantはinv-AAA、各wfsはwfs-BBBという述語として定義しておく。
  - (5)(6)はinvariant毎に一つずつ証明するが、証明するinvariantをinvS(S)とする。
  - Condition (5)のゴールは、initinv = init implies invS .
- - Condition (6)のゴールは、iinv = wfs and inv and invS implies invS'.とし、invinvを二重否定イディオムを使って定義する。
+ - Condition (6)のゴールは、iinv = inv and invS implies invS'.とし、invinvを二重否定イディオムを使って定義する。
  - 抽象レベルで証明済みのLemmaを利用するには、具象レベルにインスタンシエートする必要があるが、現在のところ、インスタンシエーションはCafeOBJの機能を利用するように整備されていないので、手作業が必要である。
 
 ## inv-ifRSStartedThenPRReadyのCondtion (5)(6)の証明譜
@@ -243,7 +239,7 @@
  - Case 1: R02のLHSにマッチする最も一般的なケース => 証明可能 (invS(S) implies invS(S')が成り立つ)
 
 ## wfs-allPRHaveRSのCondtion (5)(6)の証明譜
- - wfsはinitに含まれているのでCondition (5)の証明は不要。
+ - wfs-*はinitに含まれているのでCondition (5)の証明は不要。
  - 対象invariantを設定する：invS = wfs-allPRHaveRS。
  - 一般Lemma m2o-lemma12をインスタンシエートし、「すべてのプロパティが親リソースを持つことは、initialリソースがstartedに遷移しても変わらない」を言明する。Condtion (6)のR01で利用。
 
@@ -265,7 +261,7 @@
  - Case 1: R02のLHSにマッチする最も一般的なケース => 証明可能 (invS(S) implies invS(S')が成り立つ)
 
 ## wfs-allPRHaveRRSのCondtion (5)(6)の証明譜
- - wfsはinitに含まれているのでCondition (5)の証明は不要。
+ - wfs-*はinitに含まれているのでCondition (5)の証明は不要。
  - 対象invariantを設定する：invS = wfs-allPRHaveRRS。
  - 一般Lemma m2o-lemma12をインスタンシエートし、「すべてのプロパティが参照リソースを持つことは、initialリソースがstartedに遷移しても変わらない」を言明する。Condtion (6)のR01で利用。
 
@@ -287,7 +283,7 @@
  - Case 1: R02のLHSにマッチする最も一般的なケース => 証明可能 (invS(S) implies invS(S')が成り立つ)
 
 ## wfs-atLeastOneRSのCondtion (5)(6)の証明譜
- - wfsはinitに含まれているのでCondition (5)の証明は不要。
+ - wfs-*はinitに含まれているのでCondition (5)の証明は不要。
  - 対象invariantを設定する：invS = wfs-atLeastOneRS。
 
 ## wfs-atLeastOneRSのR01に対するCondtion (6)の証明譜
