@@ -12,9 +12,9 @@ require ProofContCont Proof-contcont.cafe
 --> **************************************************************************
 select ProofContCont .
 -- When R01 can be applied to the state S:
---> **************************************************************************
---> Step 2-1: Begin with the cases each of which matches to LHS of each rules.
---> **************************************************************************
+--> *************************************************************************
+--> Step 2-1: Begin with the cases each of which matches to LHS of each rule.
+--> *************************************************************************
 :goal {
   eq contcont(< (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >) = true .
 }

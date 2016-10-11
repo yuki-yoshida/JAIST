@@ -20,9 +20,9 @@ select ProofInitialCont .
 --> where DWSR01(N,S) does not include any initial nodes.
 --> So, we can assume that S = < (node(tnd, idND, initial) sND), sCP, sRQ, sRL, mp >
 --> and someNDInStates(DWSR01(node(tnd, idND, initial),S),initial) = false .
---> **************************************************************************
---> Step 2-1: Begin with the cases each of which matches to LHS of each rules.
---> **************************************************************************
+-> **************************************************************************
+--> Step 2-1: Begin with the cases each of which matches to LHS of each rule.
+-> **************************************************************************
 :goal {eq invcont(< (node(tnd, idND, initial) sND), sCP, sRQ, sRL, mp >) = true .}
 --> ***************************************************************
 --> Step 2-4: Think which rule can be applied to the next state
@@ -166,9 +166,9 @@ select ProofCreatedCont .
 --> where DWSR02(N,S) does not include any created nodes.
 --> So, we can assume that S = < (node(tnd, idND, created) sND), sCP, sRQ, sRL, mp >
 --> and someNDInStates(DWSR02(node(tnd, idND, created),S),created) = false .
---> **************************************************************************
---> Step 2-1: Begin with the cases each of which matches to LHS of each rules.
---> **************************************************************************
+-> **************************************************************************
+--> Step 2-1: Begin with the cases each of which matches to LHS of each rule.
+-> **************************************************************************
 :goal {eq invcont(< (node(tnd, idND, created) sND), sCP, sRQ, sRL, mp >)  = true .}
 --> ***************************************************************
 --> Step 2-4: Think which rule can be applied to the next state

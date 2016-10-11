@@ -14,9 +14,9 @@ require ProofContCont Proof-contcont.cafe
 --> ************************************************************************************************
 select ProofContCont .
 -- When R07 can be applied to the state S:
---> **************************************************************************
---> Step 2-1: Begin with the cases each of which matches to LHS of each rules.
---> **************************************************************************
+--> *************************************************************************
+--> Step 2-1: Begin with the cases each of which matches to LHS of each rule.
+--> *************************************************************************
 :goal {
   eq contcont(< sND, 
                 (cap(dependsOn,idCP,scp,idND) sCP), 
