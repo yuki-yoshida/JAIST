@@ -8,20 +8,20 @@ require Proof Proof.cafe
 module! ProofInv {
   pr(PROOFbase)
   pr(STATERules)
-  pred invS : State
+  pred invK : State
 
   pred initinv : State
   eq initinv(S:State)
-     = init(S) implies invS(S) .
+     = init(S) implies invK(S) .
 
   pred iinv : State State .
   eq iinv(S:State,SS:State)
-     = inv(S) and invS(S) implies invS(SS) .
+     = inv(S) and invK(S) implies invK(SS) .
   pred invinv : State
   eq invinv(S:State)
      = not (S =(*,1)=>+ SS:State if CC:Bool suchThat
             not ((CC implies iinv(S,SS)) == true)
-     	   { S => SS !! CC ! inv(S) ! invS(S) ! invS(SS) }) .
+     	   { S => SS !! CC ! inv(S) ! invK(S) ! invK(SS) }) .
 }
 
 --> *************************************************************
@@ -32,7 +32,7 @@ module! ProofInv {
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifRSStartedThenPRReady {
   pr(ProofInv)
-  eq invS(S:State) = inv-ifRSStartedThenPRReady(S) .
+  eq invK(S:State) = inv-ifRSStartedThenPRReady(S) .
 
   var SetRS : SetOfResource
   var SetPR : SetOfProperty
@@ -108,7 +108,7 @@ select
 --> Proof of inv(S) implies inv(SS)
 module! Proofwfs-allPRHaveRS {
   pr(ProofInv)
-  eq invS(S:State) = wfs-allPRHaveRS(S) .
+  eq invK(S:State) = wfs-allPRHaveRS(S) .
 
   var SetRS : SetOfResource
   var SetPR : SetOfProperty
@@ -169,7 +169,7 @@ select
 --> Proof of inv(S) implies inv(SS)
 module! Proofwfs-allPRHaveRRS {
   pr(ProofInv)
-  eq invS(S:State) = wfs-allPRHaveRRS(S) .
+  eq invK(S:State) = wfs-allPRHaveRRS(S) .
 
   var SetRS : SetOfResource
   var SetPR : SetOfProperty
@@ -230,7 +230,7 @@ select
 --> Proof of inv(S) implies inv(SS)
 module! Proofwfs-atLeastOneRS {
   pr(ProofInv)
-  eq invS(S:State) = wfs-atLeastOneRS(S) .
+  eq invK(S:State) = wfs-atLeastOneRS(S) .
 }
 
 select Proofwfs-atLeastOneRS 

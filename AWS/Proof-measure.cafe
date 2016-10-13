@@ -9,17 +9,19 @@ require Proof Proof.cafe
 --> ******************************************
 module! ProofMeasure {
   pr(PROOFbase)
+
+  vars S SS : State
+  var CC : Bool
+
   pred mmes : State State .
-  eq mmes(S:State,SS:State)
+  eq mmes(S,SS)
      = inv(S) and not final(S) implies m(S) > m(SS) .
+
   pred mesmes : State .
-  eq mesmes(S:State)
-     = not (S =(*,1)=>+ SS:State if CC:Bool suchThat
+  eq mesmes(S)
+     = not (S =(*,1)=>+ SS if CC suchThat
             not ((CC implies mmes(S,SS)) = true)
      	   { S => SS !! CC ! inv(S) ! final(S) ! (m(S) > m(SS)) }) .
-
-  --> Axioms of Nat
-  eq (N:Nat.PNAT < s(N)) = true .
 }
 
 --> ********************************************
@@ -45,6 +47,7 @@ select ProofMeasure .
 }
 -- Case 1: When the condition of R01 holds:
 :apply (rd) -- 1
+  -- Case 1: When the condition of R01 does not hold:
 :apply (rd) -- 2
 show proof
 
@@ -73,26 +76,60 @@ module! ProofMeasFinal {
 --> ******************************************
 --> Step 4-0: Define a predicate to be proved.
 --> ******************************************
+  var S : State
   pred mesfinal : State .
-  eq mesfinal(S:State)
-     = inv(S) and (cont(S) or final(S)) and m(S) = 0 implies final(S) .
-
---> ***************************************************
---> Step 4-1: Instantiate a general lemma, base-lemma3.
---> ***************************************************
-  var SetRS : SetOfResource
-  ceq [base-lemma3]:
-     allRSInStates(SetRS,started) = true
-     if #ResourceInStates(initial,SetRS) = 0 .
+  eq mesfinal(S)
+     = inv(S) and cont(S) and m(S) = 0 implies final(S) .
 
 --> *************************************
---> Step 4-2: Use a natural number axiom.
+--> Step 4-1: Use a natural number axiom.
 --> *************************************
-  eq (N1:Nat.PNAT + N2:Nat.PNAT = 0)
+  eq (N1:Nat + N2:Nat = 0)
      = (N1 = 0) and (N2 = 0) .
+  eq (Nz:NzNat = 0) = false .
 }
 
+--> ********************************************
+-->  ctrans [R01]:
+-->     < (res(TRS,IDRS,initial) SetRS), SetPR >
+-->  => < (res(TRS,IDRS,started) SetRS), SetPR > 
+-->     if allPROfRSInStates(SetPR,IDRS,ready) .
+--> ********************************************
 select ProofMeasFinal
-reduce mesfinal(< sRS, sPR >) .
+--> *************************************************************************
+--> Step 4-2: Begin with the cases each of which matches to LHS of each rule.
+--> *************************************************************************
+:goal {
+  eq mesfinal(< (res(trs,idRS,initial) sRS), sPR >) = true .
+}
+--> ************************************************************
+--> Step 4-3: Split the most general case for a rule into cases
+-->  where the condition of the rule does or does not hold. 
+--> ************************************************************
+-- The condition of R01 does or does not hold for S.
+:ctf {
+  eq allPROfRSInStates(sPR,idRS,ready) = true .
+}
+-- Case 1: When the condition of R01 holds:
+:apply (rd) -- 1
+-- Case 2: When the condition of R01 does not hold:
+:apply (rd) -- 2
+show proof
+
+--> ****************************************************
+-->  trans [R02]:
+-->     < (res(TRS,IDRRS,started) SetRS), 
+-->       (prop(TPR,IDPR,notready,IDRS,IDRRS) SetPR) >
+-->  => < (res(TRS,IDRRS,started) SetRS), 
+-->       (prop(TPR,IDPR,ready   ,IDRS,IDRRS) SetPR) > .
+--> ****************************************************
+--> *************************************************************************
+--> Step 4-2: Begin with the cases each of which matches to LHS of each rule.
+--> *************************************************************************
+:goal {
+  eq mesfinal(< (res(trs,idRRS,started) sRS), (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
+}
+:apply (rd) -- goal
+show proof
 
 select

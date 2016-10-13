@@ -28,7 +28,7 @@ module! PROOFbase {
 --> **********************
 --> Step 0-3: Define m(S).
 --> **********************
-  op m : State -> Nat.PNAT
+  op m : State -> Nat
   eq m(< SetRS,SetPR >)
      = #ResourceInStates(initial,SetRS) + #PropertyInStates(notready,SetPR) .
 

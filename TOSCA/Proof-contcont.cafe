@@ -28,3 +28,4 @@ module! ProofContCont {
 	      SetCP:SetOfCapability, SetRQ:SetOfRequirement, SetRL:SetOfRelationship, M:PoolOfMsg >)
      = true .
 }
+--> Totally 12 goals should be proved.

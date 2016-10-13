@@ -1,5 +1,4 @@
 require SET SET.cafe
-require PNAT PNAT.cafe
 provide TEMPLATE
 
 module* OBJECT {
@@ -26,8 +25,8 @@ module* OBJECT {
       = (id(O1) = id(O2)) .
 }
 
-module! SET+PNAT {
-  pr(SET + PNAT+)
+module! SET+NAT {
+  pr(SET + NAT)
 
   op #_ : Set -> Nat
   eq # empty = 0 .
@@ -35,10 +34,10 @@ module! SET+PNAT {
 }
 
 module! SETOBJECT {
-  pr(SET+PNAT(OBJECT {sort Elt -> Object})
+  pr(SET+NAT(OBJECT {sort Elt -> Object})
       * {sort Set -> SetOfObject,
       	 op empty -> empObj})
-  pr(SET+PNAT(OBJECT {sort Elt -> ObjState})
+  pr(SET+NAT(OBJECT {sort Elt -> ObjState})
       * {sort Set -> SetOfObjState,
       	 op empty -> empState})
 }

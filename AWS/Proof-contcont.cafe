@@ -15,9 +15,10 @@ module! ProofContCont {
   var CC : Bool
 
   pred ccont : State State
-  pred contcont : State
   eq ccont(S,SS)
      = inv(S) and not final(S) implies cont(SS) or final(SS) .
+
+  pred contcont : State
   eq contcont(S)
      = not (S =(*,1)=>+ SS if CC suchThat
             not ((CC implies ccont(S,SS)) == true)

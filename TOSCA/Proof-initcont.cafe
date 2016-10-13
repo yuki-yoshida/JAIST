@@ -54,3 +54,4 @@ select ProofInitCont .
 :apply (rd)
 show proof
 select
+--> Totally 1 goal should be proved.

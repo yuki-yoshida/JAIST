@@ -7,20 +7,20 @@ require Proof Proof.cafe
 
 module! ProofInv {
   pr(PROOFbase)
-  pred invS : State
+  pred invK : State
 
   pred initinv : State
   eq initinv(S:State)
-     = init(S) implies invS(S) .
+     = init(S) implies invK(S) .
 
   pred iinv : State State .
   eq iinv(S:State,SS:State)
-     = inv(S) and invS(S) implies invS(SS) .
+     = inv(S) and invK(S) implies invK(SS) .
   pred invinv : State
   eq invinv(S:State)
      = not (S =(*,1)=>+ SS:State if CC:Bool suchThat
             not ((CC implies iinv(S,SS)) == true)
-     	   { S => SS !! CC ! inv(S) ! invS(S) ! invS(SS) }) .
+     	   { S => SS !! CC ! inv(S) ! invK(S) ! invK(SS) }) .
 }
 
 -- Note:
@@ -37,7 +37,7 @@ module! ProofInv {
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifNDInitialThenCPClosed {
   pr(ProofInv)
-  eq invS(S:State) = inv-ifNDInitialThenCPClosed(S) .
+  eq invK(S:State) = inv-ifNDInitialThenCPClosed(S) .
 
   vars ND ND' : Node
   vars CP CP' : Capability
@@ -397,7 +397,7 @@ select
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifNDInitialThenRQUnboundReady {
   pr(ProofInv)
-  eq invS(S:State) = inv-ifNDInitialThenRQUnboundReady(S) .
+  eq invK(S:State) = inv-ifNDInitialThenRQUnboundReady(S) .
 
   vars ND ND' : Node
   vars RQ RQ' : Requirement
@@ -693,7 +693,7 @@ select
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifNDCreatedThenHostedOnRQReady {
   pr(ProofInv)
-  eq invS(S:State) = inv-ifNDCreatedThenHostedOnRQReady(S) .
+  eq invK(S:State) = inv-ifNDCreatedThenHostedOnRQReady(S) .
 
   vars ND ND' : Node
   vars RQ RQ' : Requirement
@@ -967,7 +967,7 @@ select
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifNDStartedThenRQReady {
   pr(ProofInv)
-  eq invS(S:State) = inv-ifNDStartedThenRQReady(S) .
+  eq invK(S:State) = inv-ifNDStartedThenRQReady(S) .
 
   vars ND ND' : Node
   vars RQ RQ' : Requirement
@@ -1242,7 +1242,7 @@ select
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifCPClosedThenRQUnbound {
   pr(ProofInv)
-  eq invS(S:State) = inv-ifCPClosedThenRQUnbound(S) .
+  eq invK(S:State) = inv-ifCPClosedThenRQUnbound(S) .
 
   var SetCP : SetOfCapability
   var SetRL : SetOfRelationship
@@ -1548,7 +1548,7 @@ select
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifCPOpenThenRQUnboundWaiting {
   pr(ProofInv)
-  eq invS(S:State) = inv-ifCPOpenThenRQUnboundWaiting(S) .
+  eq invK(S:State) = inv-ifCPOpenThenRQUnboundWaiting(S) .
 
   var IDND : NDID
   var IDCP : CPID
@@ -1885,7 +1885,7 @@ select
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-HostedOnCPNotOpen {
   pr(ProofInv)
-  eq invS(S:State) = inv-HostedOnCPNotOpen(S) .
+  eq invK(S:State) = inv-HostedOnCPNotOpen(S) .
 
   var SetCP : SetOfCapability
   var SCP : CPState
@@ -2112,7 +2112,7 @@ select
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-HostedOnRQNotWaiting {
   pr(ProofInv)
-  eq invS(S:State) = inv-HostedOnRQNotWaiting(S) .
+  eq invK(S:State) = inv-HostedOnRQNotWaiting(S) .
 
   var SetRQ : SetOfRequirement
   var SRQ : RQState
@@ -2340,7 +2340,7 @@ select
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifConnectsToCPOpenThenRQWaitingOrOpenMsg {
   pr(ProofInv)
-  eq invS(S:State) = inv-ifConnectsToCPOpenThenRQWaitingOrOpenMsg(S) .
+  eq invK(S:State) = inv-ifConnectsToCPOpenThenRQWaitingOrOpenMsg(S) .
 
   var SetCP : SetOfCapability
   var SetRQ : SetOfRequirement
@@ -2662,7 +2662,7 @@ select
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifConnectsToCPAvailableThenRQWaitingReadyOrOpenMsg {
   pr(ProofInv)
-  eq invS(S:State) = inv-ifConnectsToCPAvailableThenRQWaitingReadyOrOpenMsg(S) .
+  eq invK(S:State) = inv-ifConnectsToCPAvailableThenRQWaitingReadyOrOpenMsg(S) .
 
   var SetCP : SetOfCapability
   var SetRL : SetOfRelationship
@@ -2974,7 +2974,7 @@ select
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifConnectsToCPAvailableThenRQReadyOrAvailableMsg {
   pr(ProofInv)
-  eq invS(S:State) = inv-ifConnectsToCPAvailableThenRQReadyOrAvailableMsg(S) .
+  eq invK(S:State) = inv-ifConnectsToCPAvailableThenRQReadyOrAvailableMsg(S) .
 
   var SetCP : SetOfCapability
   var SetRL : SetOfRelationship
@@ -3259,7 +3259,7 @@ select
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifOpenMsgThenCPActivated {
   pr(ProofInv)
-  eq invS(S:State) = inv-ifOpenMsgThenCPActivated(S) .
+  eq invK(S:State) = inv-ifOpenMsgThenCPActivated(S) .
 
   var IDND : NDID
   var IDCP : CPID
@@ -3515,7 +3515,7 @@ select
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifAvailableMsgThenCPAvailable {
   pr(ProofInv)
-  eq invS(S:State) = inv-ifAvailableMsgThenCPAvailable(S) .
+  eq invK(S:State) = inv-ifAvailableMsgThenCPAvailable(S) .
 
   var IDND : NDID
   var IDCP : CPID
@@ -3771,4 +3771,4 @@ show proof
 :apply (rd)
 show proof
 select
-
+--> Totally 169 goals should be proved.

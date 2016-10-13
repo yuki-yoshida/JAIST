@@ -1137,3 +1137,4 @@ select TOSCALEMMA
 :apply (rd) -- 1-2
 :apply (rd) -- 2
 show proof
+--> Totally 25 goals should be proved.

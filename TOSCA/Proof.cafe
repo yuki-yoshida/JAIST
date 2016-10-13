@@ -77,7 +77,7 @@ module! PROOFbase {
 --> **********************
 --> Step 0-3: Define m(S).
 --> **********************
-  op m : State -> Nat.PNAT
+  op m : State -> Nat
   eq m(< SetND,SetCP,SetRQ,SetRL,MP >)
      = (( (#NodeInStates(initial,SetND)        * 2) + #NodeInStates(created,SetND))
      +  ( (#CapabilityInStates(closed,SetCP)    * 2) + #CapabilityInStates(open,SetCP)))
