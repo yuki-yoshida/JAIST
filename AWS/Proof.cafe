@@ -7,9 +7,10 @@ module! PROOFbase {
   op _!_ : Bool Bool -> Bool {constr assoc}
   op _=>_!!_ : State State Bool -> Bool {constr}
 
+  var RS : Resource
   var SetRS : SetOfResource
   var SetPR : SetOfProperty
-  var S : State
+  vars S SS : State
 
   -- The invariant should be defined as the conjunction of all inv-* and all wfs-*.
   -- But this definition causes costly computations.
@@ -22,8 +23,8 @@ module! PROOFbase {
 --> Step 0-2: Define cont(S).
 --> *************************
   pred cont : State
-  eq cont(S:State)
-     = (S =(*,1)=>+ SS:State) .
+  eq cont(S)
+     = (S =(*,1)=>+ SS) .
 
 --> **********************
 --> Step 0-3: Define m(S).
@@ -51,7 +52,7 @@ module! PROOFbase {
   -- From Cyclic Dependency Lemma
   -- There is an initial resource whose DDSC includes no initial resourecs.
   ceq [Cycle :nonexec]: 
-     true = false if someRSInStates(DDSC(RS:Resource,S:State),initial) .
+     true = false if someRSInStates(DDSC(RS,S),initial) .
 
 --> **************************************
 --> Step 0-6: Prepare arbitrary constants.
@@ -67,6 +68,7 @@ module! PROOFbase {
   ops spr spr' spr'' spr''' : -> PRState
   op stRS : -> SetOfRSState
   op stPR : -> SetOfPRState
+  op x : -> Resource
 }
 
 -- *************************************************************************

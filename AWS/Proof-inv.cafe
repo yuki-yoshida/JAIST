@@ -5,21 +5,28 @@ require Proof Proof.cafe
 --> (6) inv(S) implies inv(SS).
 --> ***************************
 
+--> **********************************************
+--> Step 5-0,6-0: Define a predicate to be proved.
+--> **********************************************
 module! ProofInv {
   pr(PROOFbase)
   pr(STATERules)
+
+  vars S SS : State
+  var CC : Bool
+
   pred invK : State
 
   pred initinv : State
-  eq initinv(S:State)
+  eq initinv(S)
      = init(S) implies invK(S) .
 
   pred iinv : State State .
-  eq iinv(S:State,SS:State)
+  eq iinv(S,SS)
      = inv(S) and invK(S) implies invK(SS) .
   pred invinv : State
-  eq invinv(S:State)
-     = not (S =(*,1)=>+ SS:State if CC:Bool suchThat
+  eq invinv(S)
+     = not (S =(*,1)=>+ SS if CC suchThat
             not ((CC implies iinv(S,SS)) == true)
      	   { S => SS !! CC ! inv(S) ! invK(S) ! invK(SS) }) .
 }
@@ -32,7 +39,9 @@ module! ProofInv {
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifRSStartedThenPRReady {
   pr(ProofInv)
-  eq invK(S:State) = inv-ifRSStartedThenPRReady(S) .
+
+  var S : State
+  eq invK(S) = inv-ifRSStartedThenPRReady(S) .
 
   var SetRS : SetOfResource
   var SetPR : SetOfProperty
@@ -40,6 +49,9 @@ module! Proofinv-ifRSStartedThenPRReady {
   var IDPR : PRID
   var TPR : PRType
 
+--> ******************************************************************
+--> Step 5-1,6-1: Instantiate proved lemmas for predefined predicates.
+--> ******************************************************************
   -- Instantiating m2o-lemma07:
   eq [m2o-lemma07]:
       (allRSInStates(SetRS,initial) and 
@@ -57,6 +69,9 @@ select Proofinv-ifRSStartedThenPRReady
 --> ***************************
 --> (5) init(S) implies inv(S).
 --> ***************************
+--> *******************************************
+--> Step 5-2: Begin with the most general case. 
+--> *******************************************
 :goal {
   eq initinv(< sRS,sPR >) = true .
 }
@@ -72,9 +87,16 @@ show proof
 -->  => < (res(TRS,IDRS,started) SetRS), SetPR > 
 -->     if allPROfRSInStates(SetPR,IDRS,ready) .
 --> ********************************************
+--> *************************************************************************
+--> Step 6-2: Begin with the cases each of which matches to LHS of each rule.
+--> *************************************************************************
 :goal {
   eq invinv(< (res(trs,idRS,initial) sRS), sPR >) = true .
 }
+--> ************************************************************
+--> Step 6-3: Split the most general case for a rule into cases
+-->  where the condition of the rule does or does not hold. 
+--> ************************************************************
 :ctf {
   eq allPROfRSInStates(sPR,idRS,ready) = true .
 }
@@ -93,6 +115,9 @@ show proof
 -->  => < (res(TRS,IDRRS,started) SetRS), 
 -->       (prop(TPR,IDPR,ready   ,IDRS,IDRRS) SetPR) > .
 --> ****************************************************
+--> *************************************************************************
+--> Step 6-2: Begin with the cases each of which matches to LHS of each rule.
+--> *************************************************************************
 :goal {
   eq invinv(< (res(trs,idRRS,started) sRS), (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
 }
@@ -108,13 +133,18 @@ select
 --> Proof of inv(S) implies inv(SS)
 module! Proofwfs-allPRHaveRS {
   pr(ProofInv)
-  eq invK(S:State) = wfs-allPRHaveRS(S) .
+
+  var S : State
+  eq invK(S) = wfs-allPRHaveRS(S) .
 
   var SetRS : SetOfResource
   var SetPR : SetOfProperty
   var TRS : RSType
   var IDRS : RSID
 
+--> ******************************************************************
+--> Step 5-1,6-1: Instantiate proved lemmas for predefined predicates.
+--> ******************************************************************
   -- Instantiating m2o-lemma05:
   eq [m2o-lemma05]:
      (allPRHaveRS(SetPR,(res(TRS,IDRS,initial) SetRS))
@@ -137,9 +167,16 @@ select Proofwfs-allPRHaveRS
 -->  => < (res(TRS,IDRS,started) SetRS), SetPR > 
 -->     if allPROfRSInStates(SetPR,IDRS,ready) .
 --> ********************************************
+--> *************************************************************************
+--> Step 6-2: Begin with the cases each of which matches to LHS of each rule.
+--> *************************************************************************
 :goal {
   eq invinv(< (res(trs,idRS,initial) sRS), sPR >) = true .
 }
+--> ************************************************************
+--> Step 6-3: Split the most general case for a rule into cases
+-->  where the condition of the rule does or does not hold. 
+--> ************************************************************
 :ctf {
   eq allPROfRSInStates(sPR,idRS,ready) = true .
 }
@@ -154,6 +191,9 @@ show proof
 -->  => < (res(TRS,IDRRS,started) SetRS), 
 -->       (prop(TPR,IDPR,ready   ,IDRS,IDRRS) SetPR) > .
 --> ****************************************************
+--> *************************************************************************
+--> Step 6-2: Begin with the cases each of which matches to LHS of each rule.
+--> *************************************************************************
 :goal {
   eq invinv(< (res(trs,idRRS,started) sRS), (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
 }
@@ -169,13 +209,18 @@ select
 --> Proof of inv(S) implies inv(SS)
 module! Proofwfs-allPRHaveRRS {
   pr(ProofInv)
-  eq invK(S:State) = wfs-allPRHaveRRS(S) .
+
+  var S : State
+  eq invK(S) = wfs-allPRHaveRRS(S) .
 
   var SetRS : SetOfResource
   var SetPR : SetOfProperty
   var IDRS : RSID
   var TRS : RSType
 
+--> ******************************************************************
+--> Step 5-1,6-1: Instantiate proved lemmas for predefined predicates.
+--> ******************************************************************
   -- Instantiating m2o-lemma05:
   eq [m2o-lemma05]:
      (allPRHaveRRS(SetPR,(res(TRS,IDRS,initial) SetRS))
@@ -198,9 +243,16 @@ select Proofwfs-allPRHaveRRS
 -->  => < (res(TRS,IDRS,started) SetRS), SetPR > 
 -->     if allPROfRSInStates(SetPR,IDRS,ready) .
 --> ********************************************
+--> *************************************************************************
+--> Step 6-2: Begin with the cases each of which matches to LHS of each rule.
+--> *************************************************************************
 :goal {
   eq invinv(< (res(trs,idRS,initial) sRS), sPR >) = true .
 }
+--> ************************************************************
+--> Step 6-3: Split the most general case for a rule into cases
+-->  where the condition of the rule does or does not hold. 
+--> ************************************************************
 :ctf {
   eq allPROfRSInStates(sPR,idRS,ready) = true .
 }
@@ -215,6 +267,9 @@ show proof
 -->  => < (res(TRS,IDRRS,started) SetRS), 
 -->       (prop(TPR,IDPR,ready   ,IDRS,IDRRS) SetPR) > .
 --> ****************************************************
+--> *************************************************************************
+--> Step 6-2: Begin with the cases each of which matches to LHS of each rule.
+--> *************************************************************************
 :goal {
   eq invinv(< (res(trs,idRRS,started) sRS), (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
 }
@@ -230,7 +285,9 @@ select
 --> Proof of inv(S) implies inv(SS)
 module! Proofwfs-atLeastOneRS {
   pr(ProofInv)
-  eq invK(S:State) = wfs-atLeastOneRS(S) .
+
+  var S : State
+  eq invK(S) = wfs-atLeastOneRS(S) .
 }
 
 select Proofwfs-atLeastOneRS 
@@ -248,9 +305,16 @@ select Proofwfs-atLeastOneRS
 -->  => < (res(TRS,IDRS,started) SetRS), SetPR > 
 -->     if allPROfRSInStates(SetPR,IDRS,ready) .
 --> ********************************************
+--> *************************************************************************
+--> Step 6-2: Begin with the cases each of which matches to LHS of each rule.
+--> *************************************************************************
 :goal {
   eq invinv(< (res(trs,idRS,initial) sRS), sPR >) = true .
 }
+--> ************************************************************
+--> Step 6-3: Split the most general case for a rule into cases
+-->  where the condition of the rule does or does not hold. 
+--> ************************************************************
 :ctf {
   eq allPROfRSInStates(sPR,idRS,ready) = true .
 }
@@ -265,6 +329,9 @@ show proof
 -->  => < (res(TRS,IDRRS,started) SetRS), 
 -->       (prop(TPR,IDPR,ready   ,IDRS,IDRRS) SetPR) > .
 --> ****************************************************
+--> *************************************************************************
+--> Step 6-2: Begin with the cases each of which matches to LHS of each rule.
+--> *************************************************************************
 :goal {
   eq invinv(< (res(trs,idRRS,started) sRS), (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
 }
@@ -279,27 +346,34 @@ select
 --> Proof of inv(S) implies inv(SS)
 module! Proofwfs-noRSCycle {
   pr(ProofInv)
-  -- When subset(DDSC(X,SS),DDSC(X,S)) holds for all X,
-  -- noRSCycle(S) implies noRSCycle(S'),
-  pred inv-noRSCycle : Resource State
-  eq inv-noRSCycle(X:Resource,S:State) 
-     = not (S =(*,1)=>+ SS:State if CC:Bool suchThat
-            not ((CC implies subset(DDSC(X,SS),DDSC(X,S))) == true)
-     	   { S => SS !! CC ! subset(DDSC(X,SS),DDSC(X,S)) }) .
 
-  var SetPR : SetOfProperty
+  vars S SS : State
+  var CC : Bool
   vars RS RS' : Resource
   var SetRS : SetOfResource
   var SetSRS : SetOfRSState
+  var SetPR : SetOfProperty
+
+  -- When subset(DDSC(RS,SS),DDSC(RS,S)) holds for all RS,
+  -- noRSCycle(S) implies noRSCycle(SS),
+  pred invnoRSCycle : Resource State
+  eq invnoRSCycle(RS,S) 
+     = not (S =(*,1)=>+ SS if CC suchThat
+            not ((CC implies subset(DDSC(RS,SS),DDSC(RS,S))) == true)
+     	   { S => SS !! CC ! subset(DDSC(RS,SS),DDSC(RS,S)) }) .
+
+--> ******************************************************************
+--> Step 5-1,6-1: Instantiate proved lemmas for predefined predicates.
+--> ******************************************************************
+  -- Instantiating set-lemma12:
   eq [set-lemma12]:
     subset(SetRS,SetRS) = true .
 
+  -- Instantiating m2o-lemma24:
   ceq [m2o-lemma24]:
     subset(getRRSsOfPRsInStates((RS' SetRS),SetPR,SetSRS),getRRSsOfPRsInStates((RS SetRS),SetPR,SetSRS))
     = true
     if id(RS) = id(RS') and not state(RS') \in SetSRS .
-
-  op x : -> Resource
 }
 
 select Proofwfs-noRSCycle 
@@ -317,21 +391,34 @@ select Proofwfs-noRSCycle
 -->  => < (res(TRS,IDRS,started) SetRS), SetPR > 
 -->     if allPROfRSInStates(SetPR,IDRS,ready) .
 --> ********************************************
+--> *************************************************************************
+--> Step 6-2: Begin with the cases each of which matches to LHS of each rule.
+--> *************************************************************************
 :goal {
-  eq inv-noRSCycle(x,< (res(trs,idRS,initial) sRS), sPR >) = true .
+  eq invnoRSCycle(x,< (res(trs,idRS,initial) sRS), sPR >) = true .
 }
+--> ************************************************************
+--> Step 6-3: Split the most general case for a rule into cases
+-->  where the condition of the rule does or does not hold. 
+--> ************************************************************
 :ctf {
   eq allPROfRSInStates(sPR,idRS,ready) = true .
 }
+-- Case 1: When the condition of R01 holds for the resource of idRS:
 :ctf {
   eq x = res(trs,idRS,initial) .
 }
+-- Case 1-1: X is the resource with identifier idRS.
 :apply (rd) -- 1-1
+-- Case 1-2: X is not the resource with identifier idRS.
 :ctf {
   eq state(x) = initial .
 }
+-- Case 1-2-1: The resource is initial.
 :apply (rd) -- 1-2-1
+-- Case 1-2-2: The resource is not initial.
 :apply (rd) -- 1-2-2
+-- Case 2: When the condition of R01 does not hold for the resource of idRS:
 :apply (rd) -- 2
 show proof
 
@@ -342,21 +429,30 @@ show proof
 -->  => < (res(TRS,IDRRS,started) SetRS), 
 -->       (prop(TPR,IDPR,ready   ,IDRS,IDRRS) SetPR) > .
 --> ****************************************************
+--> *************************************************************************
+--> Step 6-2: Begin with the cases each of which matches to LHS of each rule.
+--> *************************************************************************
 :goal {
-  eq inv-noRSCycle(x,< (res(trs,idRRS,started) sRS), (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
+  eq invnoRSCycle(x,< (res(trs,idRRS,started) sRS), (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
 }
 :ctf {
   eq x = res(trs,idRRS,started) .
 }
+-- Case 1: X is the resource with identifier idRRS.
 :apply (rd) -- 1
+-- Case 2: X is not the resource with identifier idRRS.
 :ctf {
   eq state(x) = initial .
 }
+-- Case 2-1: The resource is initial.
 :ctf {
   eq id(x) = idRS .
 }
+-- Case 2-1-1: The identifier of X is idRS.
 :apply (rd) -- 2-1-1
+-- Case 2-1-2: The identifier of X is not idRS.
 :apply (rd) -- 2-1-2
+-- Case 2-2: The resource is not initial.
 :apply (rd) -- 2-2
 show proof
 select

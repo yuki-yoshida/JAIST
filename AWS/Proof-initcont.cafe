@@ -9,8 +9,10 @@ require Proof Proof.cafe
 --> ******************************************
 module! ProofInitCont {
   pr(PROOFbase)
+
+  var S : State
   pred initcont : State .
-  eq initcont(S:State) = init(S) implies cont(S) .
+  eq initcont(S) = init(S) implies cont(S) .
 }
 
 -- Proof of (1) init(S) implies cont(S).
