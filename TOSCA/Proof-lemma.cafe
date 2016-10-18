@@ -3,7 +3,7 @@ require Proof Proof.cafe
 --> Common lemmas in this domain.
 
 module! TOSCALEMMA {
-  pr(PROOFbase)
+  protecting(PROOFbase)
 
   pred (_when _) : Bool Bool { prec: 63 r-assoc }
   eq (B1:Bool when B2:Bool)

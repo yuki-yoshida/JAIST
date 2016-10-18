@@ -28,7 +28,7 @@ select BOOLLEMMAS
 show proof
 
 module! SETLEMMAS {
-  pr(ALLOBJPRED1)
+  protecting(ALLOBJPRED1)
   op _ \in _ : Object SetOfObject -> Bool
   op subset : SetOfObject SetOfObject -> Bool
 
@@ -359,8 +359,8 @@ close
 select
 
 module! LEMMAbase {
-  pr(OBJECTBASE)
-  pr(PRMOBJLINKPRED)
+  protecting(OBJECTBASE)
+  protecting(PRMOBJLINKPRED)
 
   pred (_when _) : Bool Bool { prec: 64 r-assoc }
   eq (B1:Bool when B2:Bool)
@@ -459,7 +459,7 @@ module! LEMMAbase {
 }
 
 module! BASE-LEMMAS {
-  pr(LEMMAbase)
+  protecting(LEMMAbase)
 
   var IDO : ObjID 
   vars O O' : Object
@@ -475,12 +475,15 @@ module! BASE-LEMMAS {
   eq base-lemma02(O,IDO,S_O)
      = (id(O) = IDO) implies existObj((O S_O),IDO) .
 
-  pred base-lemma3 : SetOfObject ObjState SetOfObjState
+  pred base-lemma03 : SetOfObject ObjState SetOfObjState
   -- When allObjInStates(S_O,(SO St_O)) and #ObjInState(SO,S_O) =0 holds, 
   -- allObjInStates(S_O,St_O) also holds.
-  eq base-lemma3(S_O, SO, St_O)
+  eq base-lemma03(S_O, SO, St_O)
      = allObjInStates(S_O,(SO St_O)) and #ObjInStates(SO,S_O) = 0 
        implies allObjInStates(S_O,St_O) .
+
+  -- Axiom of Nat
+  eq (1 + N:Nat = 0) = false .
 }
 
 select BASE-LEMMAS
@@ -497,8 +500,8 @@ show proof
 --> *******************************************************************************
 select BASE-LEMMAS
 :goal {
-  eq base-lemma3(empObj,so,setSO) = true .
-  eq base-lemma3(setO,so,setSO) implies base-lemma3((o setO),so,setSO) = true .
+  eq base-lemma03(empObj,so,setSO) = true .
+  eq base-lemma03(setO,so,setSO) implies base-lemma03((o setO),so,setSO) = true .
 }
 :ctf {
   eq state(o) = so .
@@ -508,8 +511,8 @@ select BASE-LEMMAS
 show proof
 
 module! M2O-LEMMAS {
-  pr(LEMMAbase)
-  pr(OBJLINKMANY2ONE)
+  protecting(LEMMAbase)
+  protecting(OBJLINKMANY2ONE)
 
   var IDX : LObjID 
   var IDZ : ObjID 
@@ -1350,8 +1353,8 @@ show proof
 select
 
 module! O2O-LEMMAS {
-  pr(LEMMAbase)
-  pr(OBJLINKONE2ONE)
+  protecting(LEMMAbase)
+  protecting(OBJLINKONE2ONE)
 
   var IDX : LObjID 
   var IDY : ObjID 

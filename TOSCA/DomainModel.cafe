@@ -38,12 +38,14 @@ module! NODE {
 	   op #ObjInStates -> #NodeInStates,
 	   op getObject -> getNode,
 	   op allObjInStates -> allNDInStates,
+	   op allObjOfTypeInStates -> allNDOfTypeInStates,
 	   op allObjNotInStates -> allNDNotInStates,
 	   op someObjInStates -> someNDInStates})
 
-  -- node(NDType, NDID, NDState) is a VM Node.
+  -- node(NDType, NDID, NDState) is a Node.
   op node : NDType NDID NDState -> Node {constr}
 
+  -- There are four typical node types.
   ops VM OS MW SC : -> NDTypeLt {constr}
 
   var TND : NDType
@@ -62,7 +64,7 @@ module! NODE {
 }
 
 module! CAPABILITY {
-  pr(NODE)
+  protecting(NODE)
 
   extending(OBJECTBASE
 	* {sort ObjIDLt -> CPIDLt,
@@ -82,6 +84,7 @@ module! CAPABILITY {
 	   op #ObjInStates -> #CapabilityInStates,
 	   op getObject -> getCapability,
 	   op allObjInStates -> allCPInStates,
+	   op allObjOfTypeInStates -> allCPOfTypeInStates,
 	   op allObjNotInStates -> allCPNotInStates,
 	   op someObjInStates -> someCPInStates})
 
@@ -107,7 +110,7 @@ module! CAPABILITY {
 }
 
 module! REQUIREMENT {
-  pr(NODE)
+  protecting(NODE)
 
   extending(OBJECTBASE
 	* {sort ObjIDLt -> RQIDLt,
@@ -127,6 +130,7 @@ module! REQUIREMENT {
 	   op #ObjInStates -> #RequirementInStates,
 	   op getObject -> getRequirement,
 	   op allObjInStates -> allRQInStates,
+	   op allObjOfTypeInStates -> allRQOfTypeInStates,
 	   op allObjNotInStates -> allRQNotInStates,
 	   op someObjInStates -> someRQInStates})
 
@@ -148,7 +152,7 @@ module! REQUIREMENT {
 }
 
 module! RELATIONSHIP {
-  pr(CAPABILITY + REQUIREMENT)
+  protecting(CAPABILITY + REQUIREMENT)
 
   extending(OBJECTBASE
 	* {sort ObjIDLt -> RLIDLt,
@@ -190,7 +194,7 @@ module! RELATIONSHIP {
 }
 
 module! LINKS {
-  pr(NODE + CAPABILITY + REQUIREMENT + RELATIONSHIP)
+  protecting(NODE + CAPABILITY + REQUIREMENT + RELATIONSHIP)
 
   extending(OBJLINKMANY2ONE(
 	CAPABILITY {sort Object -> Capability,
@@ -329,7 +333,7 @@ module! LINKS {
 }
 
 module! MSG {
-  pr(LINKS)
+  protecting(LINKS)
 
   [Msg]
   -- An open message
@@ -347,7 +351,7 @@ module! MSG {
 }    
 
 module! STATE {
-  pr(BAG(MSG {sort Elt -> Msg})
+  protecting(BAG(MSG {sort Elt -> Msg})
       * {sort Bag -> PoolOfMsg,
       	 op empty -> empMsg})
 
@@ -356,7 +360,7 @@ module! STATE {
 }
 
 module! UtilFuns {
-  pr(STATE)
+  protecting(STATE)
 
   var ND : Node
   var CP : Capability
@@ -380,6 +384,10 @@ module! UtilFuns {
   var TYRL : RLType
   var MP : PoolOfMsg
 
+  pred allHostedOnRQOfNDInStates : SetOfRequirement NDID SetOfRQState
+  eq allHostedOnRQOfNDInStates(SetRQ,IDND,StRQ)
+     = allRQOfTypeOfNDInStates(SetRQ,hostedOn,IDND,StRQ) .
+
   op getCPOfRQ : SetOfCapability SetOfRelationship RQID -> Capability
   op getCPOfRQ : SetOfCapability SetOfRelationship Requirement -> Capability
   eq getCPOfRQ(SetCP,SetRL,RQ)
@@ -401,12 +409,6 @@ module! UtilFuns {
      = (existCP(SetCP,cap(RL)) implies type(getCPOfRL(SetCP,RL)) = type(RL)) and
        (existRQ(SetRQ,req(RL)) implies type(getRQOfRL(SetRQ,RL)) = type(RL)) and
        allRLHaveSameTypeCPRQ(SetRL,SetCP,SetRQ) .
-  -- eq allRLHaveSameTypeCPRQ((RL SetRL),SetCP,SetRQ)
-  --    = existCP(SetCP,cap(RL)) and
-  --      existRQ(SetRQ,req(RL)) and
-  --      type(getCPOfRL(SetCP,RL)) = type(RL) and
-  --      type(getRQOfRL(SetRQ,RL)) = type(RL) and
-  --      allRLHaveSameTypeCPRQ(SetRL,SetCP,SetRQ) .
 
   pred allRLNotInSameND : SetOfRelationship SetOfCapability SetOfRequirement
   eq allRLNotInSameND(empRL,SetCP,SetRQ)
@@ -525,22 +527,26 @@ module! UtilFuns {
        ifConnectsToCPInStatesThenRQInStatesOrAvailableMsg(SetCP,StCP,SetRQ,StRQ,SetRL,MP) .
 
   pred HostedOnCPInState : SetOfCapability SetOfCPState
-  eq HostedOnCPInState(empCP,StCP) 
-     = true .
-  eq HostedOnCPInState((CP SetCP),StCP) 
-     = (type(CP) = hostedOn implies state(CP) \in StCP) and
-       HostedOnCPInState(SetCP,StCP) .
+  eq HostedOnCPInState(SetCP,StCP) 
+     = allCPOfTypeInStates(SetCP,hostedOn,StCP) .
+  -- eq HostedOnCPInState(empCP,StCP) 
+  --    = true .
+  -- eq HostedOnCPInState((CP SetCP),StCP) 
+  --    = (type(CP) = hostedOn implies state(CP) \in StCP) and
+  --      HostedOnCPInState(SetCP,StCP) .
 
   pred HostedOnRQInState : SetOfRequirement SetOfRQState
-  eq HostedOnRQInState(empRQ,StRQ) 
-     = true .
-  eq HostedOnRQInState((RQ SetRQ),StRQ) 
-     = (type(RQ) = hostedOn implies state(RQ) \in StRQ) and
-       HostedOnRQInState(SetRQ,StRQ) .
+  eq HostedOnRQInState(SetRQ,StRQ) 
+     = allRQOfTypeInStates(SetRQ,hostedOn,StRQ) .
+  -- eq HostedOnRQInState(empRQ,StRQ) 
+  --    = true .
+  -- eq HostedOnRQInState((RQ SetRQ),StRQ) 
+  --    = (type(RQ) = hostedOn implies state(RQ) \in StRQ) and
+  --      HostedOnRQInState(SetRQ,StRQ) .
 }
 
 module! STATECyclefuns {
-  pr(UtilFuns)
+  protecting(UtilFuns)
 
   var ND : Node
   var SetND : SetOfNode
@@ -569,7 +575,7 @@ module! STATECyclefuns {
 }
 
 module STATEfuns {
-  pr(UtilFuns)
+  protecting(UtilFuns)
 
   var SetND : SetOfNode
   var SetCP : SetOfCapability
@@ -649,7 +655,7 @@ module STATEfuns {
 --       allNDInStates(SetND,started) and allCPInStates(SetCP,available) and allRQInStates(SetRQ,ready) .
 }
 module! STATERules {
-  pr(STATEfuns)
+  protecting(STATEfuns)
 
   var TND : NDType
   vars IDND IDND1 IDND2 : NDID 
@@ -663,45 +669,44 @@ module! STATERules {
   var SCP : CPState
   var MP : PoolOfMsg
 
--- Create an initial node if all of its hostedOn requirements are ready.
+  -- CREATE Operation for Node Type
   ctrans [R01]:
      < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
   => < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP > 
-     if allRQOfTypeOfNDInStates(SetRQ,hostedOn,IDND,ready) .
+     if allHostedOnRQOfNDInStates(SetRQ,IDND,ready) .
 
--- Start a created node if all of its requirements are ready.
+  -- START Operation for Node Type
   ctrans [R02]:
      < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP >
   => < (node(TND,IDND,started) SetND), SetCP, SetRQ, SetRL, MP > 
      if allRQOfNDInStates(SetRQ,IDND,ready) .
 
--- Let a closed hostedOn capability be available if its node is created.
+  -- CAPAVAILABLE Operation for HostedOn Relationship Type
   ctrans [R03]:
      < SetND, (cap(hostedOn,IDCP,closed,   IDND) SetCP), SetRQ, SetRL, MP >
   => < SetND, (cap(hostedOn,IDCP,available,IDND) SetCP), SetRQ, SetRL, MP >
      if isCreated(state(getNode(SetND,IDND))) .
 
--- Let a unbound HostedOn requirement be ready if its the corresponding capability is available.
+  -- REQREADY Operation for HostedOn Relationship Type
   trans [R04]:
      < SetND, (cap(hostedOn,IDCP,available,IDND1) SetCP), 
   	      (req(hostedOn,IDRQ,unbound,IDND2) SetRQ), (rel(hostedOn,IDRL,IDCP,IDRQ) SetRL), MP >
   => < SetND, (cap(hostedOn,IDCP,available,IDND1) SetCP), 
   	      (req(hostedOn,IDRQ,ready,  IDND2) SetRQ), (rel(hostedOn,IDRL,IDCP,IDRQ) SetRL), MP > .
 
--- Let a closed dependsOn capability be open if its node is created.
+  -- CAPOPEN Operation for DependsOn Relationship Type
   ctrans [R05]:
      < SetND, (cap(dependsOn,IDCP,closed,IDND) SetCP), SetRQ, SetRL, MP >
   => < SetND, (cap(dependsOn,IDCP,open,  IDND) SetCP), SetRQ, SetRL, MP >
      if isCreated(state(getNode(SetND,IDND))) .
 
--- Let a open dependsOn capability be available if its node is started.
+  -- CAPAVAILABLE Operation for DependsOn Relationship Type
   ctrans [R06]:
      < SetND, (cap(dependsOn,IDCP,open,     IDND) SetCP), SetRQ, SetRL, MP >
   => < SetND, (cap(dependsOn,IDCP,available,IDND) SetCP), SetRQ, SetRL, MP >
      if state(getNode(SetND,IDND)) = started .
 
--- Let a unbound DependsOn requirement be waiting 
--- if its node is created and the corresponding capability is activated.
+  -- REQWAITING Operation for DependsOn Relationship Type
   ctrans [R07]:
      < SetND, (cap(dependsOn,IDCP,SCP,IDND1) SetCP), 
    	      (req(dependsOn,IDRQ,unbound,IDND2) SetRQ), (rel(dependsOn,IDRL,IDCP,IDRQ) SetRL), MP >
@@ -709,30 +714,26 @@ module! STATERules {
   	      (req(dependsOn,IDRQ,waiting,IDND2) SetRQ), (rel(dependsOn,IDRL,IDCP,IDRQ) SetRL), MP >
      if state(getNode(SetND,IDND2)) = created and isActivated(SCP) .
 
--- Let a waiting dependsOn requirement be ready 
--- if the corresponding capability is available.
+  -- REQREADY Operation for DependsOn Relationship Type
   trans [R08]:
      < SetND, (cap(dependsOn,IDCP,available,IDND1) SetCP), 
   	      (req(dependsOn,IDRQ,waiting,IDND2) SetRQ), (rel(dependsOn,IDRL,IDCP,IDRQ) SetRL), MP >
   => < SetND, (cap(dependsOn,IDCP,available,IDND1) SetCP), 
   	      (req(dependsOn,IDRQ,ready,  IDND2) SetRQ), (rel(dependsOn,IDRL,IDCP,IDRQ) SetRL), MP > .
 
--- Let a closed connectsTo capability be open if its node is created
--- and send a open message.
+  -- CAPOPEN Operation for ConnectsTo Relationship Type
   ctrans [R09]:
      < SetND, (cap(connectsTo,IDCP,closed,IDND) SetCP), SetRQ, SetRL, MP >
   => < SetND, (cap(connectsTo,IDCP,open,  IDND) SetCP), SetRQ, SetRL, (opMsg(IDCP) MP) >
      if isCreated(state(getNode(SetND,IDND))) .
 
--- Let a open connectsTo capability be available if its node is started
--- and send an available message.
+  -- CAPAVAILABLE Operation for ConnectsTo Relationship Type
   ctrans [R10]:
      < SetND, (cap(connectsTo,IDCP,open,     IDND) SetCP), SetRQ, SetRL, MP >
   => < SetND, (cap(connectsTo,IDCP,available,IDND) SetCP), SetRQ, SetRL, (avMsg(IDCP) MP) >
      if state(getNode(SetND,IDND)) = started .
 
--- Let a unbound ConnectsTo requirement be waiting
---     if its node is created and there is a open message of the corresponding capability.
+  -- REQWAITING Operation for ConnectsTo Relationship Type
   ctrans [R11]:
      < SetND, SetCP, 
        (req(connectsTo,IDRQ,unbound,IDND) SetRQ), (rel(connectsTo,IDRL,IDCP,IDRQ) SetRL), 
@@ -741,8 +742,7 @@ module! STATERules {
        (req(connectsTo,IDRQ,waiting,IDND) SetRQ), (rel(connectsTo,IDRL,IDCP,IDRQ) SetRL), MP >
      if state(getNode(SetND,IDND)) = created .
 
--- Let a waiting ConnectsTo requirement be ready
--- if there is a available message of the corresponding capability.
+  -- REQREADY Operation for ConnectsTo Relationship Type
   trans [R12]:
      < SetND, SetCP, 
        (req(connectsTo,IDRQ,waiting,IDND) SetRQ), (rel(connectsTo,IDRL,IDCP,IDRQ) SetRL), 

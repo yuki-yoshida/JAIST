@@ -9,7 +9,7 @@ provide ProofContCont
 --> Step 2-0: Define a predicate to be proved.
 --> ******************************************
 module! ProofContCont {
-  pr(PROOFbase)
+  protecting(PROOFbase)
   pred ccont : State State
   pred contcont : State
   eq ccont(S:State,SS:State)

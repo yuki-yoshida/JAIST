@@ -26,7 +26,7 @@ module* OBJECT {
 }
 
 module! SET+NAT {
-  pr(SET + NAT)
+  protecting(SET + NAT)
 
   op #_ : Set -> Nat
   eq # empty = 0 .
@@ -34,10 +34,10 @@ module! SET+NAT {
 }
 
 module! SETOBJECT {
-  pr(SET+NAT(OBJECT {sort Elt -> Object})
+  protecting(SET+NAT(OBJECT {sort Elt -> Object})
       * {sort Set -> SetOfObject,
       	 op empty -> empObj})
-  pr(SET+NAT(OBJECT {sort Elt -> ObjState})
+  protecting(SET+NAT(OBJECT {sort Elt -> ObjState})
       * {sort Set -> SetOfObjState,
       	 op empty -> empState})
 }
@@ -166,7 +166,7 @@ module! ALLOBJPRED3(P :: PRMOBJPRED3) {
 }
 
 module! PRMOBJBASE {
-  pr(SETOBJECT)
+  protecting(SETOBJECT)
 
   -- sort ObjIDLt should be renamed.
   [ObjIDLt < ObjID]
@@ -195,14 +195,18 @@ module! PRMOBJBASE {
   eq isInStates(O:Object,SetS:SetOfObjState)
      = state(O) \in SetS .
 
+  pred ifOfTypeThenInStates : Object ObjType SetOfObjState
+  eq ifOfTypeThenInStates(O:Object,T:ObjType,SetSO:SetOfObjState)
+     = (type(O) = T) implies (state(O) \in SetSO) .
+
   pred hasIDInStates : Object ObjID SetOfObjState
   eq hasIDInStates(O:Object,ID:ObjID,SetS:SetOfObjState)
-     = hasID(O,ID) implies isInStates(O,SetS) .
+     = hasID(O,ID) and isInStates(O,SetS) .
     
 }
 
 module! OBJECTBASE {
-  pr(SETOBJECT)
+  protecting(SETOBJECT)
 
   pred uniqObj : SetOfObject
   op #ObjInStates : SetOfObjState SetOfObject -> Nat
@@ -214,19 +218,24 @@ module! OBJECTBASE {
   var S : ObjState
   var SetS : SetOfObjState
 
-  pr(ALLOBJPRED1(PRMOBJBASE {sort Arg -> ObjID,
-  			       	op p -> hasID})
+  protecting(ALLOBJPRED1(PRMOBJBASE {sort Arg -> ObjID,
+  	                             op p -> hasID})
                     * {op someObjP -> existObj})
 
-  pr(ALLOBJPRED1(PRMOBJBASE {sort Arg -> SetOfObjState,
-  			       	op p -> isInStates})
+  protecting(ALLOBJPRED1(PRMOBJBASE {sort Arg -> SetOfObjState,
+  			       	     op p -> isInStates})
                     * {op allObjP -> allObjInStates,
 		       op allObjNotP -> allObjNotInStates,
 		       op someObjP -> someObjInStates})
 
-  pr(ALLOBJPRED2(PRMOBJBASE {sort Arg1 -> ObjID,
-                             sort Arg2 -> SetOfObjState,
-  			       	op p -> hasIDInStates})
+  protecting(ALLOBJPRED2(PRMOBJBASE {sort Arg1 -> ObjType,
+                                     sort Arg2 -> SetOfObjState,
+  			       	     op p -> ifOfTypeThenInStates})
+                    * {op allObjP -> allObjOfTypeInStates})
+
+  protecting(ALLOBJPRED2(PRMOBJBASE {sort Arg1 -> ObjID,
+                                     sort Arg2 -> SetOfObjState,
+  			       	     op p -> hasIDInStates})
                     * {op someObjP -> existObjInStates})
 
   eq uniqObj(empObj)
@@ -247,7 +256,7 @@ module! OBJECTBASE {
 }
 
 module* PRMOBJLINK {
-  pr(SETOBJECT)
+  protecting(SETOBJECT)
   -- Linked Object which exists only one
   [LObject < SetOfLObject]
   op empLObj : -> SetOfLObject
@@ -272,11 +281,11 @@ module! PRMOBJLINKPRED(LINK :: PRMOBJLINK) {
 
   pred ifOfXThenInStates : Object LObjID SetOfObjState
   eq ifOfXThenInStates(O:Object,LOID:LObjID,SetSO:SetOfObjState)
-     = not (link(O) = LOID) or (state(O) \in SetSO) .
+     = (link(O) = LOID) implies (state(O) \in SetSO) .
 
   pred ifOfTypeOfXThenInStates : Object ObjType LObjID SetOfObjState
   eq ifOfTypeOfXThenInStates(O:Object,T:ObjType,LOID:LObjID,SetSO:SetOfObjState)
-     = not (type(O) = T) or not (link(O) = LOID) or (state(O) \in SetSO) .
+     = (type(O) = T) and (link(O) = LOID) implies (state(O) \in SetSO) .
 
   pred isOfX : Object LObjID
   eq isOfX(O:Object,LOID:LObjID)
@@ -288,8 +297,8 @@ module! OBJLINKONE2ONE {
   -- one X has exactly one coressponding Y
   -- Y has a link to X
 
-  pr(ALLOBJPRED1(PRMOBJLINKPRED {sort Arg -> LObjID,
-  			       	    op p -> isOfX})
+  protecting(ALLOBJPRED1(PRMOBJLINKPRED {sort Arg -> LObjID,
+  			       	         op p -> isOfX})
                     * {op someObjP -> existX,
 		       op onlyOneObjP -> onlyOneYOfX})
 
@@ -418,19 +427,19 @@ module! OBJLINKMANY2ONE {
   -- one X has zero or many coressponding Z
   -- Z has a link to X
 
-  pr(ALLOBJPRED1(PRMOBJLINKPRED {sort Arg -> SetOfLObject,
-  			       	 op p -> hasLObj})
+  protecting(ALLOBJPRED1(PRMOBJLINKPRED {sort Arg -> SetOfLObject,
+  			       	         op p -> hasLObj})
                     * {op allObjP -> allZHaveX})
 
-  pr(ALLOBJPRED2(PRMOBJLINKPRED {sort Arg1 -> LObjID,
-  				 sort Arg2 -> SetOfObjState
-  			       	 op p -> ifOfXThenInStates})
+  protecting(ALLOBJPRED2(PRMOBJLINKPRED {sort Arg1 -> LObjID,
+  				         sort Arg2 -> SetOfObjState
+  			       	         op p -> ifOfXThenInStates})
                     * {op allObjP -> allZOfXInStates})
 
-  pr(ALLOBJPRED3(PRMOBJLINKPRED {sort Arg1 -> ObjType,
-  				 sort Arg2 -> LObjID,
-  				 sort Arg3 -> SetOfObjState
-  			       	 op p -> ifOfTypeOfXThenInStates})
+  protecting(ALLOBJPRED3(PRMOBJLINKPRED {sort Arg1 -> ObjType,
+  				         sort Arg2 -> LObjID,
+  				         sort Arg3 -> SetOfObjState
+  			       	         op p -> ifOfTypeOfXThenInStates})
                     * {op allObjP -> allZOfTypeOfXInStates})
 
   var X : LObject

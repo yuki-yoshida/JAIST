@@ -9,8 +9,8 @@ require Proof Proof.cafe
 --> Step 5-0,6-0: Define a predicate to be proved.
 --> **********************************************
 module! ProofInv {
-  pr(PROOFbase)
-  pr(STATERules)
+  protecting(PROOFbase)
+  protecting(STATERules)
 
   vars S SS : State
   var CC : Bool
@@ -38,7 +38,7 @@ module! ProofInv {
 --> *************************************************************
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifRSStartedThenPRReady {
-  pr(ProofInv)
+  protecting(ProofInv)
 
   var S : State
   eq invK(S) = inv-ifRSStartedThenPRReady(S) .
@@ -132,7 +132,7 @@ select
 --> ***********************************
 --> Proof of inv(S) implies inv(SS)
 module! Proofwfs-allPRHaveRS {
-  pr(ProofInv)
+  protecting(ProofInv)
 
   var S : State
   eq invK(S) = wfs-allPRHaveRS(S) .
@@ -208,7 +208,7 @@ select
 --> ***********************************
 --> Proof of inv(S) implies inv(SS)
 module! Proofwfs-allPRHaveRRS {
-  pr(ProofInv)
+  protecting(ProofInv)
 
   var S : State
   eq invK(S) = wfs-allPRHaveRRS(S) .
@@ -284,7 +284,7 @@ select
 --> ***********************************
 --> Proof of inv(S) implies inv(SS)
 module! Proofwfs-atLeastOneRS {
-  pr(ProofInv)
+  protecting(ProofInv)
 
   var S : State
   eq invK(S) = wfs-atLeastOneRS(S) .
@@ -345,7 +345,7 @@ select
 --> *************************************j
 --> Proof of inv(S) implies inv(SS)
 module! Proofwfs-noRSCycle {
-  pr(ProofInv)
+  protecting(ProofInv)
 
   vars S SS : State
   var CC : Bool

@@ -6,7 +6,7 @@ require Proof Proof.cafe
 --> Step 2-0: Define a predicate to be proved.
 --> ******************************************
 module! ProofInitialCont {
-  pr(PROOFbase)
+  protecting(PROOFbase)
 
   vars B1 B2 : Bool
 
@@ -14,7 +14,7 @@ module! ProofInitialCont {
   eq (B1 when B2)
      = B2 implies B1 .
 
-  var S: State
+  var S : State
 
   pred invcont : State
   eq invcont(S) 

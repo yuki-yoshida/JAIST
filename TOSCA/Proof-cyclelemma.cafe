@@ -6,7 +6,7 @@ require Proof Proof.cafe
 --> Step 2-0: Define a predicate to be proved.
 --> ******************************************
 module! ProofInitialCont {
-  pr(PROOFbase)
+  protecting(PROOFbase)
 
   pred invcont : State
   eq invcont(S:State) = inv(S) implies cont(S) .
@@ -36,7 +36,7 @@ select ProofInitialCont .
 -- The condition of R01 does or does not hold for the node of idND.
 -- The states of all of the hostedOn requirements of the node are or are not ready.
 :csp { 
-  eq allRQOfTypeOfNDInStates(sRQ,hostedOn,idND,ready) = true .
+  eq allHostedOnRQOfNDInStates(sRQ,idND,ready) = true .
   eq sRQ = (req(hostedOn,idRQ,unbound,idND) sRQ') .
   eq sRQ = (req(hostedOn,idRQ,waiting,idND) sRQ') .
 }
@@ -147,7 +147,7 @@ select
 --> Step 2-0: Define a predicate to be proved.
 --> ******************************************
 module! ProofCreatedCont {
-  pr(PROOFbase)
+  protecting(PROOFbase)
 
   pred invcont : State
   eq invcont(S:State) = inv(S) implies cont(S) .

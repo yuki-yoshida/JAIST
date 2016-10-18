@@ -3,7 +3,7 @@ require DomainModel DomainModel.cafe
 provide Proof
 
 module! PROOFbase {
-  pr(STATERules)
+  protecting(STATERules)
 
   op _!_ : Bool Bool -> Bool {constr assoc}
   op _=>_!!_ : State State Bool -> Bool {constr}

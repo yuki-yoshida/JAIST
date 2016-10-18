@@ -47,7 +47,7 @@ mod! PNAT principal-sort Nat {
 }
 
 mod! PNAT+ {
-  pr(PNAT)
+  protecting(PNAT)
   -- Theorem proved.
   eq (N:Nat < s(N)) = true .
 }

@@ -8,7 +8,7 @@ require ProofContCont Proof-contcont.cafe
 -->  ctrans [R01]:
 -->     < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
 -->  => < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP > 
--->     if allRQOfTypeOfNDInStates(SetRQ,hostedOn,IDND,ready) .
+-->     if allHostedOnRQOfNDInStates(SetRQ,IDND,ready) .
 --> **************************************************************************
 select ProofContCont .
 -- When R01 can be applied to the state S:
@@ -24,7 +24,7 @@ select ProofContCont .
 --> ***********************************************************
 -- The condition of R01 does or does not hold for the node of idND.
 :ctf {
-  eq allRQOfTypeOfNDInStates(sRQ,hostedOn,idND,ready) = true .
+  eq allHostedOnRQOfNDInStates(sRQ,idND,ready) = true .
 }
 -- Case 1: When the condition of R01 holds for the node of idND:
 :apply (rd) -- 1

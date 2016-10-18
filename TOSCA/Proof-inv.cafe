@@ -6,7 +6,7 @@ require Proof Proof.cafe
 --> ***************************
 
 module! ProofInv {
-  pr(PROOFbase)
+  protecting(PROOFbase)
   pred invK : State
 
   pred initinv : State
@@ -36,7 +36,7 @@ module! ProofInv {
 --> ***************************************************************
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifNDInitialThenCPClosed {
-  pr(ProofInv)
+  protecting(ProofInv)
   eq invK(S:State) = inv-ifNDInitialThenCPClosed(S) .
 
   vars ND ND' : Node
@@ -89,13 +89,13 @@ show proof
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
 -->            => < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP > 
--->	      if allRQOfTypeOfNDInStates(SetRQ,hostedOn,IDND,ready) .
+-->	      if allHostedOnRQOfNDInStates(SetRQ,IDND,ready) .
 --> *************************************************************************
 :goal {
   eq invinv(< (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >) = true .
 }
 :ctf {
-  eq allRQOfTypeOfNDInStates(sRQ,hostedOn,idND,ready) = true .
+  eq allHostedOnRQOfNDInStates(sRQ,idND,ready) = true .
 }
 :init [m2o-lemma10] by {
     ND:Node <- node(tnd,idND,initial) ;
@@ -396,7 +396,7 @@ select
 --> ***********************************************************************
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifNDInitialThenRQUnboundReady {
-  pr(ProofInv)
+  protecting(ProofInv)
   eq invK(S:State) = inv-ifNDInitialThenRQUnboundReady(S) .
 
   vars ND ND' : Node
@@ -449,13 +449,13 @@ show proof
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
 -->            => < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP > 
--->	      if allRQOfTypeOfNDInStates(SetRQ,hostedOn,IDND,ready) .
+-->	      if allHostedOnRQOfNDInStates(SetRQ,IDND,ready) .
 --> *************************************************************************
 :goal {
   eq invinv(< (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >) = true .
 }
 :ctf {
-  eq allRQOfTypeOfNDInStates(sRQ,hostedOn,idND,ready) = true .
+  eq allHostedOnRQOfNDInStates(sRQ,idND,ready) = true .
 }
 :init [m2o-lemma10] by {
     ND:Node <- node(tnd,idND,initial) ;
@@ -692,9 +692,10 @@ select
 --> **************************************************************************************
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifNDCreatedThenHostedOnRQReady {
-  pr(ProofInv)
+  protecting(ProofInv)
   eq invK(S:State) = inv-ifNDCreatedThenHostedOnRQReady(S) .
 
+  var IDND : NDID
   vars ND ND' : Node
   vars RQ RQ' : Requirement
   var SetND : SetOfNode
@@ -713,10 +714,12 @@ module! Proofinv-ifNDCreatedThenHostedOnRQReady {
     if not (SND \in STND) .
 
   ceq [m2o-lemma20 :nonexec]:
-     (ifNDInStatesThenRQOfTypeInStates((ND  SetND),STND,SetRQ,RT,STRQ) and
-      ifNDInStatesThenRQOfTypeInStates((ND' SetND),STND,SetRQ,RT,STRQ) )
-    = ifNDInStatesThenRQOfTypeInStates((ND  SetND),STND,SetRQ,RT,STRQ)
-    if allRQOfTypeOfNDInStates(SetRQ,RT,id(ND'),STRQ) .
+     (ifNDInStatesThenRQOfTypeInStates((ND  SetND),STND,SetRQ,hostedOn,STRQ) and
+      ifNDInStatesThenRQOfTypeInStates((ND' SetND),STND,SetRQ,hostedOn,STRQ) )
+    = ifNDInStatesThenRQOfTypeInStates((ND  SetND),STND,SetRQ,hostedOn,STRQ)
+    if allHostedOnRQOfNDInStates(SetRQ,id(ND'),STRQ) .
+-- equals to
+--  if allRQOfTypeOfNDInStates(SetRQ,hostedOn,id(ND'),STRQ) .
 
   ceq [m2o-lemma19 :nonexec]:
       (ifNDInStatesThenRQOfTypeInStates(SetND,STND,(RQ  SetRQ),RT,STRQ) and
@@ -747,13 +750,13 @@ show proof
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
 -->            => < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP > 
--->	      if allRQOfTypeOfNDInStates(SetRQ,hostedOn,IDND,ready) .
+-->	      if allHostedOnRQOfNDInStates(SetRQ,IDND,ready) .
 --> *************************************************************************
 :goal {
   eq invinv(< (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >) = true .
 }
 :ctf {
-  eq allRQOfTypeOfNDInStates(sRQ,hostedOn,idND,ready) = true .
+  eq allHostedOnRQOfNDInStates(sRQ,idND,ready) = true .
 }
 :init [m2o-lemma20] by {
   ND:Node <- node(tnd,idND,initial) ;
@@ -966,7 +969,7 @@ select
 --> **************************************************************
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifNDStartedThenRQReady {
-  pr(ProofInv)
+  protecting(ProofInv)
   eq invK(S:State) = inv-ifNDStartedThenRQReady(S) .
 
   vars ND ND' : Node
@@ -1025,13 +1028,13 @@ show proof
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
 -->            => < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP > 
--->	      if allRQOfTypeOfNDInStates(SetRQ,hostedOn,IDND,ready) .
+-->	      if allHostedOnRQOfNDInStates(SetRQ,IDND,ready) .
 --> *************************************************************************
 :goal {
   eq invinv(< (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >) = true .
 }
 :ctf {
-  eq allRQOfTypeOfNDInStates(sRQ,hostedOn,idND,ready) = true .
+  eq allHostedOnRQOfNDInStates(sRQ,idND,ready) = true .
 }
 :init [m2o-lemma10] by {
     ND:Node <- node(tnd,idND,initial) ;
@@ -1241,7 +1244,7 @@ select
 --> This proof requires inv-ifOpenMsgThenCPActivated.
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifCPClosedThenRQUnbound {
-  pr(ProofInv)
+  protecting(ProofInv)
   eq invK(S:State) = inv-ifCPClosedThenRQUnbound(S) .
 
   var SetCP : SetOfCapability
@@ -1306,13 +1309,13 @@ show proof
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
 -->            => < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP > 
--->	      if allRQOfTypeOfNDInStates(SetRQ,hostedOn,IDND,ready) .
+-->	      if allHostedOnRQOfNDInStates(SetRQ,IDND,ready) .
 --> *************************************************************************
 :goal {
   eq invinv(< (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >) = true .
 }
 :ctf {
-  eq allRQOfTypeOfNDInStates(sRQ,hostedOn,idND,ready) = true .
+  eq allHostedOnRQOfNDInStates(sRQ,idND,ready) = true .
 }
 :apply (rd) -- 1
 :apply (rd) -- 2
@@ -1547,7 +1550,7 @@ select
 --> This proof requires inv-ifCPClosedThenRQUnbound, inv-ifAvailableMsgThenCPAvailable.
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifCPOpenThenRQUnboundWaiting {
-  pr(ProofInv)
+  protecting(ProofInv)
   eq invK(S:State) = inv-ifCPOpenThenRQUnboundWaiting(S) .
 
   var IDND : NDID
@@ -1614,13 +1617,13 @@ show proof
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
 -->            => < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP > 
--->	      if allRQOfTypeOfNDInStates(SetRQ,hostedOn,IDND,ready) .
+-->	      if allHostedOnRQOfNDInStates(SetRQ,IDND,ready) .
 --> *************************************************************************
 :goal {
   eq invinv(< (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >) = true .
 }
 :ctf {
-  eq allRQOfTypeOfNDInStates(sRQ,hostedOn,idND,ready) = true .
+  eq allHostedOnRQOfNDInStates(sRQ,idND,ready) = true .
 }
 :apply (rd) -- 1
 :apply (rd) -- 2
@@ -1884,16 +1887,17 @@ select
 --> *********************************************************
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-HostedOnCPNotOpen {
-  pr(ProofInv)
+  protecting(ProofInv)
   eq invK(S:State) = inv-HostedOnCPNotOpen(S) .
 
   var SetCP : SetOfCapability
   var SCP : CPState
   var STCP : SetOfCPState
+  var T : CPType
 
   ceq [tosca-lemma24]:
       (allCPInStates(SetCP,SCP) and
-       HostedOnCPInState(SetCP,STCP))
+       allCPOfTypeInStates(SetCP,T,STCP))
      = allCPInStates(SetCP,SCP) 
      if SCP \in STCP .
 }
@@ -1914,13 +1918,13 @@ show proof
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
 -->            => < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP > 
--->	      if allRQOfTypeOfNDInStates(SetRQ,hostedOn,IDND,ready) .
+-->	      if allHostedOnRQOfNDInStates(SetRQ,IDND,ready) .
 --> *************************************************************************
 :goal {
   eq invinv(< (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >) = true .
 }
 :ctf {
-  eq allRQOfTypeOfNDInStates(sRQ,hostedOn,idND,ready) = true .
+  eq allHostedOnRQOfNDInStates(sRQ,idND,ready) = true .
 }
 :apply (rd) -- 1
 :apply (rd) -- 2
@@ -2111,16 +2115,17 @@ select
 --> *********************************************************
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-HostedOnRQNotWaiting {
-  pr(ProofInv)
+  protecting(ProofInv)
   eq invK(S:State) = inv-HostedOnRQNotWaiting(S) .
 
   var SetRQ : SetOfRequirement
   var SRQ : RQState
   var STRQ : SetOfRQState
+  var T : RQType
 
   ceq [tosca-lemma25]:
       (allRQInStates(SetRQ,SRQ) and
-       HostedOnRQInState(SetRQ,STRQ))
+       allRQOfTypeInStates(SetRQ,T,STRQ))
      = allRQInStates(SetRQ,SRQ) 
      if SRQ \in STRQ .
 }
@@ -2141,13 +2146,13 @@ show proof
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
 -->            => < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP > 
--->	      if allRQOfTypeOfNDInStates(SetRQ,hostedOn,IDND,ready) .
+-->	      if allHostedOnRQOfNDInStates(SetRQ,IDND,ready) .
 --> *************************************************************************
 :goal {
   eq invinv(< (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >) = true .
 }
 :ctf {
-  eq allRQOfTypeOfNDInStates(sRQ,hostedOn,idND,ready) = true .
+  eq allHostedOnRQOfNDInStates(sRQ,idND,ready) = true .
 }
 :apply (rd) -- 1
 :apply (rd) -- 2
@@ -2339,7 +2344,7 @@ select
 --> This proof requires inv-ifAvailableMsgThenCPAvailable.
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifConnectsToCPOpenThenRQWaitingOrOpenMsg {
-  pr(ProofInv)
+  protecting(ProofInv)
   eq invK(S:State) = inv-ifConnectsToCPOpenThenRQWaitingOrOpenMsg(S) .
 
   var SetCP : SetOfCapability
@@ -2422,13 +2427,13 @@ show proof
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
 -->            => < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP > 
--->	      if allRQOfTypeOfNDInStates(SetRQ,hostedOn,IDND,ready) .
+-->	      if allHostedOnRQOfNDInStates(SetRQ,IDND,ready) .
 --> *************************************************************************
 :goal {
   eq invinv(< (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >) = true .
 }
 :ctf {
-  eq allRQOfTypeOfNDInStates(sRQ,hostedOn,idND,ready) = true .
+  eq allHostedOnRQOfNDInStates(sRQ,idND,ready) = true .
 }
 :apply (rd) -- 1
 :apply (rd) -- 2
@@ -2661,7 +2666,7 @@ select
 --> This proof requires inv-ifConnectsToCPOpenThenRQWaitingOrOpenMsg.
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifConnectsToCPAvailableThenRQWaitingReadyOrOpenMsg {
-  pr(ProofInv)
+  protecting(ProofInv)
   eq invK(S:State) = inv-ifConnectsToCPAvailableThenRQWaitingReadyOrOpenMsg(S) .
 
   var SetCP : SetOfCapability
@@ -2746,13 +2751,13 @@ show proof
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
 -->            => < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP > 
--->	      if allRQOfTypeOfNDInStates(SetRQ,hostedOn,IDND,ready) .
+-->	      if allHostedOnRQOfNDInStates(SetRQ,IDND,ready) .
 --> *************************************************************************
 :goal {
   eq invinv(< (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >) = true .
 }
 :ctf {
-  eq allRQOfTypeOfNDInStates(sRQ,hostedOn,idND,ready) = true .
+  eq allHostedOnRQOfNDInStates(sRQ,idND,ready) = true .
 }
 :apply (rd) -- 1
 :apply (rd) -- 2
@@ -2973,7 +2978,7 @@ select
 --> ************************************************************************************************
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifConnectsToCPAvailableThenRQReadyOrAvailableMsg {
-  pr(ProofInv)
+  protecting(ProofInv)
   eq invK(S:State) = inv-ifConnectsToCPAvailableThenRQReadyOrAvailableMsg(S) .
 
   var SetCP : SetOfCapability
@@ -3055,13 +3060,13 @@ show proof
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
 -->            => < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP > 
--->	      if allRQOfTypeOfNDInStates(SetRQ,hostedOn,IDND,ready) .
+-->	      if allHostedOnRQOfNDInStates(SetRQ,IDND,ready) .
 --> *************************************************************************
 :goal {
   eq invinv(< (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >) = true .
 }
 :ctf {
-  eq allRQOfTypeOfNDInStates(sRQ,hostedOn,idND,ready) = true .
+  eq allHostedOnRQOfNDInStates(sRQ,idND,ready) = true .
 }
 :apply (rd) -- 1
 :apply (rd) -- 2
@@ -3258,7 +3263,7 @@ select
 --> ****************************************************************
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifOpenMsgThenCPActivated {
-  pr(ProofInv)
+  protecting(ProofInv)
   eq invK(S:State) = inv-ifOpenMsgThenCPActivated(S) .
 
   var IDND : NDID
@@ -3305,13 +3310,13 @@ show proof
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
 -->            => < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP > 
--->	      if allRQOfTypeOfNDInStates(SetRQ,hostedOn,IDND,ready) .
+-->	      if allHostedOnRQOfNDInStates(SetRQ,IDND,ready) .
 --> *************************************************************************
 :goal {
   eq invinv(< (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >) = true .
 }
 :ctf {
-  eq allRQOfTypeOfNDInStates(sRQ,hostedOn,idND,ready) = true .
+  eq allHostedOnRQOfNDInStates(sRQ,idND,ready) = true .
 }
 :apply (rd) -- 1
 :apply (rd) -- 2
@@ -3514,7 +3519,7 @@ select
 --> *********************************************************************
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-ifAvailableMsgThenCPAvailable {
-  pr(ProofInv)
+  protecting(ProofInv)
   eq invK(S:State) = inv-ifAvailableMsgThenCPAvailable(S) .
 
   var IDND : NDID
@@ -3562,13 +3567,13 @@ show proof
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
 -->            => < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP > 
--->	      if allRQOfTypeOfNDInStates(SetRQ,hostedOn,IDND,ready) .
+-->	      if allHostedOnRQOfNDInStates(SetRQ,IDND,ready) .
 --> *************************************************************************
 :goal {
   eq invinv(< (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >) = true .
 }
 :ctf {
-  eq allRQOfTypeOfNDInStates(sRQ,hostedOn,idND,ready) = true .
+  eq allHostedOnRQOfNDInStates(sRQ,idND,ready) = true .
 }
 :apply (rd) -- 1
 :apply (rd) -- 2
