@@ -51,8 +51,10 @@ module! ProofBase {
 --> ********************************************************
   -- From Cyclic Dependency Lemma
   -- There is an initial resource whose DDSC includes no initial resourecs.
+  var T : RSType
+  var IDRS : RSID
   ceq [Cycle :nonexec]: 
-     true = false if someRSInStates(DDSC(RS,S),initial) .
+     true = false if someRSInStates(DDSC(res(T, IDRS, initial),S),initial) .
 
 --> **************************************
 --> Step 0-6: Prepare arbitrary constants.

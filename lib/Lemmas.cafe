@@ -466,6 +466,7 @@ module! BASE-LEMMAS {
   var S_O : SetOfObject
   vars SO SO1 SO2 : ObjState
   var St_O : SetOfObjState
+  var OT : ObjType
 
   pred base-lemma01 : SetOfObject ObjID Object
   eq base-lemma01(S_O,IDO,O)
@@ -481,6 +482,12 @@ module! BASE-LEMMAS {
   eq base-lemma03(S_O, SO, St_O)
      = allObjInStates(S_O,(SO St_O)) and #ObjInStates(SO,S_O) = 0 
        implies allObjInStates(S_O,St_O) .
+
+  pred base-lemma04 : SetOfObject ObjType ObjState SetOfObjState
+  eq base-lemma04(S_O,OT,SO,St_O)
+     = allObjInStates(S_O,SO) 
+       implies allObjOfTypeInStates(S_O,OT,St_O)
+     when SO \in St_O .
 
   -- Axiom of Nat
   eq (1 + N:Nat = 0) = false .
@@ -506,6 +513,32 @@ select BASE-LEMMAS
 :ctf {
   eq state(o) = so .
 }
+:apply (rd)
+:apply (rd)
+show proof
+
+--> *******************************************************************************
+--> Prove base-lemma04
+-->     = allObjInStates(S_O,SO) 
+-->       implies allObjOfTypeInStates(S_O,OT,St_O)
+-->     when SO \in St_O .
+--> *******************************************************************************
+select BASE-LEMMAS
+:goal {
+  eq base-lemma04(empObj,ot,so,setSO) = true .
+  eq base-lemma04(setO,ot,so,setSO) implies base-lemma04((o setO),ot,so,setSO) = true .
+}
+:ctf {
+  eq type(o) = ot .
+}
+:ctf {
+  eq (so \in setSO) = true .
+}
+:ctf {
+  eq state(o) = so .
+}
+:apply (rd)
+:apply (rd)
 :apply (rd)
 :apply (rd)
 show proof
@@ -1543,4 +1576,4 @@ select O2O-LEMMAS
 show proof
 
 select
---> Totally 49 goals should be proved.
+--> Totally 50 goals should be proved.

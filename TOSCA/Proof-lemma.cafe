@@ -265,17 +265,6 @@ module! TOSCALEMMA {
        ifCPInStatesThenRQInStates(SetCP,STCP,SetRQ,STRQ,SetRL) 
      when SRQ \in STRQ .
 
-  pred tosca-lemma24 : CPState SetOfCPState SetOfCapability
-  eq tosca-lemma24(SCP,STCP,SetCP)
-     = allCPInStates(SetCP,SCP) 
-       implies allHostedOnCPInStates(SetCP,STCP)
-     when SCP \in STCP .
-
-  pred tosca-lemma25 : RQState SetOfRQState SetOfRequirement
-  eq tosca-lemma25(SRQ,STRQ,SetRQ)
-     = allRQInStates(SetRQ,SRQ) 
-       implies allHostedOnRQInStates(SetRQ,STRQ)
-     when SRQ \in STRQ .
 }
 
 --> ********************************************************************
@@ -542,7 +531,7 @@ select TOSCALEMMA .
 :ctf {
   eq existRQ(sRQ,idRQ') = true .
 }
---> Next step requires much seconds.
+--> Next step requires many seconds.
 :apply (rd) -- 2-2-2-1-1
 :apply (rd) -- 2-2-2-1-2
 :apply (rd) -- 2-2-2-2
@@ -753,7 +742,7 @@ select TOSCALEMMA
 :ctf {
   eq existRQ(sRQ,idRQ') = true .
 }
---> Next step requires much seconds.
+--> Next step requires many seconds.
 :apply (rd) -- 2-2-2-1-1
 :apply (rd) -- 2-2-2-1-2
 :apply (rd) -- 2-2-2-2
@@ -1082,59 +1071,4 @@ select TOSCALEMMA
 :apply (rd) -- 2
 show proof
 
---> Proof of tosca-lemma24.
---> ***********************************************
--->  eq tosca-lemma24(SCP,STCP,SetCP)
--->     = allCPInStates(SetCP,SCP) 
--->       implies allHostedOnCPInStates(SetCP,STCP)
--->     when SCP \in STCP .
---> ***********************************************
-select TOSCALEMMA
-:goal {
-  eq [goal-1]: tosca-lemma24(scp,stCP,empCP) = true .
-  eq [goal-2]: (tosca-lemma24(scp,stCP,sCP) implies
-                tosca-lemma24(scp,stCP,(cap(trl,idCP,scp',idND) sCP))) = true .
-}
-:ctf {
-  eq trl = hostedOn .
-}
-:ctf {
-  eq (scp \in stCP) = true .
-}
-:ctf {
-  eq scp' = scp .
-}
-:apply (rd) -- 1-1-1
-:apply (rd) -- 1-1-2
-:apply (rd) -- 1-2
-:apply (rd) -- 2
-show proof
-
---> Proof of tosca-lemma25.
---> ***********************************************
--->  eq tosca-lemma25(SRQ,STRQ,SetRQ)
--->     = allRQInStates(SetRQ,SRQ) 
--->       implies allHostedOnRQInStates(SetRQ,STRQ)
--->     when SRQ \in STRQ .
---> ***********************************************
-select TOSCALEMMA
-:goal {
-  eq [goal-1]: tosca-lemma25(srq,stRQ,empRQ) = true .
-  eq [goal-2]: (tosca-lemma25(srq,stRQ,sRQ) implies
-                tosca-lemma25(srq,stRQ,(req(trl,idRQ,srq',idND) sRQ))) = true .
-}
-:ctf {
-  eq trl = hostedOn .
-}
-:ctf {
-  eq (srq \in stRQ) = true .
-}
-:ctf {
-  eq srq' =  srq .
-}
-:apply (rd) -- 1-1-1
-:apply (rd) -- 1-1-2
-:apply (rd) -- 1-2
-:apply (rd) -- 2
-show proof
---> Totally 25 goals should be proved.
+--> Totally 23 goals should be proved.

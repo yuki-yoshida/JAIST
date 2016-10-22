@@ -359,8 +359,37 @@ module! STATE {
   op <_,_,_,_,_> : SetOfNode SetOfCapability SetOfRequirement SetOfRelationship PoolOfMsg -> State {constr}
 }
 
-module! UtilFuns {
+module! STATECyclefuns {
   protecting(STATE)
+
+  var ND : Node
+  var SetND : SetOfNode
+  var SetCP : SetOfCapability
+  var SetRQ : SetOfRequirement
+  var SetRL : SetOfRelationship
+  var MP : PoolOfMsg
+
+  op getAllNDInState : State -> SetOfNode
+  eq getAllNDInState(< SetND,SetCP,SetRQ,SetRL,MP >) = SetND .
+
+  op DDSC : Node State -> SetOfNode
+  eq DDSC(ND,< SetND,SetCP,SetRQ,SetRL,MP >)
+    = getNDsOfCPs(SetND,
+                  getCPsOfRLs(SetCP,
+     		              getRLsOfRQs(SetRL,
+    		                          getRQsOfND(SetRQ,ND)))) .
+}
+
+module! STATEfuns {
+  protecting(STATE)
+
+  extending(CYCLEPRED(
+	STATECyclefuns {sort Object -> Node,
+	       		sort SetOfObject -> SetOfNode,
+	       		op empObj -> empND,
+	       		op getAllObjInState -> getAllNDInState})
+	* {op noCycle -> noNDCycle}
+	)
 
   var ND : Node
   var CP : Capability
@@ -383,6 +412,7 @@ module! UtilFuns {
   var StRQ : SetOfRQState
   var TYRL : RLType
   var MP : PoolOfMsg
+  var S : State
 
   pred allHostedOnRQOfNDInStates : SetOfRequirement NDID SetOfRQState
   eq allHostedOnRQOfNDInStates(SetRQ,IDND,StRQ)
@@ -533,58 +563,6 @@ module! UtilFuns {
   pred allHostedOnRQInStates : SetOfRequirement SetOfRQState
   eq allHostedOnRQInStates(SetRQ,StRQ) 
      = allRQOfTypeInStates(SetRQ,hostedOn,StRQ) .
-}
-
-module! STATECyclefuns {
-  protecting(UtilFuns)
-
-  var ND : Node
-  var SetND : SetOfNode
-  vars SetCP SetCP1 : SetOfCapability
-  vars SetRQ SetRQ1 : SetOfRequirement
-  var SetRL : SetOfRelationship
-  var MP : PoolOfMsg
-  var S : State
-
-  op getAllNDInState : State -> SetOfNode
-  eq getAllNDInState(< SetND,SetCP,SetRQ,SetRL,MP >) = SetND .
-
-  op DDSC : Node State -> SetOfNode
-  eq DDSC(ND,< SetND,SetCP,SetRQ,SetRL,MP >)
-    = getNDsOfCPs(SetND,
-                  getCPsOfRLs(SetCP,
-     		              getRLsOfRQs(SetRL,
-    		                          getRQsOfND(SetRQ,ND)))) .
-    -- = if (state(ND) = initial) then
-    --     getNDsOfCPs(SetND,
-    --                 getCPsOfRLs(SetCP,
-    -- 	                        getRLsOfRQs(SetRL,
-    -- 			                    getHostedOnRQsOfNDInStates(SetRQ,ND,(unbound waiting)))))
-    --   else if (state(ND) = created) then
-    --     getNDsOfCPs(SetND,
-    --                 getCPsOfRLs(SetCP,
-    -- 			        getRLsOfRQs(SetRL,
-    -- 			                    getRQsOfNDInStates(SetRQ,ND,(unbound waiting)))))
-    --   else empND fi fi .
-}
-
-module STATEfuns {
-  protecting(UtilFuns)
-
-  var SetND : SetOfNode
-  var SetCP : SetOfCapability
-  var SetRQ : SetOfRequirement
-  var SetRL : SetOfRelationship
-  var MP : PoolOfMsg
-  var S : State
-
-  extending(CYCLEPRED(
-	STATECyclefuns {sort Object -> Node,
-	       		sort SetOfObject -> SetOfNode,
-	       		op empObj -> empND,
-	       		op getAllObjInState -> getAllNDInState})
-	* {op noCycle -> noNDCycle}
-	)
 
   pred wfs-uniqND : State
   eq wfs-uniqND(< SetND,SetCP,SetRQ,SetRL,MP >) = uniqND(SetND) .
@@ -628,6 +606,7 @@ module STATEfuns {
        wfs-allCPHaveND(S) and wfs-allRQHaveND(S) and 
        wfs-allCPHaveRL(S) and wfs-allRQHaveRL(S) and 
        wfs-allRLHaveCP(S) and wfs-allRLHaveRQ(S) and 
+       wfs-allRLHaveSameTypeCPRQ(S) and
        wfs-allRLNotInSameND(S) and
        wfs-allRLHoldLocality(S) and
        wfs-allNDHaveAtMostOneHost(S) and

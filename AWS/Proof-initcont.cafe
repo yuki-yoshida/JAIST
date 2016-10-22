@@ -83,7 +83,8 @@ select ProofInitCont .
 --> ******************************************************************************
 -- The Cyclic Dependency Lemma rejects this case.
 :init [Cycle] by {
-  RS:Resource <- res(trs,idRS,initial);
+  T:RSType <- trs;
+  IDRS:RSID <- idRS;
   S:State <- < sRS, sPR >;
 }
 :apply (rd) -- 2-1-2-2-1

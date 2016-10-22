@@ -90,7 +90,8 @@ select ProofContCont .
 --> ******************************************************************************
 -- The Cyclic Dependency Lemma rejects this case.
 :init [Cycle] by {
-  RS:Resource <- res(trs',idRS',initial);
+  T:RSType <- trs';
+  IDRS:RSID <- idRS';
   S:State <- < (res(trs,idRS,initial) sRS), sPR >;
 }
 :apply (rd) -- 1-2-2-2-1

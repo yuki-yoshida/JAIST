@@ -25,9 +25,6 @@ module! ProofBase {
   -- But this definition causes costly computations.
 
   -- Invariants defined by using general predicates.
-  pred inv-ifNDInitialThenCPClosed : State
-  eq inv-ifNDInitialThenCPClosed(< SetND,SetCP,SetRQ,SetRL,MP >)
-     = ifNDInStatesThenCPInStates(SetND,initial,SetCP,closed) .
   pred inv-ifNDInitialThenRQUnboundReady : State
   eq inv-ifNDInitialThenRQUnboundReady(< SetND,SetCP,SetRQ,SetRL,MP >)
      = ifNDInStatesThenRQInStates(SetND,initial,SetRQ,(unbound ready)) .
@@ -135,14 +132,6 @@ module! ProofBase {
   -- There is a created resource whose DDSC includes no created resourecs.
   ceq [CycleR02 :nonexec]: 
      true = false if someNDInStates(DDSC(node(T:NDType,I:NDID,created),S:State),created) .
-
-  -- Skolem Functions for Cyclic Dependncy Lemma
-  -- A set of resource may include a specific initial node, of
-  op initialND : SetOfNode -> Node {strat (0)} .
-  -- it may include a specific created node
-  op createdND : SetOfNode -> Node {strat (0)} .
-  -- and there is a rest of the set of nodes.
-  op resSND : SetOfNode -> SetOfNode {strat (0)} .
 
 --> **************************************
 --> Step 0-6: Prepare arbitrary constants.
