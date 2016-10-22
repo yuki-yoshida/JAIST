@@ -2,7 +2,7 @@ require DomainModel DomainModel.cafe
 
 provide Proof
 
-module! PROOFbase {
+module! ProofBase {
   protecting(STATERules)
 
   op _!_ : Bool Bool -> Bool {constr assoc}
@@ -45,10 +45,10 @@ module! PROOFbase {
      = ifCPInStatesThenRQInStates(SetCP,open,SetRQ,(unbound waiting),SetRL) .
   pred inv-HostedOnCPNotOpen : State
   eq inv-HostedOnCPNotOpen(< SetND,SetCP,SetRQ,SetRL,MP >)
-     = HostedOnCPInState(SetCP,(closed available)) .
+     = allHostedOnCPInStates(SetCP,(closed available)) .
   pred inv-HostedOnRQNotWaiting : State
   eq inv-HostedOnRQNotWaiting(< SetND,SetCP,SetRQ,SetRL,MP >)
-     = HostedOnRQInState(SetRQ,(unbound ready)) .
+     = allHostedOnRQInStates(SetRQ,(unbound ready)) .
 
   -- Problem specific invariants for messaging.
   pred inv-ifConnectsToCPOpenThenRQWaitingOrOpenMsg : State

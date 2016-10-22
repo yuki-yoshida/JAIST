@@ -6,7 +6,7 @@ require Proof Proof.cafe
 --> ***************************
 
 module! ProofInv {
-  protecting(PROOFbase)
+  protecting(ProofBase)
   pred invK : State
 
   pred initinv : State
@@ -1880,11 +1880,11 @@ show proof
 show proof
 select
 
---> *********************************************************
+--> ************************************************************
 --> Proof of inv-HostedOnCPNotOpen.
--->  eq inv-HostedOnCPNotOpen(< SetND,SetCP,SetRQ,SetRL,MP >)
--->     = HostedOnCPInState(SetCP,(closed available)) .
---> *********************************************************
+-->  eq inv-allHostedOnCPNotOpen(< SetND,SetCP,SetRQ,SetRL,MP >)
+-->     = allHostedOnCPInStates(SetCP,(closed available)) .
+--> ************************************************************
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-HostedOnCPNotOpen {
   protecting(ProofInv)
@@ -2111,7 +2111,7 @@ select
 --> *********************************************************
 --> Proof of inv-HostedOnRQNotWaiting.
 -->  eq inv-HostedOnRQNotWaiting(< SetND,SetCP,SetRQ,SetRL,MP >)
--->     = HostedOnCPInState(SetCP,(closed available)) .
+-->     = HostedOnRQInState(SetCP,(closed available)) .
 --> *********************************************************
 --> Proof of inv(S) implies inv(SS)
 module! Proofinv-HostedOnRQNotWaiting {

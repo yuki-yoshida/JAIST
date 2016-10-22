@@ -9,7 +9,7 @@ require Proof Proof.cafe
 --> Step 5-0,6-0: Define a predicate to be proved.
 --> **********************************************
 module! ProofInv {
-  protecting(PROOFbase)
+  protecting(ProofBase)
   protecting(STATERules)
 
   vars S SS : State

@@ -8,7 +8,7 @@ require Proof Proof.cafe
 --> Step 1-0: Define a predicate to be proved.
 --> ******************************************
 module! ProofInitCont {
-  protecting(PROOFbase)
+  protecting(ProofBase)
   pred initcont : State .
   eq initcont(S:State) = init(S) implies cont(S) .
 

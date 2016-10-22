@@ -3,7 +3,7 @@ require Proof Proof.cafe
 --> Common lemmas in this domain.
 
 module! TOSCALEMMA {
-  protecting(PROOFbase)
+  protecting(ProofBase)
 
   pred (_when _) : Bool Bool { prec: 63 r-assoc }
   eq (B1:Bool when B2:Bool)
@@ -268,13 +268,13 @@ module! TOSCALEMMA {
   pred tosca-lemma24 : CPState SetOfCPState SetOfCapability
   eq tosca-lemma24(SCP,STCP,SetCP)
      = allCPInStates(SetCP,SCP) 
-       implies HostedOnCPInState(SetCP,STCP)
+       implies allHostedOnCPInStates(SetCP,STCP)
      when SCP \in STCP .
 
   pred tosca-lemma25 : RQState SetOfRQState SetOfRequirement
   eq tosca-lemma25(SRQ,STRQ,SetRQ)
      = allRQInStates(SetRQ,SRQ) 
-       implies HostedOnRQInState(SetRQ,STRQ)
+       implies allHostedOnRQInStates(SetRQ,STRQ)
      when SRQ \in STRQ .
 }
 
@@ -1083,12 +1083,12 @@ select TOSCALEMMA
 show proof
 
 --> Proof of tosca-lemma24.
---> *******************************************
+--> ***********************************************
 -->  eq tosca-lemma24(SCP,STCP,SetCP)
 -->     = allCPInStates(SetCP,SCP) 
--->       implies HostedOnCPInState(SetCP,STCP)
+-->       implies allHostedOnCPInStates(SetCP,STCP)
 -->     when SCP \in STCP .
---> *******************************************
+--> ***********************************************
 select TOSCALEMMA
 :goal {
   eq [goal-1]: tosca-lemma24(scp,stCP,empCP) = true .
@@ -1111,12 +1111,12 @@ select TOSCALEMMA
 show proof
 
 --> Proof of tosca-lemma25.
---> *******************************************
+--> ***********************************************
 -->  eq tosca-lemma25(SRQ,STRQ,SetRQ)
 -->     = allRQInStates(SetRQ,SRQ) 
--->       implies HostedOnRQInState(SetRQ,STRQ)
+-->       implies allHostedOnRQInStates(SetRQ,STRQ)
 -->     when SRQ \in STRQ .
---> *******************************************
+--> ***********************************************
 select TOSCALEMMA
 :goal {
   eq [goal-1]: tosca-lemma25(srq,stRQ,empRQ) = true .

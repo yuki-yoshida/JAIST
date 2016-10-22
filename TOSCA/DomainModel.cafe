@@ -526,23 +526,13 @@ module! UtilFuns {
         implies (state(getRQOfCP(SetRQ,SetRL,CP)) \in StRQ or avMsg(id(CP)) \in MP)) and
        ifConnectsToCPInStatesThenRQInStatesOrAvailableMsg(SetCP,StCP,SetRQ,StRQ,SetRL,MP) .
 
-  pred HostedOnCPInState : SetOfCapability SetOfCPState
-  eq HostedOnCPInState(SetCP,StCP) 
+  pred allHostedOnCPInStates : SetOfCapability SetOfCPState
+  eq allHostedOnCPInStates(SetCP,StCP) 
      = allCPOfTypeInStates(SetCP,hostedOn,StCP) .
-  -- eq HostedOnCPInState(empCP,StCP) 
-  --    = true .
-  -- eq HostedOnCPInState((CP SetCP),StCP) 
-  --    = (type(CP) = hostedOn implies state(CP) \in StCP) and
-  --      HostedOnCPInState(SetCP,StCP) .
 
-  pred HostedOnRQInState : SetOfRequirement SetOfRQState
-  eq HostedOnRQInState(SetRQ,StRQ) 
+  pred allHostedOnRQInStates : SetOfRequirement SetOfRQState
+  eq allHostedOnRQInStates(SetRQ,StRQ) 
      = allRQOfTypeInStates(SetRQ,hostedOn,StRQ) .
-  -- eq HostedOnRQInState(empRQ,StRQ) 
-  --    = true .
-  -- eq HostedOnRQInState((RQ SetRQ),StRQ) 
-  --    = (type(RQ) = hostedOn implies state(RQ) \in StRQ) and
-  --      HostedOnRQInState(SetRQ,StRQ) .
 }
 
 module! STATECyclefuns {
@@ -561,17 +551,21 @@ module! STATECyclefuns {
 
   op DDSC : Node State -> SetOfNode
   eq DDSC(ND,< SetND,SetCP,SetRQ,SetRL,MP >)
-    = if (state(ND) = initial) then
-        getNDsOfCPs(SetND,
-                    getCPsOfRLs(SetCP,
-	                        getRLsOfRQs(SetRL,
-			                    getHostedOnRQsOfNDInStates(SetRQ,ND,(unbound waiting)))))
-      else if (state(ND) = created) then
-        getNDsOfCPs(SetND,
-                    getCPsOfRLs(SetCP,
-			        getRLsOfRQs(SetRL,
-			                    getRQsOfNDInStates(SetRQ,ND,(unbound waiting)))))
-      else empND fi fi .
+    = getNDsOfCPs(SetND,
+                  getCPsOfRLs(SetCP,
+     		              getRLsOfRQs(SetRL,
+    		                          getRQsOfND(SetRQ,ND)))) .
+    -- = if (state(ND) = initial) then
+    --     getNDsOfCPs(SetND,
+    --                 getCPsOfRLs(SetCP,
+    -- 	                        getRLsOfRQs(SetRL,
+    -- 			                    getHostedOnRQsOfNDInStates(SetRQ,ND,(unbound waiting)))))
+    --   else if (state(ND) = created) then
+    --     getNDsOfCPs(SetND,
+    --                 getCPsOfRLs(SetCP,
+    -- 			        getRLsOfRQs(SetRL,
+    -- 			                    getRQsOfNDInStates(SetRQ,ND,(unbound waiting)))))
+    --   else empND fi fi .
 }
 
 module STATEfuns {
@@ -634,7 +628,6 @@ module STATEfuns {
        wfs-allCPHaveND(S) and wfs-allRQHaveND(S) and 
        wfs-allCPHaveRL(S) and wfs-allRQHaveRL(S) and 
        wfs-allRLHaveCP(S) and wfs-allRLHaveRQ(S) and 
-       wfs-allRQHaveRL(S) and 
        wfs-allRLNotInSameND(S) and
        wfs-allRLHoldLocality(S) and
        wfs-allNDHaveAtMostOneHost(S) and
@@ -642,10 +635,11 @@ module STATEfuns {
 
   pred init : State
   eq init(< SetND,SetCP,SetRQ,SetRL,MP >)
-     = not (SetND = empND) and wfs(< SetND,SetCP,SetRQ,SetRL,MP >) and (MP = empMsg) and
+     = not (SetND = empND) and (MP = empMsg) and
+       wfs(< SetND,SetCP,SetRQ,SetRL,MP >) and
        allNDInStates(SetND,initial) and 
-       allCPInStates(SetCP,closed) and allRQInStates(SetRQ,unbound) and
-       noNDCycle(< SetND,SetCP,SetRQ,SetRL,MP >) .
+       allCPInStates(SetCP,closed) and 
+       allRQInStates(SetRQ,unbound) .
 
   pred final : State
   eq final(< SetND,SetCP,SetRQ,SetRL,MP >)

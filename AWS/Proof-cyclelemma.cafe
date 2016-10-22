@@ -6,7 +6,7 @@ require Proof Proof.cafe
 --> Step 2-0: Define a predicate to be proved.
 --> ******************************************
 module! ProofInitialCont {
-  protecting(PROOFbase)
+  protecting(ProofBase)
 
   vars B1 B2 : Bool
 
