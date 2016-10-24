@@ -34,9 +34,9 @@ select ProofInitialCont .
 --> Step 1-1: Begin with the most general case. 
 --> *******************************************
 :goal {eq invcont(< (node(tnd, idND, initial) sND), sCP, sRQ, sRL, mp >) = true .}
---> *******************************************************************
---> Step 1-2: Think which rule is firstly applied to an initial state. 
---> *******************************************************************
+--> *******************************************************************************
+--> Step 1-2: Think which rule is applied to the initial state in an unproved case. 
+--> *******************************************************************************
 -- The next rule should be R01 for the node of idND.
 --> ********************************************************************
 --> Step 1-3: Split the general case into cases which collectively cover
@@ -87,9 +87,9 @@ select ProofInitialCont .
 -- Case 2-2-2-1: When the node of the capability of idCP is the same of the node of the requiement of idRQ:
 :apply (rd) -- 2-2-2-1
 -- Case 2-2-2-2: When the node of the capability of idCP is not the same of the node of the requiement of idRQ:
---> *******************************************************************
---> Step 1-2: Think which rule is firstly applied to an initial state. 
---> *******************************************************************
+--> *******************************************************************************
+--> Step 1-2: Think which rule is applied to the initial state in an unproved case. 
+--> *******************************************************************************
 -- The next rule should be R04 for the requirement of idRQ.
 --> ********************************************************************
 --> Step 1-3: Split the general case into cases which collectively cover
@@ -115,9 +115,9 @@ select ProofInitialCont .
 -- Case 2-2-2-2-1-1: When the node of the capability of idCP does not exist:
 :apply (rd) -- 2-2-2-2-1-1
 -- Case 2-2-2-2-1-2: When the node of the capability of idCP exists:
---> *******************************************************************
---> Step 1-2: Think which rule is firstly applied to an initial state. 
---> *******************************************************************
+--> *******************************************************************************
+--> Step 1-2: Think which rule is applied to the initial state in an unproved case. 
+--> *******************************************************************************
 -- The next rule should be R03 for the capability of idCP
 --> ****************************************************
 --> Step 1-4: Split the first rule case into cases where
@@ -178,9 +178,9 @@ select ProofCreatedCont .
 --> Step 1-1: Begin with the most general case. 
 --> *******************************************
 :goal {eq invcont(< (node(tnd, idND, created) sND), sCP, sRQ, sRL, mp >)  = true .}
---> *******************************************************************
---> Step 1-2: Think which rule is firstly applied to an initial state. 
---> *******************************************************************
+--> *******************************************************************************
+--> Step 1-2: Think which rule is applied to the initial state in an unproved case. 
+--> *******************************************************************************
 -- The next rule should be R02 for the node of idND.
 --> ********************************************************************
 --> Step 1-3: Split the general case into cases which collectively cover
@@ -195,9 +195,9 @@ select ProofCreatedCont .
 -- Case 1: When all of the requirements are ready:
 :apply (rd) -- 1
 -- Case 2: When there is an unbound requirement of the node of idND:
---> *******************************************************************
---> Step 1-2: Think which rule is firstly applied to an initial state. 
---> *******************************************************************
+--> *******************************************************************************
+--> Step 1-2: Think which rule is applied to the initial state in an unproved case. 
+--> *******************************************************************************
 -- The next applicable rule depends on the type of the requirement.
 -- The type of the requirement of idRQ is hostedOn, dependsOn, or connectsTo.
 :csp {
@@ -208,9 +208,9 @@ select ProofCreatedCont .
 -- Case 2-1: When the type of the requirement of idRQ is hostedOn:
 :apply (rd) -- 2-1
 -- Case 2-2: When the type of the requirement of idRQ is dependsOn:
---> *******************************************************************
---> Step 1-2: Think which rule is firstly applied to an initial state. 
---> *******************************************************************
+--> *******************************************************************************
+--> Step 1-2: Think which rule is applied to the initial state in an unproved case. 
+--> *******************************************************************************
 -- The next rule should be R07 for the dependsOn requirement of idRQ.
 --> ********************************************************************
 --> Step 1-3: Split the general case into cases which collectively cover
@@ -260,9 +260,9 @@ select ProofCreatedCont .
   eq scp = available .
 }
 -- Case 2-2-2-2-2-1: When the capability of idCP is closed:
---> *******************************************************************
---> Step 1-2: Think which rule is firstly applied to an initial state. 
---> *******************************************************************
+--> *******************************************************************************
+--> Step 1-2: Think which rule is applied to the initial state in an unproved case. 
+--> *******************************************************************************
 -- The next rule should be R05 for the dependsOn capability of idCP.
 --> ****************************************************
 --> Step 1-4: Split the first rule case into cases where
@@ -298,9 +298,9 @@ select ProofCreatedCont .
 -- Case 2-2-2-2-2-3: When the capability of idCP is available:
 :apply (rd) -- 2-2-2-2-2-3
 -- Case 2-3: When the type of the requirement of idRQ is connectsTo:
---> *******************************************************************
---> Step 1-2: Think which rule is firstly applied to an initial state. 
---> *******************************************************************
+--> *******************************************************************************
+--> Step 1-2: Think which rule is applied to the initial state in an unproved case. 
+--> *******************************************************************************
 -- The next rule should be R11 for the connectsTo requirement of idRQ.
 --> ********************************************************************
 --> Step 1-3: Split the general case into cases which collectively cover
@@ -355,9 +355,9 @@ select ProofCreatedCont .
   eq scp = available .
 }
 -- Case 2-3-2-1-2-2-1: When the capability of idCP is closed:
---> *******************************************************************
---> Step 1-2: Think which rule is firstly applied to an initial state. 
---> *******************************************************************
+--> *******************************************************************************
+--> Step 1-2: Think which rule is applied to the initial state in an unproved case. 
+--> *******************************************************************************
 -- The next rule should be R09 for the connectsTo capability of idCP.
 --> ****************************************************
 --> Step 1-4: Split the first rule case into cases where
@@ -389,9 +389,9 @@ select ProofCreatedCont .
 -- Case 2-3-2-1-2-2-1-2-3: When the node of idND' is started:
 :apply (rd) -- 2-3-2-1-2-2-1-2-3
 -- Case 2-3-2-1-2-2-2: When the capability of idCP is open:
---> *******************************************************************
---> Step 1-2: Think which rule is firstly applied to an initial state. 
---> *******************************************************************
+--> *******************************************************************************
+--> Step 1-2: Think which rule is applied to the initial state in an unproved case. 
+--> *******************************************************************************
 -- The next rule should be R10 for the connectsTo capability of idCP.
 --> ****************************************************
 --> Step 1-4: Split the first rule case into cases where
@@ -436,9 +436,9 @@ select ProofCreatedCont .
 -- Case 3-1: When the type of the requirement of idRQ is hostedOn:
 :apply (rd) -- 3-1
 -- Case 3-2: When the type of the requirement of idRQ is dependsOn:
---> *******************************************************************
---> Step 1-2: Think which rule is firstly applied to an initial state. 
---> *******************************************************************
+--> *******************************************************************************
+--> Step 1-2: Think which rule is applied to the initial state in an unproved case. 
+--> *******************************************************************************
 -- The next rule should be R08 for the dependsOn requirement of idRQ.
 --> ********************************************************************
 --> Step 1-3: Split the general case into cases which collectively cover
@@ -490,9 +490,9 @@ select ProofCreatedCont .
 -- Case 3-2-2-2-2-1: When the capability of idCP is closed:
 :apply (rd) -- 3-2-2-2-2-1
 -- Case 3-2-2-2-2-2: When the capability of idCP is open:
---> *******************************************************************
---> Step 1-2: Think which rule is firstly applied to an initial state. 
---> *******************************************************************
+--> *******************************************************************************
+--> Step 1-2: Think which rule is applied to the initial state in an unproved case. 
+--> *******************************************************************************
 -- The next rule should be R06 for the dependsOn capability of idCP.
 --> ****************************************************
 --> Step 1-4: Split the first rule case into cases where
@@ -531,9 +531,9 @@ select ProofCreatedCont .
 -- Case 3-2-2-2-2-3: When the capability of idCP is available:
 :apply (rd) -- 3-2-2-2-2-3
 -- Case 3-3: When the type of the requirement of idRQ is connectsTo:
---> *******************************************************************
---> Step 1-2: Think which rule is firstly applied to an initial state. 
---> *******************************************************************
+--> *******************************************************************************
+--> Step 1-2: Think which rule is applied to the initial state in an unproved case. 
+--> *******************************************************************************
 -- The next rule should be R12 for the connectsTo requirement of idRQ.
 --> ********************************************************************
 --> Step 1-3: Split the general case into cases which collectively cover
@@ -581,9 +581,9 @@ select ProofCreatedCont .
 -- Case 3-3-2-1-2-1: When the node of the capability of idCP is the same of the node of the requiement of idRQ:
 :apply (rd) -- 3-3-2-1-2-1
 -- Case 3-3-2-1-2-2: When the node of the capability of idCP is not the same of the node of the requiement of idRQ:
---> *******************************************************************
---> Step 1-2: Think which rule is firstly applied to an initial state. 
---> *******************************************************************
+--> *******************************************************************************
+--> Step 1-2: Think which rule is applied to the initial state in an unproved case. 
+--> *******************************************************************************
 -- The next applicable rule depends on the local state of the capability
 -- The state of the capability of idCP is closed, open, or available.
 :csp {
@@ -594,9 +594,9 @@ select ProofCreatedCont .
 -- Case 3-3-2-1-2-2-1: When the capability of idCP is closed:
 :apply (rd) -- 3-3-2-1-2-2-1
 -- Case 3-3-2-1-2-2-2: When the capability of idCP is open:
---> *******************************************************************
---> Step 1-2: Think which rule is firstly applied to an initial state. 
---> *******************************************************************
+--> *******************************************************************************
+--> Step 1-2: Think which rule is applied to the initial state in an unproved case. 
+--> *******************************************************************************
 -- The next rule should be R10 for the connectsTo capability of idCP.
 --> ********************************************************************
 --> Step 1-4: Split the general case into cases which collectively cover
