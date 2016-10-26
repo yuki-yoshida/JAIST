@@ -44,7 +44,7 @@ module! SETOBJECT {
 
 module* PRMOBJPRED1 {
   [Object < SetOfObject]
-  op empObj : -> SetOfObject
+  op empObj : -> SetOfObject {constr}
   op _ _ : SetOfObject SetOfObject -> SetOfObject {constr assoc comm id: empObj}
   [Arg]
   pred p : Object Arg
@@ -84,8 +84,8 @@ module! ALLOBJPRED1(P :: PRMOBJPRED1) {
 
 module* PRMOBJPRED2 {
   [Object < SetOfObject]
-  op empObj : -> SetOfObject
-  op _ _ : SetOfObject SetOfObject -> SetOfObject
+  op empObj : -> SetOfObject  {constr}
+  op _ _ : SetOfObject SetOfObject -> SetOfObject {constr assoc comm id: empObj}
   [Arg1 Arg2]
   pred p : Object Arg1 Arg2
 }
@@ -125,8 +125,8 @@ module! ALLOBJPRED2(P :: PRMOBJPRED2) {
 
 module* PRMOBJPRED3 {
   [Object < SetOfObject]
-  op empObj : -> SetOfObject
-  op _ _ : SetOfObject SetOfObject -> SetOfObject
+  op empObj : -> SetOfObject {constr}
+  op _ _ : SetOfObject SetOfObject -> SetOfObject {constr assoc comm id: empObj}
   [Arg1 Arg2 Arg3]
   pred p : Object Arg1 Arg2 Arg3
 }
@@ -259,12 +259,12 @@ module* PRMOBJLINK {
   protecting(SETOBJECT)
   -- Linked Object which exists only one
   [LObject < SetOfLObject]
-  op empLObj : -> SetOfLObject
+  op empLObj : -> SetOfLObject {constr}
   [LObjID]
   pred existLObj : SetOfLObject LObjID
   op getLObject : SetOfLObject LObjID -> LObject
   [LObjState < SetOfLObjState]
-  op _ _ : SetOfLObject SetOfLObject -> SetOfLObject
+  op _ _ : SetOfLObject SetOfLObject -> SetOfLObject {constr assoc comm}
   op id : LObject -> LObjID
   op state : LObject -> LObjState
   op _\in_ : LObjState SetOfLObjState -> Bool
