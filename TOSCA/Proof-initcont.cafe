@@ -9,13 +9,23 @@ require Proof Proof.cafe
 --> ******************************************
 module! ProofInitCont {
   protecting(ProofBase)
+
+  var S : State
+  var T : NDType
+  var I : NDID
+  var SetND : SetOfNode
+  var SetCP : SetOfCapability
+  var SetRQ : SetOfRequirement
+  var SetRL : SetOfRelationship
+  var M : PoolOfMsg
+
+  -- Predicate to be proved.
   pred initcont : State .
-  eq initcont(S:State) = init(S) implies cont(S) .
+  eq initcont(S) = init(S) implies cont(S) .
 
   -- initial-cont lemma: 
-  eq cont(< (node(T:NDType, I:NDID, initial) SetND:SetOfNode), 
-	     SetCP:SetOfCapability, SetRQ:SetOfRequirement, SetRL:SetOfRelationship, M:PoolOfMsg >)
-     = true .
+  eq cont(< (node(T, I, initial) SetND), 
+            SetCP, SetRQ, SetRL, M >) = true .
 }
 
 --> Proof of (1) init(S) implies cont(S).

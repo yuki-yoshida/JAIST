@@ -10,22 +10,34 @@ provide ProofContCont
 --> ******************************************
 module! ProofContCont {
   protecting(ProofBase)
+
+  vars S SS : State
+  var CC : Bool
+  var T : NDType
+  var I : NDID
+  var SetND : SetOfNode
+  var SetCP : SetOfCapability
+  var SetRQ : SetOfRequirement
+  var SetRL : SetOfRelationship
+  var M : PoolOfMsg
+
+  -- Predicate to be proved.
   pred ccont : State State
   pred contcont : State
-  eq ccont(S:State,SS:State)
+  eq ccont(S,SS)
      = inv(S) and not final(S) implies cont(SS) or final(SS) .
-  eq contcont(S:State)
-     = not (S =(*,1)=>+ SS:State if CC:Bool suchThat
+  eq contcont(S)
+     = not (S =(*,1)=>+ SS if CC suchThat
             not ((CC implies ccont(S,SS)) == true)
      	   { S => SS !! CC ! inv(S) ! final(S) ! cont(SS) ! final(SS) }) .
 
-  -- Initial Cont Lemma: 
-  eq cont(< (node(T:NDType, I:NDID, initial) SetND:SetOfNode), 
-	      SetCP:SetOfCapability, SetRQ:SetOfRequirement, SetRL:SetOfRelationship, M:PoolOfMsg >)
+  -- initial-cont lemma: 
+  eq cont(< (node(T, I, initial) SetND), 
+	    SetCP, SetRQ, SetRL, M >)
      = true .
-  -- Created Cont Lemma: 
-  eq cont(< (node(T:NDType, I:NDID, created) SetND:SetOfNode), 
-	      SetCP:SetOfCapability, SetRQ:SetOfRequirement, SetRL:SetOfRelationship, M:PoolOfMsg >)
+  -- created-cont lemma:
+  eq cont(< (node(T, I, created) SetND), 
+	    SetCP, SetRQ, SetRL, M >)
      = true .
 }
 --> Totally 12 goals should be proved.
