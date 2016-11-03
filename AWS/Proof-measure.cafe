@@ -1,15 +1,21 @@
+require NatAxiom
 require Proof Proof.cafe
 
 --> *************************************************
 --> (3) inv(S) and not final(S) implies m(S) > m(SS).
 --> *************************************************
 
---> ******************************************
---> Step 3-0: Define a predicate to be proved.
---> ******************************************
 module! ProofMeasure {
   protecting(ProofBase)
 
+--> *************************************
+--> Step 3-0: Use natural number axioms.
+--> *************************************
+  protecting(NATAXIOM)
+
+--> ******************************************
+--> Step 3-1: Define a predicate to be proved.
+--> ******************************************
   vars S SS : State
   var CC : Bool
 
@@ -20,7 +26,7 @@ module! ProofMeasure {
   pred mesmes : State .
   eq mesmes(S)
      = not (S =(*,1)=>+ SS if CC suchThat
-            not ((CC implies mmes(S,SS)) = true)
+            not ((CC implies mmes(S,SS)) == true)
      	   { S => SS !! CC ! inv(S) ! final(S) ! (m(S) > m(SS)) }) .
 }
 
@@ -32,13 +38,13 @@ module! ProofMeasure {
 --> ********************************************
 select ProofMeasure .
 --> *************************************************************************
---> Step 3-1: Begin with the cases each of which matches to LHS of each rule.
+--> Step 3-2: Begin with the cases each of which matches to LHS of each rule.
 --> *************************************************************************
 :goal {
   eq mesmes(< (res(trs,idRS,initial) sRS), sPR >) = true .
 }
 --> ************************************************************
---> Step 3-2: Split the most general case for a rule into cases
+--> Step 3-3: Split the most general case for a rule into cases
 -->  where the condition of the rule does or does not hold. 
 --> ************************************************************
 -- The condition of R01 does or does not hold for S.
@@ -59,7 +65,7 @@ show proof
 -->       (prop(TPR,IDPR,ready   ,IDRS,IDRRS) SetPR) > .
 --> ****************************************************
 --> *************************************************************************
---> Step 3-1: Begin with the cases each of which matches to LHS of each rule.
+--> Step 3-2: Begin with the cases each of which matches to LHS of each rule.
 --> *************************************************************************
 :goal {
   eq mesmes(< (res(trs,idRRS,started) sRS), (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
@@ -73,20 +79,18 @@ show proof
 module! ProofMeasFinal {
   protecting(ProofBase)
 
+--> *************************************
+--> Step 4-0: Use a natural number axiom.
+--> *************************************
+  protecting(NATAXIOM)
+
 --> ******************************************
---> Step 4-0: Define a predicate to be proved.
+--> Step 4-1: Define a predicate to be proved.
 --> ******************************************
   var S : State
   pred mesfinal : State .
   eq mesfinal(S)
      = inv(S) and cont(S) and m(S) = 0 implies final(S) .
-
---> *************************************
---> Step 4-1: Use a natural number axiom.
---> *************************************
-  eq (N1:Nat + N2:Nat = 0)
-     = (N1 = 0) and (N2 = 0) .
-  eq (Nz:NzNat = 0) = false .
 }
 
 --> ********************************************
