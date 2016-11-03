@@ -85,8 +85,8 @@ specifications of different kinds of cloud orchestration tools and (2)
 a procedure for how to verifying a kind of liveness properties, as
 well as invariant properties, of formalized specifications.  It also
 provides (a) general templates and libraries of formal descriptions
-for specifying orchestration of cloud systems and (b) logical proofs
-of lemmas for general predicates of the libraries.
+for specifying orchestration of cloud systems and (b) proved lemmas
+for general predicates of the libraries.
 
 The framework has been applied to the verification of specifications
 of AWS CloudFormation and also of OASIS TOSCA, and is demonstrated to
@@ -287,11 +287,6 @@ provides a static IP address for an EC2 instance which is dynamically
 created and activated.
 
 %% ===============================================================
-\section{OpenStack Heat}
-\label{sec:heat}
-%% ===============================================================
-
-%% ===============================================================
 \section{Puppet, Chef, and Ansible}
 \label{sec:PCA}
 %% ===============================================================
@@ -342,7 +337,7 @@ set up an httpd service.
 \end{verbatim}
 \normalsize
 \vspace{-0.6cm}
-\caption{A Simple Puppet Manifest for Setting up an HTTPD}
+\caption{A Simple Puppet Manifest for Setting up an HTTPD Server}
 \label{fig:PuppetExample}
 \end{figure}
 %% =======================================================================
@@ -354,19 +349,19 @@ package type resource named ``httpd'' is desired to be installed to
 the target VM. A package means an installable package of a middleware
 which is the Apache HTTP server in this case.  The second declaration
 of the example manifest means that an httpd service is desired to be
-running and it requires the httpd package resource above is
-in the specified state. The third one means that the specified
-directory is desired to exist and the fourth means that a file is
-desired to be copied from the Puppet server to the specified file path
-whose owner is {\tt root}, group is {\tt root}, and mode is 644, which
-requires the directory declared above is in the specified state.  The
-fifth one also means that a file is desired to be copied and this
-resource should be checked whenever the state of the specified service
-resource is changed. A manifest is not necessary executed from top to
-bottom; the order is decided by {\tt require} and {\tt subscribe}
-attributes. A manifest is idempotent which means the result of the
-execution of it is always the same because nothing is done when the
-specified resource is already in the desired state.
+running and it requires the httpd package resource above is in the
+specified state. The third one means that the specified directory is
+desired to exist and the fourth means that a file is desired to be
+copied from the Puppet server to the specified file path whose owner
+is {\tt root}, group is {\tt root}, and mode is 644, which requires
+the directory declared above is in the specified state.  The fifth one
+also means that a file is desired to be copied and this resource
+should be checked whenever the state of the specified service resource
+is changed. A manifest is not necessarily executed from top to bottom;
+the order is decided by {\tt require} and {\tt subscribe}
+attributes. A manifest is idempotent which means the result of its
+execution is always the same because nothing is done when a specified
+resource is already in the desired state.
 
 Chef~\cite{Chef} provides a Ruby-based domain specific language (DSL)
 to describe executable scripts for setting up inside VMs. A script is
@@ -406,7 +401,7 @@ set up an httpd service.
 \end{verbatim}
 \normalsize
 \vspace{-0.6cm}
-\caption{A Simple Chef Recipe for Setting up an HTTPD}
+\caption{A Simple Chef Recipe for Setting up an HTTPD Server}
 \label{fig:ChefExample}
 \end{figure}
 %% =======================================================================
