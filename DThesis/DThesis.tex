@@ -92,7 +92,12 @@ The framework has been applied to the verification of specifications
 of AWS CloudFormation and also of OASIS TOSCA, and is demonstrated to
 be effective for reducing generic routine work and making a
 verification engineer concentrate on the work specific to each
-individual system.
+individual system. The example of AWS CloudFormation shows a general
+way to manage dependencies of cloud resources which is a smarter one
+than that of CloudFormation. The example of OASIS TOSCA also shows
+that the framework can be used to specify, represent, and verify the
+behavior models of TOSCA where the standard has not yet provided any
+way to do so.
 
 The major contributions of this paper are (1) it shows that cloud
 orchestration is a practical and suitable domain to apply interactive
@@ -535,8 +540,8 @@ abstract and reusable descriptions of topologies.
 
 In this paper, {\it behavior of topologies} means when
 and which type operations should be invoked in automation. It is
-important to notice that behavior of a topology depends
-on types of included nodes and relationships. We also say
+important to notice that behavior of a topology is decided by
+types of included nodes and relationships. We also say
 {\it behavior of a type} to mean that the conditions and
 results of invoking its type operations, which is defined by a type
 architect. Usually, different types of nodes are provided by different
@@ -549,9 +554,9 @@ Currently there are no practical implementations of the declarative
 manner of TOSCA and one of the reasons is that no standard set of type
 operations of nodes or relationships are defined and there is no way
 for type architects to define behavior of their own types.  In
-Section~\ref{sec:TOSCA}, we will describe how to use our framework to
-define behavior of TOSCA types and to verify that a specified
-topology can correctly automate to set up the cloud system.
+Section~\ref{sec:TOSCAbehavior}, we will describe how to use our
+framework to define behavior of TOSCA types and to verify that a
+specified topology can correctly automate to set up the cloud system.
 
 %% ===============================================================
 \chapter{Preliminaries of \cafeobj}
@@ -5619,16 +5624,21 @@ requirements, and $pool$ is a message pool\footnote{Note that here we
 \section{Behavior Model of TOSCA Templates}
 \label{sec:TOSCAbehavior}
 %% ===============================================================
-A type of nodes defines invocation rules of its operations. Each rule
-specifies when an operation can be invoked and how it changes the
-state of the node.  A type of relationships also defines invocation
-rules of its operations. 
+The framework models the behavior of an automated operation as a state
+machine in which a set of transition rules of states specifies the
+behavior. As described in Section~\ref{sec:TOSCA}, the behavior of a
+topology of TOSCA is decided by the behavior of types of nodes and
+relationships included in the topology. Here, we propose to model the
+behavior of a type as a set of transition rules each of which is
+called an {\it invocation rule} and specifies when a type operation can
+be invoked and how it changes the local state of a node or
+relationship of the type.
 
 As described in Section \ref{sec:TOSCA}, type operations and their
 invocation rules should be defined by type architects. When an
-application architect defines a topology, the set of all type
-operations and the set of all invocation rules of referred
-node/relationship types collectively define behavior of the topology.
+application architect defines a topology, the set of all invocation
+rules of included node/relationship types collectively composes a
+state machine which specifies the behavior of the topology.
 
 In the example of Fig.~\ref{fig:exampletopology}, we assume that
 behavior of four node types is the same focusing on when a node is
@@ -5653,9 +5663,9 @@ operation of a relationship type changes the state of its capability
 or requirement.
 
 Behavior of these types is depicted in Fig.~\ref{fig:examplesem}.  A
-solid arrow represents a state transition of each object and a dashed
-arrow represents an invocation of a type operation or a message
-sending.
+solid arrow represents a state transition of each object caused by a
+type operation and a dashed arrow represents an invocation of a type
+operation or a message sending.
 
 \begin{figure}
 \centering
@@ -7343,8 +7353,12 @@ number of states in a significantly systematic way.
 
 An example of usage of our formalization shows a general way to manage
 dependencies of cloud resources which is a smarter one than that of
-the most popular tool; AWS CloudFormation. It also proposes a way to
-specify behavior models of the standard description; OASIS TOSCA.
+the most popular tool, AWS CloudFormation.
+
+It is also demonstrated that the framework can be used to specify,
+represent, and verify the behavior models of the standard
+specification language, OASIS TOSCA, of cloud orchestration where the
+standard has not yet provided any way to do so.
 
 The major contributions of this paper are (1) it shows that cloud
 orchestration is a practical and suitable domain to apply interactive
