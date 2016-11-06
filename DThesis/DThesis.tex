@@ -263,14 +263,14 @@ shown in Fig.~\ref{fig:exampleaws}.
 \begin{figure}
 \small
 \begin{verbatim}
-  { "Resources" : {
-      "MyInstance" : {
-        "Type" : "AWS::EC2::Instance",
-      "MyEIP" : {
-        "Type" : "AWS::EC2::EIP",
-        "Properties" : {
-          "InstanceId" : { "Ref" : "MyInstance" }
-  }}}}}
+               { "Resources" : {
+                   "MyInstance" : {
+                     "Type" : "AWS::EC2::Instance",
+                   "MyEIP" : {
+                     "Type" : "AWS::EC2::EIP",
+                     "Properties" : {
+                       "InstanceId" : { "Ref" : "MyInstance" }
+               }}}}}
 \end{verbatim}
 \normalsize
 \vspace{-0.6cm}
@@ -282,6 +282,7 @@ shown in Fig.~\ref{fig:exampleaws}.
 \begin{figure}
 \centering
 \includegraphics[height=2cm,natwidth=396,natheight=78]{./exaws.png}
+\vspace{-0.6cm}
 \caption{A Simple Example Cloud System on AWS}
 \label{fig:exampleaws}
 \end{figure}
@@ -299,46 +300,46 @@ Puppet, Chef, and Ansible are not cloud orchestration tools but {\it
   deployment tools} (also called {\it configuration tools}) which are
 used by cloud orchestration tools to set up resources inside VMs.
 
-Puppet~\cite{Puppet} provides a Ruby-based domain specific language (DSL)
-to describe executable scripts for setting up inside VMs. A script is
-called a {\it manifest} and executed in a VM. 
-Fig.~\ref{fig:PuppetExample} is a simple manifest written in Puppet DSL to
-set up an httpd service.
+Puppet~\cite{Puppet} provides a domain specific language (DSL) to
+describe executable Ruby~\cite{Ruby} scripts for setting up inside
+VMs. A script is called a {\it manifest} and executed in a VM.
+Fig.~\ref{fig:PuppetExample} is a simple manifest written in Puppet
+DSL to set up an httpd service.
 %% =======================================================================
 \begin{figure}
 \small
 \begin{verbatim}
-  package { "httpd":
-    name => "httpd",
-    ensure => "installed"
-  }
-  service { "httpd":
-    name => "httpd",
-    enable => "true",
-    ensure => running,
-    require => Package["httpd"]
-  }
-  file { "/var/www/html/sample":
-    ensure => directory,
-    owner => "apache",
-    group => "apache",
-    mode => "755",
-    require => Package["httpd"]
-  }
-  file { "/var/www/html/sample/sample.html":
-    source => "puppet:///files/sample.html",
-    owner => "root",
-    group => "root",
-    mode => "644",
-    require => File["/var/www/html/sample"]
-  }
-  file { "/etc/httpd/conf/httpd.conf":
-    source => "puppet:///files/httpd.conf",
-    mode => "644",
-    owner => "root",
-    group => "root"
-    subscribe => Service["httpd"]
-  }
+                 package { "httpd":
+                   name => "httpd",
+                   ensure => "installed"
+                 }
+                 service { "httpd":
+                   name => "httpd",
+                   enable => "true",
+                   ensure => running,
+                   require => Package["httpd"]
+                 }
+                 file { "/var/www/html/sample":
+                   ensure => directory,
+                   owner => "apache",
+                   group => "apache",
+                   mode => "755",
+                   require => Package["httpd"]
+                 }
+                 file { "/var/www/html/sample/sample.html":
+                   source => "puppet:///files/sample.html",
+                   owner => "root",
+                   group => "root",
+                   mode => "644",
+                   require => File["/var/www/html/sample"]
+                 }
+                 file { "/etc/httpd/conf/httpd.conf":
+                   source => "puppet:///files/httpd.conf",
+                   mode => "644",
+                   owner => "root",
+                   group => "root"
+                   subscribe => Service["httpd"]
+                 }
 \end{verbatim}
 \normalsize
 \vspace{-0.6cm}
@@ -350,7 +351,7 @@ A manifest is a list of declarations each of which declares the
 desired state of a resource. Each declaration specifies a type, a
 title, and attributes of a resource. For example, the first four lines
 of the manifest shown in Fig.~\ref{fig:PuppetExample} specifies that a
-package type resource named ``httpd'' is desired to be installed to
+package type resource named {\tt httpd} is desired to be installed to
 the target VM. A package means an installable package of a middleware
 which is the Apache HTTP server in this case.  The second declaration
 of the example manifest means that an httpd service is desired to be
@@ -368,41 +369,40 @@ attributes. A manifest is idempotent which means the result of its
 execution is always the same because nothing is done when a specified
 resource is already in the desired state.
 
-Chef~\cite{Chef} provides a Ruby-based domain specific language (DSL)
-to describe executable scripts for setting up inside VMs. A script is
-called a {\it recipe} and executed in a VM. A collection of related
-recipes and auxiliary files is called a {\it cookbook}.
-Fig.~\ref{fig:ChefExample} is a simple recipe written in Chef DSL to
-set up an httpd service.
+Chef~\cite{Chef} also provides a Ruby-based DSL to describe executable
+scripts for setting up inside VMs. A script is called a {\it recipe}
+and executed in a VM. A collection of related recipes and auxiliary
+files is called a {\it cookbook}.  Fig.~\ref{fig:ChefExample} is a
+simple recipe written in Chef DSL to set up an httpd service.
 %% =======================================================================
 \begin{figure}
 \small
 \begin{verbatim}
-  package "httpd" do
-    action :install
-  end
-  cookbook_file "/etc/httpd/conf/httpd.conf" do
-    source "httpd.conf"
-    owner 'root'
-    group 'root'
-    mode 00644
-  end
-  directory "/var/www/html/sample" do
-    owner 'apache'
-    group 'apache'
-    mode 00755
-    action :create
-  end
-  cookbook_file "/var/www/html/sample/sample.html" do
-    source "sample.html"
-    owner 'root'
-    group 'root'
-    mode 00644
-  end
-  service "httpd" do
-    supports :status => true, :restart => true, :reload => true
-    action [:enable,:start]
-  end
+       package "httpd" do
+         action :install
+       end
+       cookbook_file "/etc/httpd/conf/httpd.conf" do
+         source "httpd.conf"
+         owner 'root'
+         group 'root'
+         mode 00644
+       end
+       directory "/var/www/html/sample" do
+         owner 'apache'
+         group 'apache'
+         mode 00755
+         action :create
+       end
+       cookbook_file "/var/www/html/sample/sample.html" do
+         source "sample.html"
+         owner 'root'
+         group 'root'
+         mode 00644
+       end
+       service "httpd" do
+         supports :status => true, :restart => true, :reload => true
+         action [:enable,:start]
+       end
 \end{verbatim}
 \normalsize
 \vspace{-0.6cm}
@@ -414,9 +414,9 @@ A recipe is a list of declarations each of which declares the desired
 state of a resource. Each declaration specifies a type, a name,
 attributes, and actions of a resource. For example, the first three
 lines of the recipe shown in Fig.~\ref{fig:ChefExample} specifies that
-a package type resource named ``httpd'' is desired to be installed to
+a package type resource named {\tt httpd} is desired to be installed to
 the target VM and the action to do so is {\tt :install}. The second
-declaration of the example recipe means that a file ``httpd.conf''
+declaration of the example recipe means that a file {\tt httpd.conf}
 included in the cookbook of this recipe is desired to be copied to the
 specified file path whose owner is {\tt root}, group is {\tt root},
 and mode is 00644. The third one means that the specified directory is
@@ -426,9 +426,121 @@ is executed from top to bottom and so the order of resources is
 critical; the fourth and fifth resources should not be inverted
 because the directory should exist before the file is copied into
 it. A recipe is idempotent similarly as a Puppet manifest. Since
-actions to achive the desired states (e.g. {\tt :install}) are
+actions to achieve the desired states (e.g. {\tt :install}) are
 abstracted and implemented for many kinds of operating systems, a
-recipe is independent from them.
+recipe is independent from the difference of them.
+
+What corresponds to a manifest of Puppet or a recipe of Chef is called
+a {\it playbook} in Ansible~\cite{Ansible}. Although Ansible is
+implemented by Python~\cite{Python}, a playbook is not an executable
+script in Python but a YAML format file~\cite{YAML} which is
+interpreted and executed by {\tt ansible-playbook} command. Before
+showing an example playbook, we will beliefly explain the YAML format.
+%% =======================================================================
+\begin{figure}
+\small
+\begin{verbatim}
+                           A: one
+                           B:
+                             - C: two
+                               D: three
+                             - E: four
+                               F: five
+                           G: six
+\end{verbatim}
+\normalsize
+\vspace{-0.6cm}
+\caption{An Example YMAL Document}
+\label{fig:YAMLExample}
+\end{figure}
+%% =======================================================================
+A YAML document represents nesting key-value lists and arrays. A key
+and its value are separated by a colon (:). Keys with the same
+indentation composes a list. In Fig.~\ref{fig:YAMLExample}, the top
+level list has three key-value pairs whose keys are {\tt A}, {\tt B},
+and {\tt G}.  An array is represented by minus signs (-) with the same
+indentation.  In the figure, the value of key {\tt B} is an array with
+two elements each of which is a key-value list with two pairs. Let us
+write a key-value list as
+\small\verb|{(k1, v1), (k2, v2), ... }|\normalsize and an array as
+\small\verb|[e1, e2, ... ]|\normalsize, then the data structure
+represented by Fig.~\ref{fig:YAMLExample} is the following list:
+\\\small
+\verb|   {(A, one), (B, [{(C, two), (D, three)}, {(E, four), (F, five)}]), (G, six)}|
+\normalsize
+%% =======================================================================
+\begin{figure}
+\small
+\begin{verbatim}
+            - hosts: webservers
+              tasks:
+                - name: be sure httpd is installed
+                  yum: name=httpd state=installed
+                - name: be sure httpd.conf exists
+                  file: src=/file/httpd.conf
+                        path=/etc/httpd/conf/httpd.conf
+                        state=file
+                        owner=root
+                        group=root
+                        mode=0644
+                - name: be sure springboot root directory exists
+                  file: path=/var/www/html/sample
+                        state=directory
+                        owner=apache
+                        group=apache
+                        mode=0755
+                - name: be sure sample.html exists
+                  file: src=/file/sample.html
+                        path=/var/www/html/sample/sample.html
+                        state=file
+                        owner=root
+                        group=root
+                        mode=0644
+                - name: be sure httpd is running and enabled
+                  service: name=httpd state=running enabled=yes
+\end{verbatim}
+\normalsize
+\vspace{-0.6cm}
+\caption{A Simple Ansible Playbook for Setting up an HTTPD Server}
+\label{fig:AnsibleExample}
+\end{figure}
+%% =======================================================================
+
+\noindent
+A playbook represents an array of {\it plays} which are a sports
+analogy; many plays are required to set up a cloud
+system. Fig.~\ref{fig:AnsibleExample} is a simple example playbook to
+set up an httpd service which represents only one play. A play is a
+key-value list including keys of {\tt hosts}, {\tt tasks}, and so
+on. Key {\tt hosts} specifies machines to which the play is applied.
+Key {\tt tasks} specifies an array of {\it tasks} which are executed
+in order.  In the example, the task list includes five tasks. A task
+is a key-value list and typically begins with the pair of {\tt name}
+key and its value which serves as a comment. The second pair of a task
+specifies a {\it module} and the parameters to invoke it.  A module is
+a command provided by Ansible which can be remotely executed on the
+specified VMs. In the example, module {\tt yum} will install the
+package resource named {\tt httpd}, module {\tt file} will create the
+specified file or directory, and {\tt service} will start the httpd
+service to be running. Similarly as a Chef recipe, tasks in a Ansible
+playbook are executed from top to bottom and so the order of tasks is
+critical.  A playbook is idempotent similarly as a Puppet manifest and
+a Chef recipe. Since modules to achieve the desired states are
+abstracted and implemented for many kinds of operating systems, a
+playbook is independent from the difference of them.
+
+Although there are several differences among Puppet, Chef, and Ansible
+which are omitted to explain here, they share several common features in
+comparison with shell command scripts dependent on operating systems
+of VMs. They provides domain specific languages to describe the
+desired states of resources. The descriptions in the DSLs are
+idempotent and abstracted to be independent from the difference of
+operation systems.
+
+However, people have to learn and use at least two different kinds of
+tools (orchestration tools and configuration tools) with different
+styles of specifications and functionalities, which results in much
+elaboration to guarantee the correctness of automated operations.
 
 %% ===============================================================
 \section{OASIS TOSCA}
@@ -474,7 +586,6 @@ The current version of TOSCA is an XML-based language\footnote{OASIS
 part of the topology template of Fig.~\ref{fig:exampletopology}.
 %% =======================================================================
 \begin{figure}
-\centering
 \small
 \begin{verbatim}
   <TopologyTemplate>
@@ -2997,7 +3108,11 @@ to mean that the system always reaches some final state from any
 initial state. This kind of reachability is one of the most important
 properties of practical automation of cloud systems.
 
+Futatsugi~\cite{Futatsugi15} defines leads-to property based on
+transition sequences of state machines and proposes a set of
+sufficient conditions for it as follows:
 \begin{definition}[$p~\mbstt{leads-to}~q$]
+\label{def:leadsto}
   Let $TS=(St,Tr,In)$ be a state machine, $p$ and $q$ be predicates of
   $St$, $St^R\subseteq St$ be the set of reachable states of $TS$, and
   $\Theta$ be the set of transition sequences of $TS$, then
@@ -3010,10 +3125,11 @@ properties of practical automation of cloud systems.
 \end{definition}
 
 \begin{lemma}[sufficient conditions for leads-to]
+\label{def:sufcond}
   Let $TS=(St,Tr,In)$ be a state machine, $p$ and $q$ be predicates of
   $St$, $inv$ be an invariant of $TS$, and $m$ be a natural number
   function of $St$, then the following four conditions are sufficient
-  for ($p~\mbstt{leads-to}~q$) to hold~\cite{Futatsugi15}.
+  for ($p~\mbstt{leads-to}~q$) to hold.
 \begin{eqnarray*}
 \forall (S,S')\in Tr:&&((inv(S)\land p(S)\land\neg q(S))\ra(p(S')\lor q(S')))\\
 \forall (S,S')\in Tr:&&((inv(S)\land p(S)\land\neg q(S))\ra(m(S) > m(S')))\\
@@ -3027,6 +3143,17 @@ properties of practical automation of cloud systems.
   $(p_0 \ra p) \land (p~\mbstt{leads-to}~q) \ra
   p_0~\mbstt{leads-to}~q$.
 \end{lemma}
+Since Futatsugi~\cite{Futatsugi15} does not assume fairness
+constraints to ensure any transition rule will be eventually executed,
+Definition~\ref{def:leadsto} of leads-to property includes the case
+where there is an infinite transition sequence
+$\alpha=(S_0,S_1,\dots)$ such that predicate $q$ never holds, $\forall
+S_i\in\alpha:\neg q(S_i)$. It may be not what we expect an automated
+operation of a cloud system to have. However, fortunately, the
+sufficient conditions proposed by Lemma~\ref{def:sufcond} are strong
+enough to reject such infinite cases because the properly decreasing
+natural number function, $m$, ensures that transition sequences never
+become infinite while keeping $q$ not to hold.
 
 Let the automation of a setup operation be modeled as a state machine
 $TS=(St,Tr,In)$ specified by sort {\tt State} and a set of transition
@@ -3091,16 +3218,9 @@ hold. Since $m(S)$ is a natural number, it should stop to decrease in
 finite steps and the state machine should get to state $S'$ such that
 $((cont(S')\ \lor\ final(S'))$ $\land\ (m(S') = 0))$.
 Condition~(\ref{exp:cond4}) then ensures $final(S')$. Here, $m$ is
-called a {\it state measuring function}\footnote{Researches on
-  verification of liveness properties often assume fairness
-  constraints to make state machines always reach desired states,
-  whereas our lemma requires a properly decreasing function, $m$,
-  which is strong enough for such reachability.  Since cloud
-  orchestration intentionally brings a cloud system to desired states,
-  the specification usually designs straight forward behavior which
-  typically results in existence of some state measuring function
-  $m$.}.  When condition~(\ref{exp:cond5}) and~(\ref{exp:cond6}) hold,
-each state predicate included in $inv$ is called an invariant. 
+called a {\it state measuring function}. When
+condition~(\ref{exp:cond5}) and~(\ref{exp:cond6}) hold, each state
+predicate included in $inv$ is called an invariant.
 
 The rest of this chapter explains the verification procedure for six
 sufficient conditions above using the CloudFormation example case and
