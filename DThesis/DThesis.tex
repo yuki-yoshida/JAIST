@@ -179,11 +179,11 @@ correctness of cloud orchestration. Formal approaches are mainly
 classified into two categories, {\it model checking} and {\it theorem
   proving}. Model checking methods are based on exhaustive analysis of
 states of transition systems and can automatically find counter
-examples included in the specified models. However, the size of models
+examples included in the specified models. However, the sizes of models
 are limited and thus absence of counter examples can not be proved.
 On the other hand, theorem proving can verify models of arbitrary many
 number of states and so suitable for proving absence of counter
-examples. It requires to think through meanings of the specified
+examples. It requires thinking through meanings of the specified
 models, which is very important aspect of developing trusted
 systems. However, when applying to practical problems it requires many
 human efforts to develop proofs for splitting the cases, establishing
@@ -255,7 +255,7 @@ CloudFormation models a cloud system simply as a set of {\it
 several {\it properties} which may depend on other
 resources. CloudFormation automates to setup a cloud system according
 to the specified dependency of the
-resources. Fig.~\ref{fig:AWSExample} is a part of a very simple
+resources. Fig.~\ref{fig:AWSExample} is part of a very simple
 CloudFormation template written in JSON format~\cite{JSON}.
 This template specifies a simple cloud system on the AWS IaaS platform
 shown in Fig.~\ref{fig:exampleaws}.
@@ -435,7 +435,7 @@ a {\it playbook} in Ansible~\cite{Ansible}. Although Ansible is
 implemented by Python~\cite{Python}, a playbook is not an executable
 script in Python but a YAML format file~\cite{YAML} which is
 interpreted and executed by {\tt ansible-playbook} command. Before
-showing an example playbook, we will beliefly explain the YAML format.
+showing an example playbook, we will briefly explain the YAML format.
 %% =======================================================================
 \begin{figure}
 \small
@@ -522,7 +522,7 @@ a command provided by Ansible which can be remotely executed on the
 specified VMs. In the example, module {\tt yum} will install the
 package resource named {\tt httpd}, module {\tt file} will create the
 specified file or directory, and {\tt service} will start the httpd
-service to be running. Similarly as a Chef recipe, tasks in a Ansible
+service to be running. Similarly as a Chef recipe, tasks in an Ansible
 playbook are executed from top to bottom and so the order of tasks is
 critical.  A playbook is idempotent similarly as a Puppet manifest and
 a Chef recipe. Since modules to achieve the desired states are
@@ -532,7 +532,7 @@ playbook is independent from the difference of them.
 Although there are several differences among Puppet, Chef, and Ansible
 which are omitted to explain here, they share several common features in
 comparison with shell command scripts dependent on operating systems
-of VMs. They provides domain specific languages to describe the
+of VMs. They provide domain specific languages to describe the
 desired states of resources. The descriptions in the DSLs are
 idempotent and abstracted to be independent from the difference of
 operation systems.
@@ -547,17 +547,17 @@ elaboration to guarantee the correctness of automated operations.
 \label{sec:TOSCA}
 %% ===============================================================
 OASIS TOSCA\cite{TOSCA} is a standard specification language to
-describe a cloud system consisting of service components and their
-relationships using a {\it service template}. It provides
+describe automation of a cloud system consisting of service components
+and their relationships using a {\it service template}. It provides
 interoperable deployments of cloud systems across different cloud
 environments and their management throughout the complete lifecycle
 (e.g. setting up, scaling, patching, monitoring, etc.).  A service
 template consists of a {\it topology template} and optionally a set of
 {\it plans}. A topology template defines the resource structure of a
-cloud system. Note that a topology template can be parameterized
-to give actual environment parameters such as IP addresses. It is the
-reason why named as ``template'' and in this paper we simply say a
-topology for the sake of brevity. A plan is an imperative definition
+cloud system. Note that a topology template can be parameterized to
+give actual environment parameters such as IP addresses. It is the
+reason why named as ``template'' and in this paper we simply say ``a
+topology'' for the sake of brevity. A plan is an imperative definition
 of a system operation of the cloud system, such as a setup plan,
 written by a standard process modeling language, such as BPMN.
 
@@ -582,7 +582,7 @@ represent capabilities and black ones are requirements.
 
 The current version of TOSCA is an XML-based language\footnote{OASIS
   TOSCA TC has published the committee draft of a simple profile for a
-  YAML-based language.~\cite{TOSCAYAML}}. Fig~\ref{fig:topology} is a
+  YAML-based language.~\cite{TOSCAYAML}}. Fig~\ref{fig:topology} is 
 part of the topology template of Fig.~\ref{fig:exampletopology}.
 %% =======================================================================
 \begin{figure}
@@ -630,7 +630,7 @@ has a type, such as {\tt VirtualMachine}, {\tt HostedOn}, and so
 on. Types are main functionalities of TOSCA that enable reusability of
 topology descriptions.
 
-TOSCA assumes two main engineering roles; a type architect and an
+TOSCA assumes two main engineering roles, a type architect and an
 application architect. In a typical scenario, a type architect defines
 and provides several types of those elements and an application
 architect uses them to define a topology of a cloud system. The
@@ -767,14 +767,13 @@ constrained by the built-in module {\tt TRIV} in which one sort
 \end{verbatim}
 \normalsize
 %% =======================================================================
-The sort is referred by {\tt Elt.X} and used for elements in
-{\tt SET}. The built-in module {\tt NAT} in which natural numbers are
+The sort is referred by {\tt Elt.X} and used for elements in {\tt
+  SET}. The built-in module {\tt NAT} in which natural numbers are
 specified is imported with {\tt protecting}. Modules also can be
-imported with {\tt extending} and {\tt using}. {\tt protecting} means
-that it is not allowed to add and collapse elements of the imported
-modules.  {\tt extending} means it is allowed only to add but not to
-collapse them. {\tt using} means it is allowed to add and collapse
-them.
+imported with {\tt extending} and {\tt using}; {\tt protecting} means
+that elements of the imported modules should not be added nor
+collapsed; {\tt extending} means that they can only be added but not
+be collapsed; and {\tt using} means they can be added and collapsed.
 
 One sort {\tt Set} is declared and it is also declared that
 {\tt Elt.X} is a sub-sort of {\tt Set}. This is why an element is also
@@ -810,7 +809,7 @@ as an actual parameter of {\tt Set}:
 %% =======================================================================
 in which two sorts are declared.  A term of sort {\tt LocalState}
 represents a local state of a service and there are three constants of
-local states; {\tt closed}, {\tt open}, and {\tt ready}.  A term of
+local states ({\tt closed}, {\tt open}, and {\tt ready}).  A term of
 sort {\tt Service} represents a service which has a form
 \stt{sv(n,lst)} where {\tt n} is some natural number as an identifier
 and {\tt lst} is one of local states.  {\tt SET} can be instantiated
@@ -895,7 +894,7 @@ by {\tt c2o} and {\tt o2r}, define the state transition over the
 states.  Transition rule {\tt c2o} specifies that a {\tt closed}
 service appearing in a state is changed to {\tt open}, and {\tt o2r}
 specifies that an {\tt open} service is changed to {\tt ready} if
-there is at least one other service; {\tt ctrans} means ``conditional
+there is at least one other service, where {\tt ctrans} means ``conditional
 trans''.  Command {\tt execute} makes \cafeobj try to apply transition
 rules until no one can be applied.
 %% =======================================================================
@@ -1168,7 +1167,7 @@ are not {\tt ready}.
 %% =======================================================================
 Module {\tt ProofUPDATE} gets ready for verification; it defines the
 theorem to be proved and declares several arbitrary constants.  Note
-that we requires an axiom for natural numbers which says that the
+that we require an axiom for natural numbers which says that the
 successor of a natural number is greater than 0.
 
 Firstly, we begin with the most general case; the state is
@@ -1253,14 +1252,15 @@ commands\footnote{As its name suggests, CITP has capability to
  Reduce the goal in the current case.
 \item \stt{:def $name$ = :ctf \{$\dots$\}}\\
   \stt{:def $name$ = :csp \{$\dots$\}}\\
-  Name the case splitting.
-\item \stt{:apply ($name_1\ name_2$)}\\ Combine named case
-  splittings. When $name_1$ splits $n$ cases and $name_2$ splits $m$
-  case, the current case is split into totally $n\times m$ cases.  It
-  can also specify {\tt rd}, i.e.\ \stt{:apply~($n_1\ n_2$~rd)}, which
-    means reducing the goal in every split case.
+  Name the case splitting tactic.
+\item \stt{:apply ($name_1\ name_2$)}\\ 
+  Combine named case splitting tactics. When tactic $name_1$ splits
+  $n$ cases and tactic $name_2$ splits $m$ case, the current case is
+  split into totally $n\times m$ cases.  It can also specify tactic
+  {\tt rd}, i.e.\ \stt{:apply~($n_1\ n_2$~rd)}, which means reducing
+  the goal in every split case.
 \item \stt{:init [$label$] by \{ $substitution$ \}}\\
-  Introduce a $labeled$ lemma proven by other proof scores. $Substitution$ specifies
+  Introduce a $labeled$ lemma proven by other proof scores. $substitution$ specifies
   how to unify the lemma to the current case. Detailed examples will be explained
   in Chapter~\ref{chap:verification}.
 \item \stt{describe proof}\\
@@ -1656,7 +1656,7 @@ trying to apply transition rules as long as possible.
 \end{verbatim}
 \normalsize
 %% =======================================================================
-The following is a part of log messages of the execution above, which
+The followings are part of log messages of the execution above, which
 shows that firstly rule {\tt R01} makes {\tt myInstance} transit
 from {\it initial} to {\it ready}, then {\tt R02} makes
 {\tt myEIP::InsID} transit from {\it notready} to {\it ready}, and
@@ -1732,7 +1732,7 @@ sorts and operators can be used only by renaming appropriately. For
 the example show in Fig.~\ref{fig:AWSExample}, following module
 {\tt RESOURCE} describes specifications of the resource class for
 CloudFormation\footnote{{\tt OBJECTBASE} is a template with no
-  parameter and is used to instantiate a new module and rename
+  parameter and is used to instantiate a new module and to rename
   predefined sorts/operators.}.
 %% =======================================================================
 \small
@@ -2065,12 +2065,12 @@ objects:
 \item op \stt{empLObj} (as \stt{empRS})\\
   Constant representing an empty set of linked objects.
 \item op \stt{existLObj} (as \stt{existRS})\\
-  Predicate used as \stt{existLObj($setlo$,$lid$)} which holds iff an
+  Predicate used as \stt{existLObj($setlo$,$lid$)} which holds iff a
   linked object with identifier $lid$ is included in
   $setlo$;\\$~~~~\exists lo\in setlo:\mbstt{id}(lo)=lid$.
 \item op \stt{existLObjInStates} (as \stt{existRSInStates})\\
   Predicate used as \stt{existLObjInStates($setlo$,$lid$,$setlls$)}
-  which holds iff an linked object with identifier $lid$ is included
+  which holds iff a linked object with identifier $lid$ is included
   in $setlo$ and its local state is included in
   $setlls$;\\$~~~~\exists lo\in setlo:(\mbstt{id}(lo)=lid\land
   \mbstt{state}(lo)\in setlls)$.
@@ -2383,7 +2383,7 @@ skipping to prove it, which often results in leaving critical errors
 in specifications. However, recalling that we get {\tt allRSInStates}
 by renaming {\tt allObjInStates} and similarly
 {\tt ifRSInStatesThenPRInStates} by renaming\\
-{\tt ifXInStatesThenZInStates}, this lemma can be got by renaming {\tt
+{\tt ifXInStatesThenZInStates}, this lemma can be obtained by renaming {\tt
   m2o-lemma07} as follows:
 %% =======================================================================
 \small
@@ -2479,7 +2479,7 @@ to {\tt ready}.  The lemma could be defined as follows:
 Again this lemma may be intuitively true because its antecedent part
 requires that some properties should be {\tt ready} and one specific
 property with identifier {\tt IDPR} changes its local state from {\tt
-  notready} to {\tt ready}. And again this lemma can also be got by
+  notready} to {\tt ready}. And again this lemma can also be obtained by
 renaming {\tt m2o-lemma11} as follows:
 %% =======================================================================
 \small
@@ -2554,7 +2554,7 @@ to formalize acyclicness of dependency for (1) and a lemma that
 guarantees existence of applicable rules for (3).
 
 %% ===============================================================
-\subsubsection{Formalization of dependency and no cyclicness}
+\subsubsection{Formalization of Dependency and Acyclicness}
 %% ===============================================================
 This section will describe a formal definition of cyclic dependency
 and show examples using the CloudFormation example case shown in
@@ -2695,7 +2695,7 @@ and there exists some object $X$ of $C$ in $S$ whose local state
 is included in $prels(R,C)$, then there exists some object $O$ of $C$ in
 $S$ such that the local state of $O$ is included in $prels(R,C)$ and the
 depending set of $O$ includes no object of $C$ whose local
-state is included in $prels(R,C)$; i.e.
+state is included in $prels(R,C)$, i.e.
 \begin{eqnarray*}
 &&noCycle_C(S)\land\exists X\in C:(st(X,S)\in prels(R,C)) \ra\\
 &&\:\:\:\:\:\:\:\:\:\exists O\in C:(st(O,S)\in prels(R,C)\ \land\\
@@ -2704,7 +2704,7 @@ state is included in $prels(R,C)$; i.e.
 \end{eqnarray*}
 \end{lemma}
 Proof: Let $C^R$ be a set of objects of $C$ in $S$ whose local states
-are included in $prels(R,C)$; i.e.\ $C^R=\{~O\mid O\in C~\land~
+are included in $prels(R,C)$, i.e.\ $C^R=\{~O\mid O\in C~\land~
 st(O,S)\in prels(R,C)~\}$. $C^R$ is not empty because it includes $X$.
 If every object $O$ in $C^R$ has at least one object $O' \in C^R\cap
 DS(O,S)$ then there should be some object $O$ in $C^R$ such that $O
@@ -2717,7 +2717,7 @@ cyclic dependency of {\tt Resource} in $S_0$ and there exists {\tt
   myEIP} whose local state is {\it initial}. Thereby, the Cyclic
 Dependency Lemma ensures that there exists a {\tt Resource} object
 whose local state is {\it initial} and whose depending set includes no
-initial {\tt Resource} objects; that is {\tt myInstance}.
+initial {\tt Resource} objects, which is {\tt myInstance}.
 
 %% ===============================================================
 \subsubsection{Focusing on One Class}
@@ -2789,9 +2789,9 @@ $prels(R,C)$; typically $DDS_C(O,S)$ is empty.
 %% ===============================================================
 Using the formalization of cyclic dependency explained above, the
 framework provides a predicate, \stt{noCycle($S$)}, which checks there
-is no cyclic dependency in the given global state $S$. It is defined
-by a template module, {\tt CYCLEPRED}, which uses the following
-parameter module, {\tt PRMCYCLE}.
+is no cyclic dependency in the given global state $S$. Predicate {\tt
+  noCycle} is defined by a template module, {\tt CYCLEPRED} and a
+parameter module, {\tt PRMCYCLE}:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -2803,23 +2803,46 @@ parameter module, {\tt PRMCYCLE}.
   
     [State]
     op getAllObjInState : State -> SetOfObject
+      op DDSC : Object State -> SetOfObject
+  }
+
+  module! CYCLEPRED(P :: PRMCYCLE) {
+    var O  : Object
+    vars V OS : SetOfObject
+    var S : State
   
-    -- DDSC means Direct Depending Set of the same class.
-    -- DDSC is required to have the following properties.
-    --   (O \in DDSC(O,S)) = false .
-    op DDSC : Object State -> SetOfObject
+    pred noCycle : State
+    pred noCycle : Object State
+    pred noCycle : SetOfObject SetOfObject State
+  
+    eq noCycle(S)
+       = noCycle(getAllObjInState(S),empObj,S) .
+  
+    eq noCycle(O,S)
+       = noCycle(O,empObj,S) .
+  
+    eq noCycle(empObj,V,S)
+       = true .
+    eq noCycle((O OS),V,S)
+       = if O \in V then false else noCycle(DDSC(O,S),(O V),S) fi
+         and noCycle(OS,V,S) .
   }
 \end{verbatim}
 \normalsize
 %% =======================================================================
-Given a global state, operator {\tt getAllObjInState} returns the set
-of all objects of the specific class we focus; that is the resource
-class in the CloudFormation example case. Operator \stt{DDSC(O,S)}
-returns the directly depending set of the same class as the given
-object {\tt O} in the given global state {\tt S}. The user of the
-framework should appropriately define {\tt getAllObjInState} and {\tt
-  DDSC} because they are specific to each problem. In the
-CloudFormation example case, they can be defined as follows:
+Given a global state, operator {\tt getAllObjInState} should return
+the set of all objects of the specific class we focus; that is the
+resource class in the CloudFormation example case. Operator
+\stt{DDSC(O,S)} returns the directly depending set of the same class
+as the given object {\tt O} in the given global state {\tt S}.  Given
+a global state, predicate {\tt noCycle} transitively visits objects in
+directly depending sets \stt{DDSC(O,S)} and checks not to find any
+object already visited.
+
+The user of the framework should appropriately define {\tt
+  getAllObjInState} and {\tt DDSC} because they are specific to each
+problem. In the CloudFormation example case, they can be defined as
+follows:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -2857,38 +2880,8 @@ returns a set of resources which are included in the set of resources
 and whose local states are {\tt initial}. Thereby, $DDS_C(X,S)$ can be
 defined by combining these operators.
 
-The following is the template module {\tt CYCLEPRED}:
-%% =======================================================================
-\small
-\begin{verbatim}
-  module! CYCLEPRED(P :: PRMCYCLE) {
-    var O  : Object
-    vars V OS : SetOfObject
-    var S : State
-  
-    pred noCycle : State
-    pred noCycle : Object State
-    pred noCycle : SetOfObject SetOfObject State
-  
-    eq noCycle(S)
-       = noCycle(getAllObjInState(S),empObj,S) .
-  
-    eq noCycle(O,S)
-       = noCycle(O,empObj,S) .
-  
-    eq noCycle(empObj,V,S)
-       = true .
-    eq noCycle((O OS),V,S)
-       = if O \in V then false else noCycle(DDSC(O,S),(O V),S) fi
-         and noCycle(OS,V,S) .
-  }
-\end{verbatim}
-\normalsize
-%% =======================================================================
-Given a global state, predicate {\tt noCycle} transitively visits
-objects in directly depending sets \stt{DDSC(O,S)} and checks not to
-find any object already visited. In the CloudFormation example case,
-this template module can be instantiated as follows:
+Using {\tt getAllRSInState} and {\tt DDSC} as parameters template
+module {\tt CYCLEPRED} can be instantiated as follows:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -2902,16 +2895,16 @@ this template module can be instantiated as follows:
 \end{verbatim}
 \normalsize
 %% =======================================================================
- {\tt Resource}, {\tt SetOfResource}, {\tt empRS}, {\tt
+ {\tt Resource}, {\tt SetOfResource}, {\tt empRS}, and {\tt
    getAllRSInState} are specified as actual parameters where {\tt
    DDSC} is not specified because the name is the same as the formal
  parameter.  {\tt noCycle} is renamed as {\tt noRSCycle}.
 
 %% ===============================================================
-\subsubsection{Lemmas for Proving No Cyclicness is An Invariant}
+\subsubsection{Lemmas for Proving Acyclicness is an Invariant}
 %% ===============================================================
 In order to use the Cyclic Dependency Lemma, the user of the framework
-should prove that no cyclicness is an invariant, especially should
+should prove that acyclicness is an invariant, especially should
 prove that $noCycle_c(S) \ra noCycle_C(S')$ for any global state $S$
 and any possible next state $S'$ of $S$. Although such proof is
 specific to each problem, there are several common techniques and the
@@ -3000,7 +2993,7 @@ be defined as follows:
 \normalsize
 %% =======================================================================
 As explained in Section~\ref{sec:linkpred}, {\tt getRRSsOfPRsInStates}
-is renamed from {\tt getXsOfZsInStates} and thus this lemma can be got
+is renamed from {\tt getXsOfZsInStates} and thus this lemma can be obtained
 by renaming {\tt m2o-lemma24} as follows:
 %% =======================================================================
 \small
@@ -3164,7 +3157,7 @@ $init$ and $final$ are predicates for a given global state $S$ such
 that $init(S)$ holds iff $S \in In$ and $final(S)$ holds iff $S \in
 Fn$. This means that any transition sequence from any initial state
 always reaches some final state no matter what possible transition
-sequence is taken; i.e. for any transition sequence $S\alpha$ if
+sequence is taken, i.e., for any transition sequence $S\alpha$ if
 $init(S)$ holds, then there exists a transition sequence $\beta S'$
 such that $S\alpha\beta S'\in\Theta$ and $final(S')$ holds.
 
@@ -3186,7 +3179,7 @@ continues to transit until it reaches a final state.
 \begin{lemma}[sufficient conditions for $init~\mbstt{leads-to}~final$]
   Let $TS=(St,Tr,In)$ be a state machine, $inv$ be a conjunction of
   some state predicates and $m$ be a natural number function of $St$,
-  thne the following six conditions are sufficient for
+  then the following six conditions are sufficient for
   ($init~\mbstt{leads-to}~final$) to hold.
   \begin{eqnarray}
   \label{exp:cond1}
@@ -3411,7 +3404,7 @@ specified resource includes any {\tt initial} resource.
 {\tt Cycle} is the label of this lemma and {\tt :nonexec} means that
 this lemma is executed only when it is introduced by a {\tt :init}
 command and variables {\tt T}, {\tt IDRS}, and {\tt S} are
-substitued. The usage of an {\tt :init} command will be described in
+substituted. The usage of an {\tt :init} command will be described in
 the next section.\\
 
 \noindent{\bf Step 0-6:} Prepare arbitrary constants. \\
@@ -3487,13 +3480,13 @@ specification. For the CloudFormation example case, the first rule is
 
 \noindent{\bf Step 1-3:} Split the current case into cases which
 collectively cover the current case and one of which matches to LHS of
-the current rule. \\
-Since LHS of rule {\tt R01} requires the global state to have at least
-one {\tt initial} resource, the case is split into three more cases;
-no resource, at least one {\tt initial} or {\tt started} resource. In
-the following proof score, {\tt trs}, {\tt idRS}, and {\tt sRS'} are
-arbitrary constants for a type of the resource, an identifier of the
-resource, and a set of resources respectively.
+the current rule. \\ Since LHS of rule {\tt R01} requires the global
+state to have at least one {\tt initial} resource, the case is split
+into three more cases, i.e., no resource, at least one {\tt initial}
+or {\tt started} resource. In the following proof score, {\tt trs},
+{\tt idRS}, and {\tt sRS'} are arbitrary constants for a type of the
+resource, an identifier of the resource, and a set of resources
+respectively.
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -4764,7 +4757,7 @@ The following list describes the role and content of each module:
   \item Define the constructor of the class.
   \item Define literals of the type and local state of the class.
   \item Define the selectors of the class.
-  \item Define operators specific to the class if any.
+  \item Define operators that are specific to the class if any.
   \end{enumerate}
 \item {\tt LINKS}\\
   Module for links between objects. 
@@ -4880,7 +4873,7 @@ automate to set up the cloud system.
 %% ===============================================================
 A TOSCA topology of a cloud system is modeled as it mainly consists of
 four classes of objects corresponding to the four main kinds of
-elements of a topology; nodes, relationships, capabilities, and
+elements of a topology, i.e., nodes, relationships, capabilities, and
 requirements. There is an additional object, a message pool, to
 represent messaging between resources inside of different VMs because
 they cannot communicate directly. The message pool is simply a bag of
@@ -5391,8 +5384,8 @@ be easily instantiated using the template modules {\tt
 \end{verbatim}
 \normalsize
 %% =======================================================================
-Links from capabilities to their parents node and from requirements to
-there parents are many-to-one, whereas links from relationships to
+Links from capabilities to their parent nodes and from requirements to
+their parent nodes are many-to-one, whereas links from relationships to
 their corresponding capabilities and requirements are one-to-one.
 
 In addition to the predefined predicates/operators explained in
@@ -5584,7 +5577,7 @@ to module {\tt SET} explained in Section~\ref{sec:module}:
 \normalsize
 %% =======================================================================
 
-In addition to the operators instantiated from the predefined ones, it
+In addition to the instantiated operators from the predefined ones, it
 requires to define several problem specific operators in module {\tt
   STATEfuns}. There are three kinds of them; (1) to represent
 invariants for the consistency between messages and local states of
@@ -6199,7 +6192,7 @@ as follows:
 \noindent{\bf Step 0-5:} Prepare for using the Cyclic Dependency
 Lemma. \\
 For the CloudFormation example, the Cyclic Dependency Lemma is
-required to use for only one transition rule; {\tt R01}. However, for
+required to use for only one transition rule, {\tt R01}. However, for
 the TOSCA example, there are two transition rules, {\tt R01} and {\tt
   R02} which cause cyclic situations in the verification. Thus, we
 need to define two lemmas in advance.  One of them means that there is
@@ -6742,7 +6735,7 @@ The first rule is {\tt R01}. \\
 collectively cover the current case and one of which matches to LHS of
 the current rule. \\
 Since LHS of rule {\tt R01} requires the global state to have at least
-one {\tt initial} node, the case is split into four more cases; no
+one {\tt initial} node, the case is split into four more cases, i.e., no
 node, at least one {\tt initial}, {\tt created}, or {\tt started}
 node.
 %% =======================================================================
@@ -7262,7 +7255,9 @@ Condition~(\ref{exp:cond4}) for other rules can be similarly proved.
 \section{Evaluation}
 \label{sec:evaluation}
 %% ===============================================================
+%% ===============================================================
 \subsubsection{Rate of Reuse}
+%% ===============================================================
 We need 37 sorts to represent the TOSCA structure models and all of
 them can be just instantiated and renamed from predefined sorts
 provided by the framework.
@@ -7278,14 +7273,14 @@ predicates, such as {\tt wfs-*} and {\tt inv-*}.
 Thus, 76 operators are problem specific ones. 23 of them are
 constructors including local state and type literals. 15 operators are
 selectors such as {\tt id}, {\tt type}, {\tt state}, and ones for
-links. The framework requires users to define 8 operators; {\tt init},
-{\tt final}, {\tt wfs}, {\tt inv}, {\tt m}, {\tt invK}, {\tt
+links. The framework requires users to define 8 operators, i.e., {\tt
+  init}, {\tt final}, {\tt wfs}, {\tt inv}, {\tt m}, {\tt invK}, {\tt
   getAllNDInState}, and {\tt DDSC}.
 
 Remaining 30 operators are fully original ones of this problem,
 however almost all of them can be easily defined combining predefined
 operators and can be written in several code lines. As described in
-Section~\ref{sec:TOSCAstructRep}, there are three kinds of them;
+Section~\ref{sec:TOSCAstructRep}, there are three kinds of them:
 \begin{itemize}
 \item Check the consistency between messages and local states of
   objects, e.g. if there is an available message then the
@@ -7298,7 +7293,9 @@ Section~\ref{sec:TOSCAstructRep}, there are three kinds of them;
   should be hosted on exactly one VM node.
 \end{itemize}
 
+%% ===============================================================
 \subsubsection{Size of Codes}
+%% ===============================================================
 The representation of the TOSCA model in \cafeobj consists of about
 600 lines of codes not including comment lines. About 530 lines of codes
 represent the structure model and 70 lines represent twelve rules. We
@@ -7314,7 +7311,9 @@ level of abstraction. Reminding 23 lemmas are required to prove
 condition~(\ref{exp:cond5}) and (\ref{exp:cond6}) for invariants about
 three kinds of problem specific operators described above.
 
+%% ===============================================================
 \subsubsection{Consistent Structure of Proof}
+%% ===============================================================
 However the framework does not remarkably reduce the size of codes,
 time and efforts to develop them is radically reduced. Of course, it
 is mainly because this is our second experience of the same problem,
@@ -7415,7 +7414,7 @@ used for verification.
 %% ===============================================================
 \section{Future Issues}
 %% ===============================================================
-While more than one seventh of opeartors and one third of lemmas for
+While more than one seventh of operators and one third of lemmas for
 the TOSCA example can be easily defined using predefined operators and
 proved lemmas, several extensions of our framework are desired to
 reduce problem specific coding and proving. The general formalization
