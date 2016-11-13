@@ -592,8 +592,6 @@ module! STATEfuns {
   eq wfs-allRLHoldLocality(< SetND,SetCP,SetRQ,SetRL,MP >) = allRLHoldLocality(SetRL,SetND,SetCP,SetRQ) .
   pred wfs-allNDHaveAtMostOneHost : State
   eq wfs-allNDHaveAtMostOneHost(< SetND,SetCP,SetRQ,SetRL,MP >) = allNDHaveAtMostOneHost(SetND,SetRQ) .
-  pred wfs-noNDCycle : State
-  eq wfs-noNDCycle(S) = noNDCycle(S) .
   
 --> **************************************
 --> Step 0-1: Define init(S) and final(S).
@@ -609,13 +607,13 @@ module! STATEfuns {
        wfs-allRLHaveSameTypeCPRQ(S) and
        wfs-allRLNotInSameND(S) and
        wfs-allRLHoldLocality(S) and
-       wfs-allNDHaveAtMostOneHost(S) and
-       wfs-noNDCycle(S) .
+       wfs-allNDHaveAtMostOneHost(S) .
 
   pred init : State
   eq init(< SetND,SetCP,SetRQ,SetRL,MP >)
      = not (SetND = empND) and (MP = empMsg) and
        wfs(< SetND,SetCP,SetRQ,SetRL,MP >) and
+       noNDCycle(< SetND,SetCP,SetRQ,SetRL,MP >) and
        allNDInStates(SetND,initial) and 
        allCPInStates(SetCP,closed) and 
        allRQInStates(SetRQ,unbound) .

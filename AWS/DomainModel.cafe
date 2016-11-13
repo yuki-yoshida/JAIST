@@ -213,8 +213,6 @@ module! STATEfuns {
   eq wfs-allPRHaveRS(< SetRS,SetPR >) = allPRHaveRS(SetPR,SetRS) .
   pred wfs-allPRHaveRRS : State
   eq wfs-allPRHaveRRS(< SetRS,SetPR >) = allPRHaveRRS(SetPR,SetRS) .
-  pred wfs-noRSCycle : State
-  eq wfs-noRSCycle(S) = noRSCycle(S) .
   
 --> **************************************
 --> Step 0-1: Define init(S) and final(S).
@@ -225,12 +223,12 @@ module! STATEfuns {
   eq wfs(S)
      = wfs-atLeastOneRS(S) and
        wfs-uniqRS(S) and wfs-uniqPR(S) and 
-       wfs-allPRHaveRS(S) and wfs-allPRHaveRRS(S) and
-       wfs-noRSCycle(S) .
+       wfs-allPRHaveRS(S) and wfs-allPRHaveRRS(S) .
 
   pred init : State
   eq init(< SetRS,SetPR >)
      = wfs(< SetRS,SetPR >) and
+       noRSCycle(< SetRS,SetPR >) and
        allRSInStates(SetRS,initial) and 
        allPRInStates(SetPR,notready) .
 

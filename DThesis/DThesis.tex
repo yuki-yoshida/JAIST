@@ -15,7 +15,7 @@
 \title{An Interactive Theorem Proving Framework\\for Declarative Cloud Orchestration}
 \author{Hiroyuki Yoshida}
 \school{Information Science}
-\adviser{Research Professor Kokichi Futatsugi}
+\adviser{Professor Kokichi Futatsugi}
 \date{December 03, 2016}
 %% <local definitions here>
 \newtheorem{lemma}{Lemma}
@@ -60,7 +60,7 @@ cycle of system usage and requires much flexible automation of system
 operations. Automation of cloud system operations is called cloud
 orchestration and correctness of cloud orchestration becomes much
 crucial for many activities in the human society.  However,
-correctness of automated operations cannot depend on testing-based
+correctness of automated system operations cannot depend on testing-based
 quality control because tests of them are meaningful intrinsically
 when done on production environments not on testing environments.
 Formal approaches are expected to provide systematic ways to guarantee
@@ -84,20 +84,20 @@ The proposed framework provides (1) a general way to formalize
 specifications of different kinds of cloud orchestration tools and (2)
 a procedure for how to verifying a kind of liveness properties, as
 well as invariant properties, of formalized specifications.  It also
-provides (a) general templates and libraries of formal descriptions
-for specifying orchestration of cloud systems and (b) proved lemmas
-for general predicates of the libraries.
+provides (3) general templates and libraries of formal descriptions
+for specifying orchestration of cloud systems and (4) proved lemmas
+for general predicates of the libraries to be used for verification.
 
 The framework has been applied to the verification of specifications
 of AWS CloudFormation and also of OASIS TOSCA, and is demonstrated to
 be effective for reducing generic routine work and making a
 verification engineer concentrate on the work specific to each
-individual system. The example of AWS CloudFormation shows a general
-way to manage dependencies of cloud resources which is a smarter one
-than that of CloudFormation. The example of OASIS TOSCA also shows
-that the framework can be used to specify, represent, and verify the
-behavior models of TOSCA where the standard has not yet provided any
-way to do so.
+individual system. The example of OASIS TOSCA shows that the framework
+can be used to specify, represent, and verify the behavior models of
+TOSCA where the standard has not yet provided any way to do so. It
+also shows a general way to manage dependencies of cloud resources
+which is a smarter one than that of the most popular tool,
+CloudFormation.
 
 The major contributions of this paper are (1) it shows that cloud
 orchestration is a practical and suitable domain to apply interactive
@@ -126,15 +126,19 @@ several months to make system infrastructure resources (computer,
 network, storage, etc.) available, while in these days, it takes only
 several minutes to do so. This situation accelerates the whole life
 cycle of system usage where much flexible automation is required for
-system operations.
+system operations such as setting up, scaling, patching, and so on.
+The total automation of system operations is sometimes called
+``Infrastructure as Code'' (IaC).
 
 Correctness of automated operations of cloud systems is much more
 crucial than that of the former systems because cloud systems serve to
 much more people in much longer time than the former systems used
-mainly inside of companies. However cloud computing enables to easily,
+mainly inside of companies. Cloud computing enables to easily,
 cheaply, and repeatedly prepare testing environments for applications,
-tests of automated operations are meaningful intrinsically when
-done on production environments not on testing environments.
+however, tests of system operations are meaningful intrinsically when
+done on production environments not on testing environments.  It means
+that test-based quality control is not sufficient for automated
+system operations.
 
 A system on cloud consists of many ``parts,'' such as virtual machines
 (VMs), storages, and network services as well as software packages,
@@ -147,9 +151,7 @@ The most popular cloud orchestration tool is {\it
 Amazon Web Services (AWS) and a compatible open source tool is being
 developed as {\it OpenStack Heat}~\cite{Heat}. CloudFormation can
 manage resources provided by IaaS platform of AWS, such as VMs (EC2),
-block storages (EBS), load balancers (ELB), and so on. CloudFormation
-automatically sets up these resources according to a {\it template}
-that declaratively defines dependencies of resources. However,
+block storages (EBS), load balancers (ELB), and so on. However,
 CloudFormation does not directly manage resources inside VMs and
 instead it allows to specify any types of scripts for initially
 setting up VMs, such as installing Httpd package, creating
@@ -163,16 +165,16 @@ elaboration to guarantee its correctness. In an actual commercial
 experience of the author, more than 50\% of troubles are caused by
 defects in those dependency definitions and scripts.
 
-While orchestration tools are specialized into two management layers
+While orchestration tools are specialized into two management layers,
 on IaaS and inside VMs, there is a unified standard specification
 language, {\it OASIS TOSCA}~\cite{TOSCA} that can be used to describe
-the structure of both types of resources, on IaaS and inside VMs. The
-resource structure is called a {\it topology} and a TOSCA tool is
-expected to automate system operations based on resource dependencies
-declaratively defined in topologies.  Currently, however, there is no
-practical implementation of declarative specifications of TOSCA
-because it has not yet explicitly provided any way to specify behavior
-of a topology, i.e.\ how to automate a topology.
+the structure of both types of resources. The resource structure is
+called a {\it topology} and a TOSCA tool is expected to automate
+system operations based on resource dependencies declaratively defined
+by topologies.  Currently, however, there is no practical
+implementation of declarative specifications of TOSCA because it has
+not yet explicitly provided any way to specify behavior of a topology,
+i.e.\ how to automate a topology.
 
 We believe formal approaches will provide systematic ways to guarantee
 correctness of cloud orchestration. Formal approaches are mainly
@@ -185,7 +187,7 @@ On the other hand, theorem proving can verify models of arbitrary many
 number of states and so suitable for proving absence of counter
 examples. It requires thinking through meanings of the specified
 models, which is very important aspect of developing trusted
-systems. However, when applying to practical problems it requires many
+systems. However, when applying to practical problems, it requires many
 human efforts to develop proofs for splitting the cases, establishing
 lemmas, and proving them in the course of verification.
 
@@ -197,7 +199,7 @@ Rails (RoR)~\cite{RoR} is one of the most popular application
 frameworks. RoR defines an MVC architecture of web applications,
 provides super classes and utility classes to implement the
 architecture, and gives developers a guide for how to design and code
-web applications. Focusing on a specific application domain, i.e.\ web
+web applications. Focusing on a specific application domain, namely web
 applications, RoR brings high productivity by minimizing development
 efforts and high maintainability by consistent structure of
 applications.
@@ -237,28 +239,28 @@ and future issues.
 %% ===============================================================
 The most popular cloud orchestration tool is {\it
   CloudFormation}~\cite{CloudFormation} provided as a service by
-Amazon Web Services (AWS) and a compatible open source tool is being
-developed as {\it OpenStack Heat}~\cite{Heat}. CloudFormation can
-manage resources provided by IaaS platform of AWS, such as VMs (EC2),
-block storages (EBS), and load balancers (ELB). CloudFormation
-automatically sets up these resources according to a {\it template}
-that declaratively defines dependencies of resources. However,
-CloudFormation does not directly manage resources inside VMs and
-instead it allows to specify any types of scripts for initially
-setting up VMs, such as installing Httpd package, creating
-configuration files, copying contents, and activating an Httpd
-component.
+Amazon Web Services (AWS). CloudFormation can manage {\it resources}
+provided by IaaS platform of AWS, such as VMs (EC2), block storages
+(EBS), and load balancers (ELB).  CloudFormation automatically sets up
+these resources according to a {\it template} that declaratively
+defines dependencies of resources.  A template is a set of resources
+and a resource has an identifier and a type and includes several {\it
+  properties} which may depend on other resources.
 
-CloudFormation models a cloud system simply as a set of {\it
-  resources} on IaaS platform of AWS. The model is called a {\it
-  template}. A resource has an identifier and a type and includes
-several {\it properties} which may depend on other
-resources. CloudFormation automates to setup a cloud system according
-to the specified dependency of the
-resources. Fig.~\ref{fig:AWSExample} is part of a very simple
-CloudFormation template written in JSON format~\cite{JSON}.
-This template specifies a simple cloud system on the AWS IaaS platform
-shown in Fig.~\ref{fig:exampleaws}.
+Fig.~\ref{fig:AWSExample} is part of a very simple CloudFormation
+template written in JSON format~\cite{JSON}.  This template specifies
+the dependency of the resources in a simple cloud system on the AWS
+IaaS platform shown in lower part of Fig.~\ref{fig:AWSExample}.  There are two
+resources; one has the identifier {\tt MyInstance} and the type {\tt
+  AWS::EC2::Instance}, another has the identifier {\tt MyEIP} and the
+type {\tt AWS::EC2::EIP}. Note that an Elastic Compute Cloud instance
+(EC2 instance) is a virtual machine on AWS IaaS platform and an
+Elastic IP (EIP) provides a static IP address for an EC2 instance
+which is dynamically created and activated. {\tt MyEIP} has a property
+whose type is {\tt InstanceID}. The property refers {\tt MyInstance}
+which makes resource {\tt MyEIP} depend on {\tt MyInstance}. Thus,
+CloudFormation firstly activates {\tt MyInstance} and then activates
+{\tt MyEIP} with a parameter of the instance ID of {\tt MyInstance}.
 %% =======================================================================
 \begin{figure}
 \small
@@ -273,24 +275,13 @@ shown in Fig.~\ref{fig:exampleaws}.
                }}}}}
 \end{verbatim}
 \normalsize
-\vspace{-0.6cm}
+\centering
+\includegraphics[height=2cm,natwidth=396,natheight=78]{./exaws.png}
+\vspace{-0.3cm}
 \caption{A Very Simple CloudFormation Template}
 \label{fig:AWSExample}
 \end{figure}
 %% =======================================================================
-%% =======================================================================
-\begin{figure}
-\centering
-\includegraphics[height=2cm,natwidth=396,natheight=78]{./exaws.png}
-\vspace{-0.6cm}
-\caption{A Simple Example Cloud System on AWS}
-\label{fig:exampleaws}
-\end{figure}
-%% =======================================================================
-Note that an Elastic Compute Cloud instance (EC2 instance) is a
-virtual machine on AWS IaaS platform and an Elastic IP (EIP)
-provides a static IP address for an EC2 instance which is dynamically
-created and activated.
 
 %% ===============================================================
 \section{Puppet, Chef, and Ansible}
@@ -301,8 +292,8 @@ Puppet, Chef, and Ansible are not cloud orchestration tools but {\it
 used by cloud orchestration tools to set up resources inside VMs.
 
 Puppet~\cite{Puppet} provides a domain specific language (DSL) to
-describe executable Ruby~\cite{Ruby} scripts for setting up inside
-VMs. A script is called a {\it manifest} and executed in a VM.
+describe executable Ruby~\cite{Ruby} scripts for setting up resources inside
+VMs. A Ruby script of Puppet is called a {\it manifest} and executed in a VM.
 Fig.~\ref{fig:PuppetExample} is a simple manifest written in Puppet
 DSL to set up an httpd service.
 %% =======================================================================
@@ -351,13 +342,13 @@ A manifest is a list of declarations each of which declares the
 desired state of a resource. Each declaration specifies a type, a
 title, and attributes of a resource. For example, the first four lines
 of the manifest shown in Fig.~\ref{fig:PuppetExample} specifies that a
-package type resource named {\tt httpd} is desired to be installed to
+{\it package} type resource named {\tt httpd} is desired to be installed to
 the target VM. A package means an installable package of a middleware
 which is the Apache HTTP server in this case.  The second declaration
 of the example manifest means that an httpd service is desired to be
 running and it requires the httpd package resource above is in the
 specified state. The third one means that the specified directory is
-desired to exist and the fourth means that a file is desired to be
+desired to exist. The fourth means that a file is desired to be
 copied from the Puppet server to the specified file path whose owner
 is {\tt root}, group is {\tt root}, and mode is 644, which requires
 the directory declared above is in the specified state.  The fifth one
@@ -370,7 +361,7 @@ execution is always the same because nothing is done when a specified
 resource is already in the desired state.
 
 Chef~\cite{Chef} also provides a Ruby-based DSL to describe executable
-scripts for setting up inside VMs. A script is called a {\it recipe}
+scripts for setting up resources inside VMs. A script is called a {\it recipe}
 and executed in a VM. A collection of related recipes and auxiliary
 files is called a {\it cookbook}.  Fig.~\ref{fig:ChefExample} is a
 simple recipe written in Chef DSL to set up an httpd service.
@@ -464,9 +455,9 @@ two elements each of which is a key-value list with two pairs. Let us
 write a key-value list as
 \small\verb|{(k1, v1), (k2, v2), ... }|\normalsize and an array as
 \small\verb|[e1, e2, ... ]|\normalsize, then the data structure
-represented by Fig.~\ref{fig:YAMLExample} is the following list:
+represented by the YAML document in Fig.~\ref{fig:YAMLExample} is the following list:
 \\\small
-\verb|   {(A, one), (B, [{(C, two), (D, three)}, {(E, four), (F, five)}]), (G, six)}|
+\verb|  {(A, one), (B, [{(C, two), (D, three)}, {(E, four), (F, five)}]), (G, six)}|
 \normalsize
 %% =======================================================================
 \begin{figure}
@@ -506,7 +497,6 @@ represented by Fig.~\ref{fig:YAMLExample} is the following list:
 \end{figure}
 %% =======================================================================
 
-\noindent
 A playbook represents an array of {\it plays} which are a sports
 analogy; many plays are required to set up a cloud
 system. Fig.~\ref{fig:AnsibleExample} is a simple example playbook to
@@ -514,7 +504,7 @@ set up an httpd service which represents only one play. A play is a
 key-value list including keys of {\tt hosts}, {\tt tasks}, and so
 on. Key {\tt hosts} specifies machines to which the play is applied.
 Key {\tt tasks} specifies an array of {\it tasks} which are executed
-in order.  In the example, the task list includes five tasks. A task
+in order.  In the example, the task array includes five tasks. A task
 is a key-value list and typically begins with the pair of {\tt name}
 key and its value which serves as a comment. The second pair of a task
 specifies a {\it module} and the parameters to invoke it.  A module is
@@ -531,7 +521,7 @@ playbook is independent from the difference of them.
 
 Although there are several differences among Puppet, Chef, and Ansible
 which are omitted to explain here, they share several common features in
-comparison with shell command scripts dependent on operating systems
+comparison with shell command scripts provided by operating systems
 of VMs. They provide domain specific languages to describe the
 desired states of resources. The descriptions in the DSLs are
 idempotent and abstracted to be independent from the difference of
@@ -540,7 +530,7 @@ operation systems.
 However, people have to learn and use at least two different kinds of
 tools (orchestration tools and configuration tools) with different
 styles of specifications and functionalities, which results in much
-elaboration to guarantee the correctness of automated operations.
+elaboration to guarantee the correctness of automated system operations.
 
 %% ===============================================================
 \section{OASIS TOSCA}
@@ -555,11 +545,11 @@ environments and their management throughout the complete lifecycle
 template consists of a {\it topology template} and optionally a set of
 {\it plans}. A topology template defines the resource structure of a
 cloud system. Note that a topology template can be parameterized to
-give actual environment parameters such as IP addresses. It is the
+give actual environment parameters such as IP addresses, which is the
 reason why named as ``template'' and in this paper we simply say ``a
 topology'' for the sake of brevity. A plan is an imperative definition
 of a system operation of the cloud system, such as a setup plan,
-written by a standard process modeling language, such as BPMN.
+written by a standard process modeling language, such as BPMN~\cite{BPMN}.
 
 In TOSCA, a resource is called a {\it node} that has several {\it
   capabilities} and {\it requirements}. A topology consists of a set
@@ -619,22 +609,19 @@ part of the topology template of Fig.~\ref{fig:exampletopology}.
 \end{figure}
 %% =======================================================================
 In this example, there are two nodes ({\tt VMApache} and {\tt
-  OSApache}) and one relationship.  A capability is a function that
-the node provides to another node, while a requirement is a function
-that the node needs to be provided by another node. In this example,
+  OSApache}) and one relationship.  
 {\tt VMApacheOS} is a capability of {\tt VMApache} and {\tt
-  OSApacheContainer} is a requirement of {\tt OSApache}.  A
-relationship relates a requirement of a source node to a capability of
-a target node.  Each node, relationship, capability, and requirement
-has a type, such as {\tt VirtualMachine}, {\tt HostedOn}, and so
+  OSApacheContainer} is a requirement of {\tt OSApache}.  
+Each node, relationship, capability, and requirement
+has a {\it type}, such as {\tt VirtualMachine}, {\tt HostedOn}, and so
 on. Types are main functionalities of TOSCA that enable reusability of
 topology descriptions.
 
-TOSCA assumes two main engineering roles, a type architect and an
-application architect. In a typical scenario, a type architect defines
-and provides several types of those elements and an application
+TOSCA assumes two main engineering roles, namely a type architect and an
+application architect. In a typical scenario, type architects define
+and provide several types of those elements and an application
 architect uses them to define a topology of a cloud system. The
-type architect also defines operations\footnote{In this paper, we say
+type architect also defines {\it operations}\footnote{In this paper, we say
   {\it a type operation} as an operation of a type whereas TOSCA calls
   it {\it a lifecycle operation}.} of node types, such as creating,
 starting, stopping, or deleting nodes, and of relationship types, such
@@ -717,10 +704,10 @@ if so. An example of parameterized modules is as follows
   
     op #_ : Set -> Nat
     op _U_ : Set Set -> Set
-    op _\in_ : Elt.X Set -> Bool
+    pred _\in_ : Elt.X Set
     op _A_ : Set Set -> Set
     op _\\_ : Set Set -> Set
-    op subset : Set Set -> Bool
+    pred subset : Set Set
   
     -- Variables
     vars S S1 S2 : Set
@@ -788,12 +775,13 @@ with equations. The first equation specifies that \stt{\# empty} equals
 {\tt 0}, and the second one specifies that \stt{\# (E S)} equals \stt{1
   + (\# S)}. Those two equations define operator {\tt \#\_} that
 counts the number of the elements in a given set. Operators
-{\tt \_U\_}, {\tt \_$\backslash$in\_}, {\tt \_A\_}, and {\tt \_$\backslash$\_} are
-defined which mean union($\cup$), inclusion($\in$),
-intersection($\cap$), and difference($\backslash$) of sets respectively.
+{\tt \_U\_}, {\tt \_$\backslash$in\_}, {\tt \_A\_}, {\tt \_$\backslash\backslash$\_}, and {\tt subset} are
+defined which mean union($\cup$), membership($\in$),
+intersection($\cap$), difference($\backslash$), and inclusion($\subseteq$) of sets respectively.
+Note that ``\stt{pred~Op~:~Sort1~Sort2}'' is an abbreviation for ``\stt{op~Op~:~Sort1~Sort2~->~Bool}.''
 
 Parameterized modules can be instantiated with modules as actual
-parameters through\\ views. Let us consider the following module
+parameters through views. Let us consider the following module
 as an actual parameter of {\tt Set}:
 %% =======================================================================
 \small
@@ -827,14 +815,19 @@ as {\tt SV-SET} as follows:
 \normalsize
 %% =======================================================================
 What follows {\tt SERVICE}, namely \stt{\{sort Elt -> Service\}}, is
-the view used here saying that {\tt Elt} is replaced with
+the {\it view} used here saying that {\tt Elt} is replaced with
 {\tt Service} in the instantiation of {\tt SET} with
 {\tt SERVICE}. What follows {\tt *} is renaming. {\tt Set} and
 {\tt empty} are renamed as {\tt SvSet} and {\tt empSvSet},
 respectively. Other operators are used without renaming.
 The instantiated {\tt SET} with {\tt SERVICE} in which {\tt Set} and
 {\tt empty} are renamed as mentioned is imported with {\tt protecting}
-in {\tt SV-SET}. Command {\tt open} make a given module, {\tt SV-SET}
+in {\tt SV-SET}. In this case, {\tt SET} is called a {\it template
+  module} and {\tt TRIV} is called a {\it parameter module}. Note that
+a template module is not always a parameterized module. Template modules
+with no parameters will be explained in Section~\ref{sec:objectbase}.
+
+Command {\tt open} make a given module, {\tt SV-SET}
 in this case, available.
 %% =======================================================================
 \small
@@ -884,37 +877,40 @@ Let us consider the following module:
 \end{verbatim}
 \normalsize
 %% =======================================================================
-Module {\tt UPDATE} specifies a state machine. We say a ``global state''
+Module {\tt UPDATE} specifies a {\it state machine}. We say a ``global state''
 as a state of the state machine in order to avoid the confusion with
 local states of services. A ground term of sort {\tt State} represents
 a global state consisting of a set of services, where the set
 \{$\ \mbstt{<}\ svs\ \mbstt{>}\mid svs$ is a ground term of {\tt
   SvSet}\} represents the state space. Two transition rules, labeled
 by {\tt c2o} and {\tt o2r}, define the state transition over the
-states.  Transition rule {\tt c2o} specifies that a {\tt closed}
-service appearing in a state is changed to {\tt open}, and {\tt o2r}
+global states.  Transition rule {\tt c2o} specifies that a {\tt closed}
+service appearing in a global state is changed to {\tt open}, and {\tt o2r}
 specifies that an {\tt open} service is changed to {\tt ready} if
 there is at least one other service, where {\tt ctrans} means ``conditional
-trans''.  Command {\tt execute} makes \cafeobj try to apply transition
+trans''.
+
+Command {\tt select} is similar to {\tt open} except that it does not
+allow to declare new sorts, operators, equations, and so on. 
+Command {\tt execute} makes \cafeobj try to apply transition
 rules until no one can be applied.
 %% =======================================================================
 \small
 \begin{verbatim}
-  open UPDATE .
+  select UPDATE .
    execute < sv(1,closed) sv(2,open) > .
      -- to < sv(1,ready)  sv(2,ready) > .
 
    execute < sv(1,closed) > .
      -- to < sv(1,open) > .
-  close
 \end{verbatim}
 \normalsize
 %% =======================================================================
-Rule {\tt c2o} makes state \stt{<~sv(1,closed)~sv(2,open)~>} transit
+Rule {\tt c2o} makes global state \stt{<~sv(1,closed)~sv(2,open)~>} transit
 to \stt{<~sv(1,open)~sv(2,open)~>} then rule {\tt o2r} makes transit
 it to \stt{<~sv(1,ready)~sv(2,open)~>} and successively makes it
 transit to \stt{<~sv(1,open)~sv(2,open)~>}. On the other hand,
-only rule {\tt c2o} can be applied to state \stt{<~sv(1,closed)~>}
+only rule {\tt c2o} can be applied to global state \stt{<~sv(1,closed)~>}
 because it has only one element.
 
 %% ===============================================================
@@ -932,9 +928,9 @@ definitions.
     $l$ => $r$ .}'' when $c$ is \stt{true}).
 \end{definition}
 \begin{definition}[transition]
-  Let $St$ be a set of global states (i.e. ground terms of sort {\tt
+  Let $S\!t$ be a set of global states (i.e.\ ground terms of sort {\tt
     State}), $Rule$ be a set of transition rules, then a pair of
-  global states $(S,S')\in Tr\subseteq St\times St$ is called a
+  global states $(S,S')\in T\!r\subseteq S\!t\times S\!t$ is called a
   \ul{transition specified by} $Rule$ iff there exists a transition
   rule $R=[l,r,c]\in Rule$ and some ground substitution $\sigma$ such
   that $S=l\sigma$, $S'=r\sigma$, and $c\sigma$ reduces to $true$. We
@@ -943,70 +939,79 @@ definitions.
 \end{definition}
 \begin{definition}[state machine]
   Let $Rule$ be a set of transition rules, then a \ul{state machine}
-  is a triple $(St,Tr,In)$ where $St$ is a set of global state,
-  $Tr\subseteq St\times St$ is a set of transitions specified by
-  $Rule$, and $In \subseteq St$. An element of $In$ is called an
+  is a triple $(S\!t,T\!r,In)$ where $S\!t$ is a set of global state,
+  $T\!r\subseteq S\!t\times S\!t$ is a set of transitions specified by
+  $Rule$, and $In \subseteq S\!t$. An element of $In$ is called an
   \ul{initial state}.
 \end{definition}
 \begin{definition}[transition sequence]
-  Let $(St,Tr,In)$ be a state machine, then a transition sequence is a
-  sequence of global states $(S_0,S_1,\dots,S_n)$ where each adjacent
-  pair $(S_i,S_{i+1}) \in Tr$. 
+  Let $(S\!t,T\!r,In)$ be a state machine, then a \ul{transition sequence} is a
+  sequence of global states $(S\!_0,S\!_1,\dots,S\!_n)$ where each adjacent
+  pair $(S\!_i,S\!_{i+1}) \in T\!r$. 
 \end{definition}
 \begin{notation}[$S\alpha,\alpha S,\alpha\beta$]
-  Let $S$ be a global state and $\alpha=(S_0,S_1,\dots,S_n)$ be a
+  Let $S$ be a global state and $\alpha=(S\!_0,S\!_1,\dots,S\!_n)$ be a
   transition sequence, then \ul{$S\alpha$} is the transition sequence
-  such that $S\alpha=(S,S_0,S_1,\dots,S_n)$.  \ul{$\alpha S$} is the
-  transition sequence such that $\alpha S=(S_0,S_1,\dots,S_n,S)$.  Let
-  $\alpha=(S_0,S_1,\dots,S_n)$ and
-  $\alpha=(S_{n+1},S_{n+2},\dots,S_{n+m})$ be transition sequences,
+  such that $S\alpha=(S,S\!_0,S\!_1,\dots,S\!_n)$.  \ul{$\alpha S$} is the
+  transition sequence such that $\alpha S=(S\!_0,S\!_1,\dots,S\!_n,S)$.  Let
+  $\alpha=(S\!_0,S\!_1,\dots,S\!_n)$ and
+  $\alpha=(S\!_{n+1},S\!_{n+2},\dots,S\!_{n+m})$ be transition sequences,
   then \ul{$\alpha\beta$} is the transition sequence such that
-  $\alpha\beta=(S_0,S_1,\dots,S_n,S_{n+1},S_{n+2},\dots,S_{n+m})$.
+  $\alpha\beta=(S\!_0,S\!_1,\dots,S\!_n,S\!_{n+1},S\!_{n+2},\dots,S\!_{n+m})$.
 \end{notation}
 \begin{definition}[reachable]
-  Let $(St,Tr,In)$ be a state machine, then a global state $S\in St$
+  Let $(S\!t,T\!r,In)$ be a state machine, then a global state $S\in S\!t$
   is \ul{reachable} iff there exists a transition sequence
-  $(S_0,S_1,\dots,S_n)$ where $S_0\in In$ and $S=S_n$. Note that $S_0\in
-  In$ is reachable because $(S_0)$ is a transition sequence with $n=0$.
+  $(S\!_0,S\!_1,\dots,S\!_n)$ where $S\!_0\in In$ and $S=S\!_n$. Note that $S\!_0\in
+  In$ is reachable because $(S\!_0)$ is a transition sequence with $n=0$.
 \end{definition}
 \begin{definition}[invariant]
-  Let $(St,Tr,In)$ be a state machine, then a global state predicate
+  Let $(S\!t,T\!r,In)$ be a state machine, then a global state predicate
   $p$ is an \ul{invariant} iff $p(S)=true$ holds for any reachable
-  state $S$.
+  global state $S$.
 \end{definition}
 
 %% ===============================================================
 \section{Search Predicates}
 \label{sec:searchpredicate}
 %% ===============================================================
-What is called search predicates can be used to conduct
+What is called {\it search predicates} can be used to conduct
 reachability analysis for such state machines specified in
-\cafeobj. Let us consider the following code fragment:
+\cafeobj:
 %% =======================================================================
 \small
 \begin{verbatim}
-  open UPDATE .
+  pred _=(*,1)=>+_ : State State
+  pred _=(*,1)=>+_if_suchThat_{_} : State State Bool Bool Info
+\end{verbatim}
+\normalsize
+%% =======================================================================
+
+Let us consider the following code fragment:
+%% =======================================================================
+\small
+\begin{verbatim}
+  select UPDATE .
    reduce < sv(1,closed) sv(2,open) > =(*,1)=>+ < SVS > .  -- to true.
    reduce < sv(3,closed) sv(4,ready) > =(*,1)=>+ < SVS > . -- to true.
    reduce < sv(5,open) > =(*,1)=>+ < SVS > .               -- to false.
-  close
 \end{verbatim}
 \normalsize
 %% =======================================================================
 By reducing the term in the code fragment, \cafeobj finds any next
-states of the given state, such as
+states of the given global state, such as
 \stt{<~sv(1,open)~sv(2,open)~>}\footnote{{\tt *}, {\tt 1}, and {\tt +}
   specify the range of search. If {\tt 2} is used instead of {\tt *},
   \cafeobj tries to find at most two next states. If {\tt 3} is used
-  instead of {\tt 1}, \cafeobj finds all states reachable from the
-  given state with at most three state transitions. If {\tt *} is used
-  instead of {\tt +}, \cafeobj also includes the given state as a
+  instead of {\tt 1}, \cafeobj finds all global states reachable from the
+  given global state with at most three state transitions. If {\tt *} is used
+  instead of {\tt +}, \cafeobj also includes the given global state as a
   search target.  Only \stt{=(*,1)=>+} is used in this paper.}.  The
 first reduction returns true because both transition rules are
 applicable.  The second one also returns true but only rule {\tt c2o}
 is applicable. The third one returns false.
 
-\cafeobj can find next states of a given state such that some
+\cafeobj can find next states of a given global state such that some
 conditions hold in those next states. Let us consider the following
 code fragment\footnote{Since the final part of the {\tt reduce} sentence,
   {\tt \{~true~\}}, is for debugging, please ignore it.}:
@@ -1015,7 +1020,6 @@ code fragment\footnote{Since the final part of the {\tt reduce} sentence,
 \begin{verbatim}
   open UPDATE .
    pred anyOpen : SvSet .
-     -- The same as: op anyOpen : SvSet -> Bool .
    eq anyOpen(sv(N,open) SVS) = true .
    var CC : Bool .
    reduce 
@@ -1024,18 +1028,17 @@ code fragment\footnote{Since the final part of the {\tt reduce} sentence,
 \end{verbatim}
 \normalsize
 %% =======================================================================
-Here, {\tt pred} declares a predicate, i.e., an operator whose coarity
-is {\tt Bool}.  The reduction returns true in which \cafeobj finds any
-next states of the given state such that an {\tt open} service is
+The reduction returns true in which \cafeobj finds any
+next states of the given global state such that at least one {\tt open} service is
 appearing. In this case, transition rule {\tt c2o} makes such next
-state.  Note that when the predicate tries a conditional transition
-rule, it binds the rule's condition to {\tt CC}. The {\tt suchThat}
+state.  Note that when the conditional search predicate tries a transition
+rule, it binds the rule's condition to Boolean variable {\tt CC} placed at {\tt i\!f} clause. The {\tt suchThat}
 clause uses {\tt CC} to check \stt{anyOpen(SVS)} only when the rule is
 applied.
 
 On the other hand, when we want to check some condition holds in all
 possible next states, we need some trick. The following code fragment
-checks whether all possible next states of state
+checks whether all possible next states of global state
 \stt{<~sv(1,closed)~sv(2,open)~>} include at least one {\tt open} services:
 %% =======================================================================
 \small
@@ -1049,18 +1052,19 @@ checks whether all possible next states of state
 %% =======================================================================
 This style of coding is we call the {\it double negation idiom}
 because it returns true when it CANNOT find any next state of the
-given state such that NO open service is appearing. The reduction
+given global state such that NO open service is appearing. The reduction
 proceeds as follows:
 \begin{enumerate}
-\item Try to match LHS of {\tt c2o} to the given state.
+\item Try to match LHS of {\tt c2o} to the given global state.
 \item Also try to match the rule's condition (i.e.\ {\tt true} because
   the rule is unconditional) to {\tt CC} and the substituted RHS
   (i.e.\ \stt{<~sv(1,open)~sv(2,open)~>}) to \stt{<~SVS~>}.
 \item Evaluate the substituted {\tt suchThat} clause which reduces to
   false \\ because \stt{anyOpen(sv(1,open) sv(2,open))} reduces to
   true.
-\item Then, continuing the search, try to match LHS of {\tt o2r} to
-  the given state, the condition (i.e.\ \stt{\# SVS > 0}) to {\tt CC},
+\item Then, continuing the search to find a next state where the {\tt suchThat} clause holds,
+  try to match LHS of {\tt o2r} to
+  the given global state, the condition (i.e.\ \stt{\# SVS > 0}) to {\tt CC},
   and the substituted RHS (i.e.\ \stt{<~sv(2,ready)~sv(1,closed)~>}) to
   \stt{<~SVS~>}.
 \item Evaluate the substituted {\tt suchThat} clause which reduces to
@@ -1069,9 +1073,9 @@ proceeds as follows:
 \item Then the search predicate returns true and the whole term
   reduces to false.
 \end{enumerate}
-This means that there is a next states of state
+This means that there is a next states of global state
 \stt{<~sv(1,closed)~sv(2,open)~>} which does not include any {\tt open}
-services; \cafeobj finds that it is state
+services; that is global state
 \stt{<~sv(1,closed)~sv(2,ready)~>}.
 
 Note that this is a typical example where we need \stt{\_ == true}. In
@@ -1084,22 +1088,22 @@ shows difference between \stt{\_ = \_} and \stt{\_ == \_ }.
 \small
 \begin{verbatim}
   reduce anyOpen(sv(1,closed)) = true .
-                               -- to anyOpen(sv(1,closed)) = true .
+                               -- no reduction occurs.
   reduce anyOpen(sv(1,closed)) == true . 
-                               -- to false.
+                               -- reduce to false.
 \end{verbatim}
 \normalsize
 %% =======================================================================
 In this case, \cafeobj cannot decide \stt{anyOpen(SVS)} does or does
 not hold because the definition of {\tt anyOpen} is incomplete and
-thus the first sentence above can reduce to neither {\tt true} nor
+thus the first reduction above can reduce to neither {\tt true} nor
 {\tt false}.  The second one using \stt{\_ == true} reduces to
 {\tt false}, which is the reason why {\tt suchThat} clause in the
 double negation idiom works as we intended.
 
 %% ===============================================================
 \subsection{Formalization of Search Predicates}
-\label{sec:formalSeach}
+\label{sec:formalSearch}
 %% ===============================================================
 This section describes the search predicates more formally.  
 \begin{definition}[unconditional search predicate]
@@ -1119,6 +1123,8 @@ This section describes the search predicates more formally.
   rule $R=[l,r,c]\in Rule$ and a substitution $\sigma$ such that
   $S\sigma=l\sigma$ holds, $S'\sigma=r\sigma$ holds,
   $CC\sigma=c\sigma$ holds, and $B\sigma$ reduces to true.
+  $B$ typically has a form ``\stt{$CC$ implies $p(S,S')$}'' where
+  $p(S,S')$ is a predicate of global states.
 \end{definition}
 
 %% ===============================================================
@@ -1133,7 +1139,7 @@ specification that is very important aspect of developing trusted
 systems.
 
 For example, let us verify that in module {\tt UPDATE} there should be
-a next state of state $S$ when at least two services included in $S$
+a next state of global state $S$ when at least two services included in $S$
 are not {\tt ready}.
 %% =======================================================================
 \small
@@ -1142,22 +1148,21 @@ are not {\tt ready}.
    protecting(UPDATE)
   
    -- Theorem to be proved.
-   pred theorem : State
+   pred theorem : Nat LocalState Nat LocalState SvSet
   
    vars N N1 N2 : Nat
-   vars St1 St2 : LocalState .
-   vars SVS SVS' : SvSet
+   vars Lst1 Lst2 : LocalState .
+   var SVS : SvSet
+   var SS : State
   
-   eq theorem(< sv(N1,St1) sv(N2,St2) SVS >)
-     = ((St1 == ready) = false and (St2 == ready) = false)
-       implies < sv(N1,St1) sv(N2,St2) SVS > =(*,1)=>+ < SVS' > .
+   eq theorem(N1,Lst1,N2,Lst2,SVS)
+     = ((Lst1 == ready) = false and (Lst2 == ready) = false)
+       implies < sv(N1,Lst1) sv(N2,Lst2) SVS > =(*,1)=>+ SS .
   
    -- Axiom of Nat
    eq (1 + N > 0) = true .
   
    -- Arbitrary constants.
-   op s : -> State
-   ops sv1 sv2 : -> Service
    ops st1 st2 : -> LocalState
    ops n1 n2 : -> Nat
    op svs : -> SvSet
@@ -1168,52 +1173,47 @@ are not {\tt ready}.
 Module {\tt ProofUPDATE} gets ready for verification; it defines the
 theorem to be proved and declares several arbitrary constants.  Note
 that we require an axiom for natural numbers which says that the
-successor of a natural number is greater than 0.
+successor of a natural number is always greater than 0.
 
-Firstly, we begin with the most general case; the state is
-\stt{<~sv1~sv2~svs~>} where {\tt sv1} and {\tt sv2} are arbitrary
-constants of sort {\tt Service} and {\tt svs} is of {\tt SvSet}.
+Firstly, we begin with the most general case where all aruguments of
+{\tt theorem} are arbitrary constants:
 %% =======================================================================
 \small
 \begin{verbatim}
   -- The most general case.
   open ProofUPDATE .
-   eq s = < sv1 sv2 svs > .
-   reduce theorem(s) . -- to false.
+   reduce theorem(n1,st1,n2,st2,svs) . -- to false.
   close
 \end{verbatim}
 \normalsize
 %% =======================================================================
-This case is too general to judge whether the theorem does or does not
-hold.  We should split the case into cases which collectively cover
+This case is too general for \cafeobj to find any next states.
+We should split the case into cases which collectively cover
 the general case.  There are three case; (1) both services are closed,
 (2) both services are open, and (3) one service is closed and another
 is open. The following is a proof score for the three cases.
 %% =======================================================================
 \small
 \begin{verbatim}
-  -- Case 1: Both services are closed.  
+  -- Case 1: Both services are closed.
   open ProofUPDATE .
-   eq s = < sv1 sv2 svs > .  
-   eq sv1 = sv(n1,closed) .  
-   eq sv2 = sv(n2,closed) .
-   reduce theorem(s) . -- to true.  
+   eq st1 = closed .
+   eq st2 = closed .
+   reduce theorem(n1,st1,n2,st2,svs) . -- to true.
   close
   
   -- Case 2: Both services are open.
   open ProofUPDATE .
-   eq s = < sv1 sv2 svs > .
-   eq sv1 = sv(n1,open) .
-   eq sv2 = sv(n2,open) .
-   reduce theorem(s) . -- to true.
+   eq st1 = open .
+   eq st2 = open .
+   reduce theorem(n1,st1,n2,st2,svs) . -- to true.
   close
   
   -- Case 3: A closed service and an open service.
   open ProofUPDATE .
-   eq s = < sv1 sv2 svs > .
-   eq sv1 = sv(n1,closed) .
-   eq sv2 = sv(n2,open) .
-   reduce theorem(s) . -- to true.
+   eq st1 = closed .
+   eq st2 = open .
+   reduce theorem(n1,st1,n2,st2,svs) . -- to true.
   close
 \end{verbatim}
 \normalsize
@@ -1243,19 +1243,19 @@ commands\footnote{As its name suggests, CITP has capability to
   proved and let it be the current case. Multiple goal equations
   can be specified.
 \item \stt{:ctf \{eq $LHS$ = $RHS$ .\}}\\
-  Split the current case into two case adding \stt{eq~$LHS$~=~$RHS$~.} to one case and\\
+  Split the current case into two cases adding \stt{eq~$LHS$~=~$RHS$~.} to one case and\\
   \stt{eq~($LHS$~=~$RHS$)~=~false~.} to another.
-\item \stt{:csp \{eq $LHS_1$ = $RHS_1$ . eq $LHS_2$ = $RHS_2$ . $\dots$\}}\\
-  Split the current case into cases each of which
-  \stt{eq~$LHS_i$~=~$RHS_i$~.~} is added to.
+\item \stt{:csp \{eq $LHS\!_1$ = $RHS\!_1$ . eq $LHS\!_2$ = $RHS\!_2$ . $\dots$\}}\\
+  Split the current case into cases adding 
+  \stt{eq~$LHS\!_i$~=~$RHS\!_i$~.} to each case.
 \item \stt{:apply (rd)}\\
  Reduce the goal in the current case.
 \item \stt{:def $name$ = :ctf \{$\dots$\}}\\
   \stt{:def $name$ = :csp \{$\dots$\}}\\
   Name the case splitting tactic.
 \item \stt{:apply ($name_1\ name_2$)}\\ 
-  Combine named case splitting tactics. When tactic $name_1$ splits
-  $n$ cases and tactic $name_2$ splits $m$ case, the current case is
+  Combine named case splitting tactics. When tactic $name_1$ splits an case into
+  $n$ cases and tactic $name_2$ splits into $m$ cases, the current case is
   split into totally $n\times m$ cases.  It can also specify tactic
   {\tt rd}, i.e.\ \stt{:apply~($n_1\ n_2$~rd)}, which means reducing
   the goal in every split case.
@@ -1275,7 +1275,7 @@ The following is a proof score of CITP version of the example in the previous se
 \begin{verbatim}
   select ProofUPDATE .
   :goal {
-    eq theorem(< sv(n1,st1) sv(n2,st2) svs >) = true .
+    eq theorem(n1,st1,n2,st2,svs) = true .
   }
   :def csp-st1 = :csp {
    eq st1 = closed .
@@ -1292,17 +1292,9 @@ The following is a proof score of CITP version of the example in the previous se
 \end{verbatim}
 \normalsize
 %% =======================================================================
-Command {\tt select} is similar to {\tt open} except that it does not
-allow to declare new sorts, operators, equations, and so on. 
-
-Firstly, the goal to be proved should represent the most general case.
-Note that predicate {\tt theorem} is defined by only one equation,
-which implicitly means that it does not hold for global states which
-does not match the LHS of the rule,
-i.e.\ \stt{<~sv(N1,St1)~sv(N2,St2)~SVS~>}. Thus, the state in the most
-general case is \stt{<~sv(n1,st1)~sv(n2,st2)~svs~>} where \stt{n1,
-  st1, n2, st2}, and {\tt svs} are arbitrary constants of
-corresponding classes.  Then, since class {\tt LocalState} has only
+Firstly, the goal to be proved should represent the most general case
+where all aruguments of {\tt theorem} are arbitrary constants.
+Then, since class {\tt LocalState} has only
 three constants ({\tt closed, open} , and {\tt ready}) as constructors
 in module {\tt UPDATE}, there are three cases where {\tt st1} (and
 also {\tt st2}) is one of the three constants in each of cases. Thereby
@@ -1317,101 +1309,88 @@ follows:
   ==> root*
       -- context module: #Goal-root
       -- targeted sentence:
-        eq theorem(< (sv(n1, st1) sv(n2, st2) svs) >)
-            = true .
+        eq theorem(n1, st1, n2, st2, svs) = true .
   [csp-st1] 1*
       -- context module: #Goal-1
       -- assumption
         eq [csp-st1]: st1 = closed .
       -- targeted sentence:
-        eq theorem(< (sv(n1, st1) sv(n2, st2) svs) >)
-            = true .
+        eq theorem(n1, st1, n2, st2, svs) = true .
   [csp-st2] 1-1*
       -- context module: #Goal-1-1
       -- assumptions
         eq [csp-st1]: st1 = closed .
         eq [csp-st2]: st2 = closed .
       -- discharged sentence:
-        eq [RD]: theorem(< (sv(n1, st1) sv(n2, st2) svs) >)
-            = true .
+        eq [RD]: theorem(n1, st1, n2, st2, svs) = true .
   [csp-st2] 1-2*
       -- context module: #Goal-1-2
       -- assumptions
         eq [csp-st1]: st1 = closed .
         eq [csp-st2]: st2 = open .
       -- discharged sentence:
-        eq [RD]: theorem(< (sv(n1, st1) sv(n2, st2) svs) >)
-            = true .
+        eq [RD]: theorem(n1, st1, n2, st2, svs) = true .
   [csp-st2] 1-3*
       -- context module: #Goal-1-3
       -- assumptions
         eq [csp-st1]: st1 = closed .
         eq [csp-st2]: st2 = ready .
       -- discharged sentence:
-        eq [RD]: theorem(< (sv(n1, st1) sv(n2, st2) svs) >)
-            = true .
+        eq [RD]: theorem(n1, st1, n2, st2, svs) = true .
   [csp-st1] 2*
       -- context module: #Goal-2
       -- assumption
         eq [csp-st1]: st1 = open .
       -- targeted sentence:
-        eq theorem(< (sv(n1, st1) sv(n2, st2) svs) >)
-            = true .
+        eq theorem(n1, st1, n2, st2, svs) = true .
   [csp-st2] 2-1*
       -- context module: #Goal-2-1
       -- assumptions
         eq [csp-st1]: st1 = open .
         eq [csp-st2]: st2 = closed .
       -- discharged sentence:
-        eq [RD]: theorem(< (sv(n1, st1) sv(n2, st2) svs) >)
-            = true .
+        eq [RD]: theorem(n1, st1, n2, st2, svs) = true .
   [csp-st2] 2-2*
       -- context module: #Goal-2-2
       -- assumptions
         eq [csp-st1]: st1 = open .
         eq [csp-st2]: st2 = open .
       -- discharged sentence:
-        eq [RD]: theorem(< (sv(n1, st1) sv(n2, st2) svs) >)
-            = true .
+        eq [RD]: theorem(n1, st1, n2, st2, svs) = true .
   [csp-st2] 2-3*
       -- context module: #Goal-2-3
       -- assumptions
         eq [csp-st1]: st1 = open .
         eq [csp-st2]: st2 = ready .
       -- discharged sentence:
-        eq [RD]: theorem(< (sv(n1, st1) sv(n2, st2) svs) >)
-            = true .
+        eq [RD]: theorem(n1, st1, n2, st2, svs) = true .
   [csp-st1] 3*
       -- context module: #Goal-3
       -- assumption
         eq [csp-st1]: st1 = ready .
       -- targeted sentence:
-        eq theorem(< (sv(n1, st1) sv(n2, st2) svs) >)
-            = true .
+        eq theorem(n1, st1, n2, st2, svs) = true .
   [csp-st2] 3-1*
       -- context module: #Goal-3-1
       -- assumptions
         eq [csp-st1]: st1 = ready .
         eq [csp-st2]: st2 = closed .
       -- discharged sentence:
-        eq [RD]: theorem(< (sv(n1, st1) sv(n2, st2) svs) >)
-            = true .
+        eq [RD]: theorem(n1, st1, n2, st2, svs) = true .
   [csp-st2] 3-2*
       -- context module: #Goal-3-2
       -- assumptions
         eq [csp-st1]: st1 = ready .
         eq [csp-st2]: st2 = open .
       -- discharged sentence:
-        eq [RD]: theorem(< (sv(n1, st1) sv(n2, st2) svs) >)
-            = true .
+        eq [RD]: theorem(n1, st1, n2, st2, svs) = true .
   [csp-st2] 3-3*
       -- context module: #Goal-3-3
       -- assumptions
         eq [csp-st1]: st1 = ready .
         eq [csp-st2]: st2 = ready .
       -- discharged sentence:
-        eq [RD]: theorem(< (sv(n1, st1) sv(n2, st2) svs) >)
-            = true .
+        eq [RD]: theorem(n1, st1, n2, st2, svs) = true .
 \end{verbatim}
 \normalsize
 %% =======================================================================
@@ -1431,7 +1410,7 @@ correctness of an automated operation of a cloud system, we need to
 model the structure of the target cloud system and the behavior of the
 operation. We say ``model'' which means abstractly and formally
 specifying the structure and behavior. A specified model is represented
-by a formal specification language, i.e.\ \cafeobj in this paper.
+by a formal specification language, namely \cafeobj in this paper.
 
 %% ===============================================================
 \section{Structure Models and Representations}
@@ -1447,7 +1426,7 @@ resources.
 On the other hand, TOSCA's model of a cloud system is more structured
 to manage any types of cloud resources, as well as inside VMs, and any
 types of operations such as scale-out, scale-in, shutdown, and so on.
-A TOSCA's model, called a {\it topology}, which is represented by XML
+A TOSCA's model, called a {\it topology}, is represented by XML
 as illustrated in Fig~\ref{fig:topology}. A topology consists of a set
 of {\it nodes} and a set of {\it relationships} between nodes. A node
 has several {\it capabilities} and {\it requirements}. A relationship
@@ -1470,14 +1449,13 @@ An object has a {\it type}\footnote{Do not think a {\it type} is that
   type is just an attribute of an object. We use the term because both
   CloudFormation and TOSCA use it.}, an {\it identifier}(ID), a {\it
   local state}, and possibly {\it links} to other objects. In the case
-of the example show in Fig.~\ref{fig:AWSExample}, a resource object
+of the example shown in Fig.~\ref{fig:AWSExample}, a resource object
 whose type is AWS::EC2::Instance has its ID as MyInstance. The type of
 MyEIP resource is AWS::EC2::EIP. MyEIP has a property but its ID is
 hidden and we assume it is MyEIP::InsID since its parent is MyEIP and
 its type is InstanceId. MyEIP::InsID has a link to MyInstance. Local
 states of objects are used for automation of operations, which will be
-explained in Section~\ref{sec:behaviormodel}. Note that a link is
-represented by an identifier of the linked object in our framework.
+explained in Section~\ref{sec:behaviormodel}. 
 
 An object belongs to a class and thus a class is a set of objects. We
 assume this set consists of countably infinite objects each of which
@@ -1510,14 +1488,13 @@ its type ({\tt ec2Instance}, {\tt ec2Eip}, {\tt instanceId}), the
 second is its identifier ({\tt myInstance}, {\tt myEIP},
 {\tt myEIP::InsID})\footnote{In this paper, we often use an identifier
   to designate an object which has the identifier for the sake of
-  brevity.}, and the third is its local state. In this example, the
-initial states of resource and property objects are assumed as
-{\tt initial} and {\tt notready} respectively. The fourth argument of the
+  brevity.}, and the third is its local state. The fourth argument of the
 property object represents a link to its parent, {\tt myEIP}, and the
 fifth represents that the property depends on {\tt myInstance}. The
 example of \cafeobj modules representing resource and property classes
 will be shown in Chapter~\ref{chap:reusable}.
-
+Note that a link is represented by an identifier of the linked object
+in our framework.
 %% ===============================================================
 \section{Behavior Models and Representations}
 \label{sec:behaviormodel}
@@ -1728,7 +1705,7 @@ Template module {\tt OBJECTBASE} defines nine sorts and more than ten
 operators/predicates of objects, which generally and minimally defines
 what an object is in a class. The template can be instantiated and
 imported in a module for each class of objects, where the imported
-sorts and operators can be used only by renaming appropriately. For
+sorts and operators can be used just by renaming appropriately. For
 the example show in Fig.~\ref{fig:AWSExample}, following module
 {\tt RESOURCE} describes specifications of the resource class for
 CloudFormation\footnote{{\tt OBJECTBASE} is a template with no
@@ -1781,75 +1758,80 @@ CloudFormation\footnote{{\tt OBJECTBASE} is a template with no
 \end{verbatim}
 \normalsize
 %% =======================================================================
-The following is the list of part of sorts and operators predefined by
+The following is the list of nine sorts predefined by
+template module {\tt OBJECTBASE}:
+\begin{itemize}
+\item \stt{Object} (renamed as \stt{Resource} in this case)\\
+  Sort for objects themselves.
+\item \stt{ObjIDLt} (as \stt{RSIDLt})\\
+  Subsort of {\tt ObjID} for identifier literals. A literal is a
+  constant for which {\tt OBJECTBASE} predefines a special equality
+  predicate such that $\_ = \_$ is exactly the same as $\_ == \_ $ .
+\item \stt{ObjID} (as \stt{RSID})\\
+  Sort for identifiers of objects.
+\item \stt{ObjTypeLt} (as \stt{RSTypeLt})\\
+  Subsort of {\tt ObjType} for type literals.
+\item \stt{ObjType} (as \stt{RSType})\\
+  Sort for types of objects.
+\item \stt{ObjStateLt} (as \stt{RSStateLt})\\
+  Subsort of {\tt ObjState} for local state literals.
+\item \stt{ObjState} (as \stt{RSState})\\
+  Sort for local states of objects.
+\item \stt{SetOfObject} (as \stt{SetOfResource})\\
+  Soft for sets of objects.
+\item \stt{SetOfObjState} (as \stt{SetOfRSState})\\
+  Sort for sets of local states of objects.
+\end{itemize}
+
+The following is the list of part of operators predefined by
 template module {\tt OBJECTBASE} whereas argument $obj$ is an object,
 $id$ is an identifier of an object, $seto$ is a set of objects, and
 $setls$ is a set of local states of objects:
 \begin{itemize}
-\item sort \stt{Object} (as \stt{Resource})\\
-  Sort for objects themselves.
-\item sort \stt{ObjIDLt} (renamed as \stt{RSIDLt})\\
-  Subsort of {\tt ObjID} for identifier literals. A literal is a
-  constant for which {\tt OBJECTBASE} predefines a special equality
-  predicate such that $\_ = \_$ is exactly the same as $\_ == \_ $ .
-\item sort \stt{ObjID} (as \stt{RSID})\\
-  Sort for identifiers of objects.
-\item sort \stt{ObjTypeLt} (as \stt{RSTypeLt})\\
-  Subsort of {\tt ObjType} for type literals.
-\item sort \stt{ObjType} (as \stt{RSType})\\
-  Sort for types of objects.
-\item sort \stt{ObjStateLt} (as \stt{RSStateLt})\\
-  Subsort of {\tt ObjState} for local state literals.
-\item sort \stt{ObjState} (as \stt{RSState})\\
-  Sort for local states of objects.
-\item sort \stt{SetOfObject} (as \stt{SetOfResource})\\
-  Soft for sets of objects.
-\item sort \stt{SetOfObjState} (as \stt{SetOfRSState})\\
-  Sort for sets of local states of objects.
-\item op \stt{empObj} (as \stt{empRS})\\
+\item \stt{empObj} (renamed as \stt{empRS} in this case)\\
   Constant representing an empty set of objects.
-\item op \stt{empState} (as \stt{empSRS})\\
+\item \stt{empState} (as \stt{empSRS})\\
   Constant representing an empty set of local states of objects.
-\item op \stt{existObj} (as \stt{existRS})\\ 
+\item \stt{existObj} (as \stt{existRS})\\ 
   Predicate used as \stt{existObj($seto$,$id$)} which holds iff some
   object with identifier $id$ is included in $seto$;\\$~~~~\exists o\in
   seto: \mbstt{id}(o)=id$.
-\item op \stt{existObjInStates} (as \stt{existRSInStates})\\
+\item \stt{existObjInStates} (as \stt{existRSInStates})\\
   Predicate used as \stt{existObjInStates($seto$,$id$,$setls$)} which
   holds iff some object with identifier $id$ is included in $seto$ and
   its local state is included in $setls$;\\$~~~~\exists o\in seto:
   (\mbstt{id}(o)=id \land \mbstt{state}(o)\in setls)$.
-\item op \stt{uniqObj} (as \stt{uniqRS})\\
+\item \stt{uniqObj} (as \stt{uniqRS})\\
   Predicate used as \stt{uniqObj($seto$)} which holds iff the
   identifier of each object is unique in $seto$;\\$~~~~\forall o,o'\in
   seto:(o\ne o'\ra\mbstt{id}(o)\ne\mbstt{id}(o'))$.
-\item op \stt{\#ObjInStates} (as \stt{\#ResourceInStates})\\ 
+\item \stt{\#ObjInStates} (as \stt{\#ResourceInStates})\\ 
   Operator used as \stt{\#ObjInStates($setls$,$seto$)} which returns
   the number of objects in $seto$ whose local states are
   included in $setls$.
-\item op \stt{getObject} (as \stt{getResource})\\ 
+\item \stt{getObject} (as \stt{getResource})\\ 
   Operator used as \stt{getObject($seto$,$id$)} which returns an
   object in $seto$ whose identifier is $id$.
-\item op \stt{allObjInStates} (as \stt{allRSInStates})\\
+\item \stt{allObjInStates} (as \stt{allRSInStates})\\
   Predicate used as \stt{allObjInStates($seto$,$setls$)} which holds iff
   the local states of all objects in $seto$ are included
   in $setls$;\\$~~~~\forall o\in seto:\mbstt{state}(o)\in setls$.
-\item op \stt{allObjNotInStates} (as \stt{allRSNotInStates})\\
+\item \stt{allObjNotInStates} (as \stt{allRSNotInStates})\\
   Predicate used as \stt{allObjNotInStates($seto$,$setls$)} which holds iff
   the local states of all objects in $seto$ are not included
   in $setls$;\\$~~~~\forall o\in seto:\mbstt{state}(o)\not\in setls$.
-\item op \stt{someObjInStates} (as \stt{someRSInStates})\\ 
+\item \stt{someObjInStates} (as \stt{someRSInStates})\\ 
   Predicate used as \stt{someObjInStates($seto$,$setls$)} which holds
   iff there exists an objects in $seto$ whose local state is included
   in $setls$;\\$~~~~\exists o\in seto:\mbstt{state}(o)\in setls$.
 \end{itemize}
 
-The module importing the instantiated template can be extended to
+The module importing the instantiated template can extend it to
 freely define a constructor of objects and local state literals.  In
 this case, module {\tt RESOURCE} defines a constructor ({\tt res}) of
 sort {\tt Resource} whose arguments are a type, an identifier, and a
-local state of the resource. It also defines local state literals,
-{\tt initial} and {\tt started} of a resource.
+local state of the resource. It also defines two local state literals,
+{\tt initial} and {\tt started}, of a resource.
 
 In addition, the module should implement three selector operators,
 {\tt type}, {\tt id}, and {\tt state}, each of which takes a resource
@@ -1920,10 +1902,10 @@ Firstly, module {\tt PROPERTY} imports module {\tt RESOURCE} using
 resource and also links to its referring resource.
 
 Module {\tt PROPERTY} defines a constructor ({\tt prop}) of sort
-{\tt property} whose arguments are a type, an identifier, a local
+{\tt Property} whose arguments are a type, an identifier, a local
 state, and links of the property. As noted before, a link is
 represented by an identifier of the linked object.  It also defines
-local state literals, {\tt notready} and {\tt ready} of a property.
+two local state literals, {\tt notready} and {\tt ready}, of a property.
 
 In addition to the mandatory selectors ({\tt type}, {\tt id}, and
 {\tt state}), module {\tt PROPERTY} declares and defines two more
@@ -2031,50 +2013,55 @@ correspondence of the names:
 \end{verbatim}
 \normalsize
 %% =======================================================================
-The following is the list of eleven sorts and five operators assumed by
+The following is the list of eleven sorts assumed by
+module {\tt OBJLINKMANY2ONE}:
+\begin{itemize}
+\item \stt{Object} (actually named as \stt{Property} in this case)\\
+  Sort for linking objects.
+\item \stt{ObjID} (as \stt{PRID})\\
+  Sort for identifiers of linking objects.
+\item \stt{ObjType} (as \stt{PRType})\\
+  Sort for types of linking objects.
+\item \stt{ObjState} (as \stt{PRState})\\
+  Sort for local states of linking objects.
+\item \stt{SetOfObject} (as \stt{SetOfProperty})\\
+  Sort for sets of linking objects.
+\item \stt{SetOfObjState} (as \stt{SetOfPRState})\\
+  Sort for sets of local states of linking objects.
+\item \stt{LObject} (as \stt{Resource})\\
+  Sort for linked objects.
+\item \stt{LObjID} (as \stt{RSID})\\
+  Sort for identifiers of linked objects.
+\item \stt{LObjState} (as \stt{RSState})\\
+  Sort for local states of linked objects.
+\item \stt{SetOfLObject} (as \stt{SetOfResource})\\
+  Sort for sets of linked objects.
+\item \stt{SetOfLObjState} (as \stt{SetOfRSState})\\
+  Sort for sets of local states of linked objects.
+\end{itemize}
+
+The following is the list of five operators assumed by
 module {\tt OBJLINKMANY2ONE} whereas argument $obj$ is a linking
 object, $lid$ is an identifier of a linked object, $setlo$ is a set of
 linked objects, and $setlls$ is a set of local states of linked
 objects:
 \begin{itemize}
-\item sort \stt{Object} (actually named as \stt{Property})\\
-  Sort for linking objects.
-\item sort \stt{ObjID} (as \stt{PRID})\\
-  Sort for identifiers of linking objects.
-\item sort \stt{ObjType} (as \stt{PRType})\\
-  Sort for types of linking objects.
-\item sort \stt{ObjState} (as \stt{PRState})\\
-  Sort for local states of linking objects.
-\item sort \stt{SetOfObject} (as \stt{SetOfProperty})\\
-  Sort for sets of linking objects.
-\item sort \stt{SetOfObjState} (as \stt{SetOfPRState})\\
-  Sort for sets of local states of linking objects.
-\item sort \stt{LObject} (as \stt{Resource})\\
-  Sort for linked objects.
-\item sort \stt{LObjID} (as \stt{RSID})\\
-  Sort for identifiers of linked objects.
-\item sort \stt{LObjState} (as \stt{RSState})\\
-  Sort for local states of linked objects.
-\item sort \stt{SetOfLObject} (as \stt{SetOfResource})\\
-  Sort for sets of linked objects.
-\item sort \stt{SetOfLObjState} (as \stt{SetOfRSState})\\
-  Sort for sets of local states of linked objects.
-\item op \stt{link} (as \stt{parent} and \stt{refer})\\
+\item \stt{link} (actually named as \stt{parent} and \stt{refer} in this case)\\
   Selector used as \stt{link($obj$)} which returns the identifier of
   the object linked by $obj$.
-\item op \stt{empLObj} (as \stt{empRS})\\
+\item \stt{empLObj} (as \stt{empRS})\\
   Constant representing an empty set of linked objects.
-\item op \stt{existLObj} (as \stt{existRS})\\
+\item \stt{existLObj} (as \stt{existRS})\\
   Predicate used as \stt{existLObj($setlo$,$lid$)} which holds iff a
   linked object with identifier $lid$ is included in
   $setlo$;\\$~~~~\exists lo\in setlo:\mbstt{id}(lo)=lid$.
-\item op \stt{existLObjInStates} (as \stt{existRSInStates})\\
+\item \stt{existLObjInStates} (as \stt{existRSInStates})\\
   Predicate used as \stt{existLObjInStates($setlo$,$lid$,$setlls$)}
   which holds iff a linked object with identifier $lid$ is included
   in $setlo$ and its local state is included in
   $setlls$;\\$~~~~\exists lo\in setlo:(\mbstt{id}(lo)=lid\land
   \mbstt{state}(lo)\in setlls)$.
-\item op \stt{getLObject} (as \stt{getResource})\\
+\item \stt{getLObject} (as \stt{getResource})\\
   Operator used as \stt{getLObject($setlo$,$lid$)} which returns an
   object in $setlo$ whose identifier is $lid$.
 \end{itemize}
@@ -2091,13 +2078,14 @@ states of linking objects, $lobj$ is a linked object, $lid$ is an
 identifier of a linked object, $setlo$ is a set of linked objects, and
 $setlls$ is a set of local states of linked objects:
 \begin{itemize}
-\item \stt{hasLObj} (renamed as \stt{hasParent} and \stt{hasRefRS})\\
+\item \stt{hasLObj} (renamed as \stt{hasParent} and \stt{hasRefRS} in this case)\\
   Predicate used as \stt{hasLObj($obj$,$setlo$)} which holds iff
   the object linked by $obj$ is included in $setlo$;\\$~~~~\exists lo\in
   setlo:\mbstt{id}(lo)=\mbstt{link}(obj)$.
 \item \stt{getXOfZ} (as \stt{getRSOfPR} and \stt{getRRSOfPR})\\
   Operator used as \stt{getXOfZ($setlo$,$obj$)} which returns an
-  object linked by $obj$ and included in $setlo$.
+  object linked by $obj$ and included in $setlo$. When there is no such
+  object in $setlo$, what it returns is undefined.
 \item \stt{getZsOfX} (as \stt{getPRsOfRS} and \stt{getPRsOfRRS})\\
   Operator used as \stt{getZsOfX($seto$,$lobj$)} which returns a subset
   $seto$ each of whose element object links to $lobj$.
@@ -2206,7 +2194,7 @@ represented as \stt{A xor B xor goal xor (A and B) xor (A and goal)
   xor (A and B and goal)}. The ANF of a goal would become
 exponentially long along with the number of lemmas.
 
-Using the implication lemma, we can define lemmas in a independent
+Using the Implication Lemma, we can define lemmas in an independent
 style from goals as follows:
 %% =======================================================================
 \small
@@ -2228,7 +2216,7 @@ Let {\tt S} be a set of object, {\tt P} be a predicate of an object,
 {\tt allObjP} be a predicate of a set of objects where
 \stt{allObjP(S)} holds iff \stt{P(O)} holds for every object {\tt O}
 in {\tt S}. Then, if \stt{allObjP(S)} does not hold, then there exists
-an object {\tt O'} and a set of objects {\tt S'} such that \stt{S=(O'
+an object {\tt O'} and a set {\tt S'} of objects such that \stt{S=(O'
   S')} holds and \stt{P(O')} does not hold\footnote{Many proved lemmas
   including the Set Lemma are proved using the mathematical induction
   about constructors. Therefor, the user should not additionally define
@@ -2239,7 +2227,7 @@ Let {\tt S} be a set of object, {\tt P} be a predicate of an object,
 {\tt someObjP} be a predicate of a set of objects where
 \stt{someObjP(S)} holds iff \stt{P(O)} holds for some object {\tt O}
 in {\tt S}. Then, if \stt{someObjP(S)} holds, then there exists an
-object {\tt O'} and a set of objects {\tt S'} such that \stt{S=(O'
+object {\tt O'} and a set {\tt S'} of objects such that \stt{S=(O'
   S')} holds and \stt{P(O')} holds.
 \end{corollary}
 Since a cloud system structure is modeled as a collection of several
@@ -2279,8 +2267,8 @@ Note that in this case, {\tt PR'} should be a property whose parent is
 resource {\tt idRS} but is not {\tt ready} (i.e.\ is {\tt
   notready}). Thus, it can be represented as
 \stt{prop(tpr,idPR,notready,idRS,idRRS)} where {\tt tpr}, {\tt idPR},
-and {\tt idRRS} are arbitrary constants. Then, the case splitting
-can be specified as follows:
+and {\tt idRRS} are arbitrary constants. Then, the following case splitting
+collectively covers all cases:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -2314,12 +2302,12 @@ provided by\\ {\tt OBJLINKMANY2ONE} and {\tt OBJLINKONE2ONE}. This
 section describes two of them with example usages.
 
 \begin{lemma}[Many-2-One Lemma 07]
-  Let {\tt Sx} be a set of linking objects, {\tt Sz} be a set of
-  linked objects, {\tt STx} be a set of local states of linking
-  objects, {\tt STz} be a set of local states of linked objects, and
-  {\tt St} be a local state of linking object where {\tt St} is not
-  included in {\tt STx}. Then, \stt{allObjInStates(Sx,St)} implies
-  \stt{ifXInStatesThenZInStates(Sx,STx,Sz,STz)}.
+  Let {\tt S\_X} be a set of linking objects, {\tt S\_Z} be a set of
+  linked objects, {\tt St\_X} be a set of local states of linking
+  objects, {\tt St\_Z} be a set of local states of linked objects, and
+  {\tt SX} be a local state of linking object where {\tt SX} is not
+  included in {\tt St\_X}. Then, \stt{allObjInStates(S\_X,St)} implies
+  \stt{ifXInStatesThenZInStates(S\_X,St\_X,S\_Z,St\_Z)}.
 \end{lemma}
 This lemma is represented in \cafeobj as follows\footnote{\stt{prec:~64} 
 means the operator precedence of {\tt when} is 64 (very low) and 
@@ -2400,8 +2388,8 @@ by renaming {\tt allObjInStates} and similarly
 %% =======================================================================
 Since \stt{not (initial $\backslash$in started)} is true, the {\tt
   when} clause can be omitted. This is why we use {\tt when} instead
-of {\tt implies} assuming it will omitted when renamed. Using the
-implication lemma, this lemma can be define as follows:
+of {\tt implies} assuming it will be omitted when renamed. Using the
+Implication Lemma, this lemma can be define as follows:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -2416,17 +2404,17 @@ implication lemma, this lemma can be define as follows:
 %% =======================================================================
 
 \begin{lemma}[Many-2-One Lemma 11]
-  Let {\tt Sx} be a set of linking objects, {\tt Sz} be a set of
-  linked objects, {\tt STx} be a set of local states of linking
-  objects, {\tt STz} be a set of local states of linked objects, and
+  Let {\tt S\_X} be a set of linking objects, {\tt S\_Z} be a set of
+  linked objects, {\tt St\_X} be a set of local states of linking
+  objects, {\tt St\_Z} be a set of local states of linked objects, and
   {\tt Z} and {\tt Z'} be linked objects where {\tt Z} and {\tt Z'}
   are identical (i.e.\ whose identifiers, links, and types are the
   same) and only their local states are different\footnote{Exactly
     speaking, {\tt Z} and {\tt Z'} are terms of \cafeobj representing
     when the same object in the model is in the different local
     states.}.  Then, if the local state of {\tt Z'} is included in
-  {\tt STz}, \stt{ifXInStatesThenZInStates(Sx,STx,(Z Sz),STz)}
-  implies\\ \stt{ifXInStatesThenZInStates(Sx,STx,(Z' Sz),STz)}.
+  {\tt St\_Z}, \stt{ifXInStatesThenZInStates(S\_X,St\_X,(Z S\_Z),St\_Z)}
+  implies\\ \stt{ifXInStatesThenZInStates(S\_X,St\_X,(Z' S\_Z),St\_Z)}.
 \end{lemma}
 This lemma is represented in \cafeobj as follows:
 %% =======================================================================
@@ -2504,7 +2492,7 @@ renaming {\tt m2o-lemma11} as follows:
 \normalsize
 %% =======================================================================
 The {\tt when} clause reduces to true and can be omitted. Using the
-implication lemma, this lemma can be define as follows:
+Implication Lemma, this lemma can be define as follows:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -2548,8 +2536,8 @@ In order to start transitions and reach a desired final state, a cloud
 system should not include such cyclic dependency. Verification of the
 system requires (1) to formalize that the dependency is acyclic, (2)
 to prove that the acyclicness is an invariant, and (3) to prove that
-when acyclic there exists at least one applicable trans rule and the
-system continues to transit. The framework provides a template module
+when acyclic there exists at least one applicable transition rule and the
+state machine continues to transit. The framework provides a template module
 to formalize acyclicness of dependency for (1) and a lemma that
 guarantees existence of applicable rules for (3).
 
@@ -2613,7 +2601,7 @@ This notation can specify more than one objects such that
 an object and a local state, $\Sigma = \{~ (X_1,s_1), (X_2,s_2), \dots~\}$,
 then we denote \ul{$S[\Sigma]$} as $S[X_1/s_1,X_2/s_2,\dots]$.
 \end{notation}
-Let $S_0$ be the following global state:
+Let $S\!_0$ be the following global state:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -2626,7 +2614,7 @@ Let $S_0$ be the following global state:
 Let us denote an object by its identifier and let $\Sigma_0$ be a set
 of pairs of an object and a local state such that $\Sigma_0=\{$
 $(\mbstt{myInstance,started}),$ $(\mbstt{myEIP::InsID,ready})\}$, then
-$S_0[\Sigma_0]$ is the following global state:
+$S\!_0[\Sigma_0]$ is the following global state:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -2651,16 +2639,16 @@ $S[\Sigma']$. We also say \ul{$X$ depends on $X'$ in $S$}, denoted
 that $dep_R(X,X',S)$.
 \end{definition}
 For example, rule {\tt R01} can make {\tt myEIP} transit from {\tt
-  initial} to {\tt started} in $S_0[\Sigma_0]$, however, there is a
+  initial} to {\tt started} in $S\!_0[\Sigma_0]$, however, there is a
 subset of $\Sigma_0$ such that
 $\Sigma_{R01}=\{\mbstt{(myEIP:InsID,ready)}\}$ where rule {\tt R01}
-can make {\tt myEIP} transit also in $S_0[\Sigma_{R01}]$. Thereby, {\tt
+can make {\tt myEIP} transit also in $S\!_0[\Sigma_{R01}]$. Thereby, {\tt
   myEIP} depends only on {\tt myEIP:InsID} but not on {\tt myInstance}
-in $S_0$ w.r.t.\ {\tt R01}. Similarly, when
+in $S\!_0$ w.r.t.\ {\tt R01}. Similarly, when
 $\Sigma_{R02}=\{(\mbstt{myInstance,started})\}$, rule {\tt R02} can
 make {\tt myEIP::InsID} transit from {\tt notready} to {\tt ready} in
-$S_0[\Sigma_{R02}]$ and thus {\tt myEIP::InsID} depends on {\tt
-  myInstance} in $S_0$ w.r.t.\ {\tt R02}.
+$S\!_0[\Sigma_{R02}]$ and thus {\tt myEIP::InsID} depends on {\tt
+  myInstance} in $S\!_0$ w.r.t.\ {\tt R02}.
 
 \begin{definition}[depending set]
 Let $X$ be an object, $R$ be a transition rule, and $S$ be a global
@@ -2681,13 +2669,13 @@ also say \ul{there is no cyclic dependency of $C$ in $S$}, denoted
 \ul{$noCycle_C(S)$}, iff all objects of $C$ in $S$ are in no cyclic
 dependency in $S$.
 \end{definition}
-For example, $DS(\mbstt{myEIP},S_0) =
+For example, $DS(\mbstt{myEIP},S\!_0) =
 \{~\mbstt{myEIP::InsID},\mbstt{myInstance}~\}$ because {\tt myEIP}
-depends on \stt{myEIP::InsID} in $S_0$ w.r.t.\ {\tt R01} and
-\stt{myEIP::InsID} depends on {\tt myInstance} in $S_0$ w.r.t.\ {\tt
+depends on \stt{myEIP::InsID} in $S\!_0$ w.r.t.\ {\tt R01} and
+\stt{myEIP::InsID} depends on {\tt myInstance} in $S\!_0$ w.r.t.\ {\tt
   R02}. Since the depending set of {\tt myEIP} does not include {\tt
-  myEIP} itself, {\tt myEIP} is in no cyclic dependency in $S_0$, and
-there is no cyclic dependency of {\tt Resource} in $S_0$.
+  myEIP} itself, {\tt myEIP} is in no cyclic dependency in $S\!_0$, and
+there is no cyclic dependency of {\tt Resource} in $S\!_0$.
 \begin{lemma}[Cyclic Dependency Lemma]
 Let $S$ be a global state, $R$ be a transition rule, and $C$ be a
 class of objects. If there is no cyclic dependency of $C$ in $S$
@@ -2695,7 +2683,7 @@ and there exists some object $X$ of $C$ in $S$ whose local state
 is included in $prels(R,C)$, then there exists some object $O$ of $C$ in
 $S$ such that the local state of $O$ is included in $prels(R,C)$ and the
 depending set of $O$ includes no object of $C$ whose local
-state is included in $prels(R,C)$, i.e.
+state is included in $prels(R,C)$, i.e.:
 \begin{eqnarray*}
 &&noCycle_C(S)\land\exists X\in C:(st(X,S)\in prels(R,C)) \ra\\
 &&\:\:\:\:\:\:\:\:\:\exists O\in C:(st(O,S)\in prels(R,C)\ \land\\
@@ -2712,8 +2700,8 @@ DS(O,S)$ then there should be some object $O$ in $C^R$ such that $O
 it means there is cyclic dependency of $C$ in $S$. $\Box$\\
 
 \noindent
-For example, let $S_0$ be a global state shown above, then there is no
-cyclic dependency of {\tt Resource} in $S_0$ and there exists {\tt
+For example, let $S\!_0$ be a global state shown above, then there is no
+cyclic dependency of {\tt Resource} in $S\!_0$ and there exists {\tt
   myEIP} whose local state is {\it initial}. Thereby, the Cyclic
 Dependency Lemma ensures that there exists a {\tt Resource} object
 whose local state is {\it initial} and whose depending set includes no
@@ -2733,12 +2721,12 @@ is a modified version of the formalization focusing on one class.
 \begin{definition}[depending set of the same class as]
 Let $C$ be a class , $X$ be an object of $C$, $R$ be a transition
 rule, and $S$ be a global state, then the \ul{depending set of the same
-class as $X$ in $S$}, denoted \ul{$DS_C(X,S)$}, is defined
-as $DS_C(X,S)=\{~X'\in C\mid X'\in DS(X,S)~\}$
+class as $X$ in $S$}, denoted \ul{$DS\!_C(X,S)$}, is defined
+as $DS\!_C(X,S)=\{~X'\in C\mid X'\in DS(X,S)~\}$
 \end{definition}
 \begin{lemma}
 Let $C$ be a class, $X$ be an object of $C$, and $S$ be a global
-state. If $X$ itself is not included in $DS_C(X,S)$, then $X$ is in no
+state. If $X$ itself is not included in $DS\!_C(X,S)$, then $X$ is in no
 cyclic dependency of $C$ in $S$.
 \end{lemma}
 \begin{corollary}
@@ -2747,8 +2735,8 @@ class of objects. If there is no cyclic dependency of $C$ in $S$ and
 there exists some object $X$ of $C$ in $S$ whose local state is
 included in $prels(R,C)$, then there exists some object $O$ of $C$ in
 $S$ such that the local state of $O$ is included in $prels(R,C)$ and
-$DS_C(O,S)$ includes no object whose local state is included in
-$prels(R,C)$; typically $DS_C(O,S)$ is empty.
+$DS\!_C(O,S)$ includes no object whose local state is included in
+$prels(R,C)$; typically $DS\!_C(O,S)$ is empty.
 \end{corollary}
 \begin{definition}[dependency chain]
 Let $X_1, X_2, \dots,X_n$ be objects and $S$ be a global state, then the
@@ -2757,23 +2745,23 @@ Let $X_1, X_2, \dots,X_n$ be objects and $S$ be a global state, then the
 X_{i+1},S)$.
 \end{definition}
 For example, since {\tt myEIP} depends on {\tt myEIP::InsID} and it in
-turn depends on {\tt myInstance} in $S_0$, there is a dependency chain
-in $S_0$, $dc([\mbstt{myEIP,myEIP::InsID,myInstance}],S_0)$.
+turn depends on {\tt myInstance} in $S\!_0$, there is a dependency chain
+in $S\!_0$, $dc([\mbstt{myEIP,myEIP::InsID,myInstance}],S\!_0)$.
 
 \begin{definition}[directly depending set of the same class as]
 Let $C$ be a class of objects, $X$ be an object of $C$, and $S$ be a
 global state. The \ul{directly depending set of the same class as $X$
-  in $S$}, denoted \ul{$DDS_C(X,S)$}, is defined as $\{~X'\mid\exists
+  in $S$}, denoted \ul{$DDS\!_C(X,S)$}, is defined as $\{~X'\mid\exists
 dc([X,X_1,\dots,X_n,X'],S)\land X' \in C\land\forall i\in [1 \dots
   n]:X_i \not\in C~\}$. We also say \ul{$X$ directly depends on $X'$
-  in $S$} when $X'\in DDS_c(X,S)$.
+  in $S$} when $X'\in DDS\!_c(X,S)$.
 \end{definition}
-When $X$ and $X'$ are objects of $C$, $X' \in DDS_C(X)$ means that
+When $X$ and $X'$ are objects of $C$, $X' \in DDS\!_C(X)$ means that
 there exists a dependency chain in which the first object is $X$, the
 last object is $X'$, and every object between $X$ and $X'$ is not of
-$C$. For example, $DDS_C(\mbstt{myEIP},S_0)$ $=\{~\mbstt{myInstance}~\}$
+$C$. For example, $DDS\!_C(\mbstt{myEIP},S\!_0)$ $=\{~\mbstt{myInstance}~\}$
 since there is a dependency chain
-$dc([\mbstt{myEIP,myEIP::InsID,myInstance}],S_0)$.
+$dc([\mbstt{myEIP,myEIP::InsID,myInstance}],S\!_0)$.
 
 \begin{corollary}
 Let $S$ be a global state, $R$ be a transition rule, and $C$ be a
@@ -2781,8 +2769,8 @@ class of objects. If there is no cyclic dependency of $C$ in $S$ and
 there exists some object $X$ of $C$ in $S$ whose local state is
 included in $prels(R,C)$, then there exists some object $O$ of $C$ in
 $S$ such that the local state of $O$ is included in $prels(R,C)$ and
-$DDS_C(O,S)$ includes no object whose local state is included in
-$prels(R,C)$; typically $DDS_C(O,S)$ is empty.
+$DDS\!_C(O,S)$ includes no object whose local state is included in
+$prels(R,C)$; typically $DDS\!_C(O,S)$ is empty.
 \end{corollary}
 %% ===============================================================
 \subsubsection{Using a Template Module to Represent $noCycle_C$}
@@ -2803,7 +2791,7 @@ parameter module, {\tt PRMCYCLE}:
   
     [State]
     op getAllObjInState : State -> SetOfObject
-      op DDSC : Object State -> SetOfObject
+    op DDSC : Object State -> SetOfObject
   }
 
   module! CYCLEPRED(P :: PRMCYCLE) {
@@ -2830,18 +2818,25 @@ parameter module, {\tt PRMCYCLE}:
 \end{verbatim}
 \normalsize
 %% =======================================================================
-Given a global state, operator {\tt getAllObjInState} should return
+Parameter module {\tt PRMCYCLE} requires five operator parameters
+three of which can be defined just by using template module {\tt
+  OBJECTBASE}.
+The user of the framework should appropriately define {\tt
+  getAllObjInState} and {\tt DDSC} because they are specific to each
+problem. 
+Given a global state {\tt S}, operator \stt{getAllObjInState(S)} should return
 the set of all objects of the specific class we focus; that is the
 resource class in the CloudFormation example case. Operator
-\stt{DDSC(O,S)} returns the directly depending set of the same class
-as the given object {\tt O} in the given global state {\tt S}.  Given
-a global state, predicate {\tt noCycle} transitively visits objects in
+\stt{DDSC(O,S)} should return the directly depending set of the same class
+as the given object {\tt O} in the given global state {\tt S}.
+
+Using these operators, template module {\tt CYCLEPRED} defines predicate
+{\tt noCylce}. Given
+a global state {\tt S}, predicate \stt{noCycle(S)} transitively visits objects in
 directly depending sets \stt{DDSC(O,S)} and checks not to find any
 object already visited.
 
-The user of the framework should appropriately define {\tt
-  getAllObjInState} and {\tt DDSC} because they are specific to each
-problem. In the CloudFormation example case, they can be defined as
+In the CloudFormation example case, {\tt getAllObjInState} and {\tt DDSC} can be defined as
 follows:
 %% =======================================================================
 \small
@@ -2872,12 +2867,12 @@ transit when all of its properties are {\tt ready} and that rule {\tt
   R02} can make a {\tt notready} property when its parent is {\tt
   started}. As explained in Section~\ref{sec:linkpred},
 \stt{getPRsOfRSInStates(SetPR,RS,notready)} returns a set of
-properties which are included in the set of properties {\tt SetPR},
+properties which are included in the set {\tt SetPR} of properties,
 whose parents are the resource {\tt RS}, and whose local states are
 {\tt notready}. And \stt{getRRSsOfPRsInStates(SetRS,$setPR$,initial)}
-returns a set of resources which are included in the set of resources
-{\tt SetRS}, are referred by one of the properties in the set $setPR$,
-and whose local states are {\tt initial}. Thereby, $DDS_C(X,S)$ can be
+returns a set of resources which are included in the set
+{\tt SetRS} of resources, which are referred by one of the properties in the set $setPR$,
+and whose local states are {\tt initial}. Thereby, $DDS\!_C(X,S)$ can be
 defined by combining these operators.
 
 Using {\tt getAllRSInState} and {\tt DDSC} as parameters template
@@ -2904,7 +2899,7 @@ module {\tt CYCLEPRED} can be instantiated as follows:
 \subsubsection{Lemmas for Proving Acyclicness is an Invariant}
 %% ===============================================================
 In order to use the Cyclic Dependency Lemma, the user of the framework
-should prove that acyclicness is an invariant, especially should
+should prove that $noCycle_C$ is an invariant, especially should
 prove that $noCycle_c(S) \ra noCycle_C(S')$ for any global state $S$
 and any possible next state $S'$ of $S$. Although such proof is
 specific to each problem, there are several common techniques and the
@@ -2915,7 +2910,7 @@ between objects when it is applied. For example, when rule {\tt R01}
 is applied to a global state, it makes a resource object transit from
 {\tt initial} to {\tt started}. If the resource object is referred by
 some {\tt notready} property object, then the property depends on the
-resource in the global state w.r.t.\ {\tt R02} and does not in the
+resource in the global state w.r.t.\ {\tt R02} and does not depend on it in the
 next state. Similarly, when rule {\tt R02} is applied, it makes a
 property object transit from {\tt notready} to {\tt ready} and the
 dependency between the property and its parent resource disappears.
@@ -2932,24 +2927,24 @@ DS(X,S)$.  $\Box$
 
 \begin{corollary}
 Let $C$ be a class of objects and $S$ and $S'$ be global states.  If
-$DS_C(X,S')\subseteq DS_C(X,S)$ for all objects $X$ of $C$ in $S$,
+$DS\!_C(X,S')\subseteq DS\!_C(X,S)$ for all objects $X$ of $C$ in $S$,
 then $noCycle_C(S) \ra noCycle_C(S')$.
 \end{corollary}
 
 \begin{corollary}
 Let $C$ be a class of objects and $S$ and $S'$ be global states.  If
-$DDS_C(X,S')\subseteq DDS_C(X,S)$ for all objects $X$ of $C$ in $S$,
+$DDS\!_C(X,S')\subseteq DDS\!_C(X,S)$ for all objects $X$ of $C$ in $S$,
 then $noCycle_C(S) \ra noCycle_C(S')$.
 \end{corollary}
 
 \begin{lemma}[Many-2-One Lemma 24]
-  Let {\tt Sx} be a set of linking objects, {\tt Sz} be a set of
-  linked objects, {\tt STx} be a set of local states of linking
+  Let {\tt S\_X} be a set of linking objects, {\tt S\_Z} be a set of
+  linked objects, {\tt St\_X} be a set of local states of linking
   objects, and {\tt X} and {\tt X'} be linking objects where {\tt X}
   and {\tt X'} are identical and only their local states are different
-  Then, if the local state of {\tt X'} is not included in {\tt STx},
-  \stt{getXsOfZsInStates((X' Sx),Sz,STx)} is a subset of or equal to
-  \stt{getXsOfZsInStates((X Sx),Sz,STx))}.
+  Then, if the local state of {\tt X'} is not included in {\tt St\_X},
+  \stt{getXsOfZsInStates((X' S\_X),S\_Z,St\_X)} is a subset of or equal to
+  \stt{getXsOfZsInStates((X S\_X),S\_Z,St\_X))}.
 \end{lemma}
 This Many-2-One Lemma 24 is represented in \cafeobj as follows:
 %% =======================================================================
@@ -3029,42 +3024,42 @@ to check the constraints than to use $noCycle$ defined above.
 \begin{definition}[directly relating set]
 Let $S$ be a global state, $X$ be an object in $S$, and $r$ be a
 relationship of objects. Then, the \ul{directly relating set of $X$ in
-  $S$ w.r.t.\ $r$}, denoted \ul{$DRS_r(X,S)$}, is defined as
-$DRS_r(X,S)=\{~X'\mid r(X,X',S)~\}$.
+  $S$ w.r.t.\ $r$}, denoted \ul{$DRS\!_r(X,S)$}, is defined as
+$DRS\!_r(X,S)=\{~X'\mid r(X,X',S)~\}$.
 \end{definition}
 
 \begin{definition}[relating set]
 Let $X$ be an object, $S$ be a global state, and $r$ be a relationship
 of objects, then the \ul{relating set of $X$ in $S$
-  w.r.t.\ $r$}, denoted \ul{$RS_r(X,S)$}, is recursively defined
-as (1) $\forall X': (r(X,X',S) \ra X'\in RS_r(X,S))$, and (2)
-$\forall X',X'': (X'\in RS_r(X,S) \land r(X',X'',S) \ra X''\in
-RS_r(X,S))$.
+  w.r.t.\ $r$}, denoted \ul{$RS\!_r(X,S)$}, is recursively defined
+as (1) $\forall X': (r(X,X',S) \ra X'\in RS\!_r(X,S))$, and (2)
+$\forall X',X'': (X'\in RS\!_r(X,S) \land r(X',X'',S) \ra X''\in
+RS\!_r(X,S))$.
 \end{definition}
 
 \begin{definition}[no cyclic relationship]
 Let $X$ be an object, $S$ be a global state, and $r$ be a relationship
 of objects, then we say \ul{$X$ is in no cyclic relationship in $S$
   w.r.t.\ $r$}, denoted \ul{$noCycle_r(X,S)$}, iff $X$ itself is not
-included in $RS_r(X,S)$.
+included in $RS\!_r(X,S)$.
 \end{definition}
 
 \begin{lemma}
 \label{lemma:simplerel}
 Let $C$ is a class, $X$ be an object of $C$, $S$ be a global state,
-and $r$ be a relationship of objects. If $DDS_c(X,S)$ is a subset of
-$DRS_R(X,S)$ for all $X$ in $S$, then $noCycle_r(X,S)$ implies
-$noCycle_c(X,S)$ for all $X$, i.e.
-\[\forall X:DDS_c(X,S)\subseteq DRS_r(X,S) \ra \forall X: (noCycle_r(X,S) \ra
+and $r$ be a relationship of objects. If $DDS\!_c(X,S)$ is a subset of
+$DRS\!_R(X,S)$ for all $X$ in $S$, then $noCycle_r(X,S)$ implies
+$noCycle_c(X,S)$ for all $X$, i.e.:
+\[\forall X:DDS\!_c(X,S)\subseteq DRS\!_r(X,S) \ra \forall X: (noCycle_r(X,S) \ra
 noCycle_C(X,S))\]
 \end{lemma}
-Proof: $DDS_c(X,S)\subseteq DRS_r(X,S)$ means that $DS_c(X,S)\subseteq
-RS_r(X,S)$.  Thereby, if $noCycle_c(X,S)$ does not holds, then $X\in
-DS_C(X,S)$ and $X\in RS_r(X,S)$, which is a contradiction. $\Box$\\
+Proof: $DDS\!_c(X,S)\subseteq DRS\!_r(X,S)$ means that $DS\!_c(X,S)\subseteq
+RS\!_r(X,S)$.  Thereby, if $noCycle_c(X,S)$ does not holds, then $X\in
+DS\!_C(X,S)$ and $X\in RS\!_r(X,S)$, which is a contradiction. $\Box$\\
 
 This lemma allows the user of the framework to define {\tt DDSC}
-implementing some simpler relationship $r$ instead of the true $DDS_C$
-and use {\tt noCycle} using the {\tt DDSC} instead of the true
+implementing some simpler relationship $r$ instead of the true $DDS\!_C$
+and use {\tt noCycle} defined by using the {\tt DDSC} instead of the true
 $noCycle_c$. For example, when we adopt the constraint of no cyclic
 chains of links in the CloudFormation example case, {\tt DDSC} can be
 simply defined as follows:
@@ -3088,8 +3083,7 @@ However {\tt noCycle} defined by using the simpler {\tt DDSC} above is
 \label{chap:verification}
 %% ===============================================================
 The framework provides an overall verification procedure for a kind of
-liveness properties, {\it leads-to} properties of UNITY
-logic~\cite{DBLP:books/daglib/0067338}, as well as invariant
+liveness properties, {\it leads-to} properties, as well as invariant
 properties.  The procedure assists the users of the framework to
 systematically think and develop proof scores for verification of
 cloud orchestration.
@@ -3102,105 +3096,113 @@ initial state. This kind of reachability is one of the most important
 properties of practical automation of cloud systems.
 
 Futatsugi~\cite{Futatsugi15} defines leads-to property based on
-transition sequences of state machines and proposes a set of
-sufficient conditions for it as follows:
+transition sequences of state machines\footnote{However adopting (p
+  leads-to q) property from UNITY
+  logic~\cite{DBLP:books/daglib/0067338}, this definition is not the
+  same as the original one. In the UNITY logic, the basic model is the
+  parallel program with parallel assignments, and (p leads-to q) is
+  defined through applications of inference rules.} and proposes a set
+of sufficient conditions for it as follows:
 \begin{definition}[$p~\mbstt{leads-to}~q$]
 \label{def:leadsto}
-  Let $TS=(St,Tr,In)$ be a state machine, $p$ and $q$ be predicates of
-  $St$, $St^R\subseteq St$ be the set of reachable states of $TS$, and
+  Let $TS=(S\!t,T\!r,In)$ be a state machine, $p$ and $q$ be predicates of
+  $S\!t$, $S\!t^R\subseteq S\!t$ be the set of reachable states of $TS$, and
   $\Theta$ be the set of transition sequences of $TS$, then
   \ul{$p~\mbstt{leads-to}~q$} defined as follows:
   \begin{eqnarray*}
-  \forall S\alpha\in \Theta: (S\in St^R \land p(S) \land
+  \forall S\alpha\in \Theta: (S\in S\!t^R \land p(S) \land
   \forall S'\in S\alpha: \neg q(S')\\
-  \ra \exists T\in St, \exists\beta\in\Theta:(q(T) \land S\alpha\beta T\in \Theta))
+  \ra \exists T\in S\!t, \exists\beta\in\Theta:(q(T) \land S\alpha\beta T\in \Theta))
   \end{eqnarray*}
 \end{definition}
 
-\begin{lemma}[sufficient conditions for leads-to]
-\label{def:sufcond}
-  Let $TS=(St,Tr,In)$ be a state machine, $p$ and $q$ be predicates of
-  $St$, $inv$ be an invariant of $TS$, and $m$ be a natural number
-  function of $St$, then the following four conditions are sufficient
-  for ($p~\mbstt{leads-to}~q$) to hold.
-\begin{eqnarray*}
-\forall (S,S')\in Tr:&&((inv(S)\land p(S)\land\neg q(S))\ra(p(S')\lor q(S')))\\
-\forall (S,S')\in Tr:&&((inv(S)\land p(S)\land\neg q(S))\ra(m(S) > m(S')))\\
-\forall S\in St:&&((inv(S)\land p(S)\land\neg q(S))\ra\exists S'\in St:(S,S')\in Tr)\\
-\forall S\in St:&&((inv(S)\land (p(S)\lor q(S))\land(m(S) = 0)) \ra q(S))
-\end{eqnarray*}
-\end{lemma}
-
 \begin{lemma}
-  Let $p_0$, $p$, and $q$ be predicates of $St$:
+  Let $p_0$, $p$, and $q$ be predicates of $S\!t$:
   $(p_0 \ra p) \land (p~\mbstt{leads-to}~q) \ra
   p_0~\mbstt{leads-to}~q$.
 \end{lemma}
+
+\begin{lemma}[sufficient conditions for leads-to]
+\label{def:sufcond}
+  Let $TS=(S\!t,T\!r,In)$ be a state machine, $p$ and $q$ be predicates of
+  $S\!t$, $inv$ be an invariant of $TS$, and $m$ be a natural number
+  function of $S\!t$, then the following four conditions are sufficient
+  for ($p~\mbstt{leads-to}~q$) to hold.
+\begin{eqnarray*}
+\forall (S,S')\in T\!r:&&((inv(S)\land p(S)\land\neg q(S))\ra(p(S')\lor q(S')))\\
+\forall (S,S')\in T\!r:&&((inv(S)\land p(S)\land\neg q(S))\ra(m(S) > m(S')))\\
+\forall S\in S\!t:&&((inv(S)\land p(S)\land\neg q(S))\ra\exists S'\in S\!t:(S,S')\in T\!r)\\
+\forall S\in S\!t:&&((inv(S)\land (p(S)\lor q(S))\land(m(S) = 0)) \ra q(S))
+\end{eqnarray*}
+\end{lemma}
 Since Futatsugi~\cite{Futatsugi15} does not assume fairness
-constraints to ensure any transition rule will be eventually executed,
+constraints to ensure any applicable transition rule will be eventually executed,
 Definition~\ref{def:leadsto} of leads-to property includes the case
 where there is an infinite transition sequence
-$\alpha=(S_0,S_1,\dots)$ such that predicate $q$ never holds, $\forall
-S_i\in\alpha:\neg q(S_i)$. It may be not what we expect an automated
-operation of a cloud system to have. However, fortunately, the
+$\alpha=(S\!_0,S\!_1,\dots)$ such that predicate $q$ never holds, $\forall
+S\!_i\in\alpha:\neg q(S\!_i)$. It may be not what we expect an automated
+operation of a cloud system to have. Fortunately, however, the
 sufficient conditions proposed by Lemma~\ref{def:sufcond} are strong
 enough to reject such infinite cases because the properly decreasing
 natural number function, $m$, ensures that transition sequences never
 become infinite while keeping $q$ not to hold.
 
 Let the automation of a setup operation be modeled as a state machine
-$TS=(St,Tr,In)$ specified by sort {\tt State} and a set of transition
-rules, $\Theta$ be the set of transition sequences of $TS$, and
-$Fn\subseteq St$ be a set of expected final states, reachability
-mentioned above is formalized as ($init~\mbstt{leads-to}~final$) where
+$TS=(S\!t,T\!r,In)$ specified by sort {\tt State} and a set of transition
+rules
+%% , $\Theta$ be the set of transition sequences of $TS$, 
+and
+$Fn\subseteq S\!t$ be a set of expected final states, reachability
+we want to verify is formalized as ($init~\mbstt{leads-to}~final$) where
 $init$ and $final$ are predicates for a given global state $S$ such
 that $init(S)$ holds iff $S \in In$ and $final(S)$ holds iff $S \in
-Fn$. This means that any transition sequence from any initial state
-always reaches some final state no matter what possible transition
-sequence is taken, i.e., for any transition sequence $S\alpha$ if
-$init(S)$ holds, then there exists a transition sequence $\beta S'$
-such that $S\alpha\beta S'\in\Theta$ and $final(S')$ holds.
+Fn$. 
+%% This means that any transition sequence from any initial state
+%% always reaches some final state no matter what possible transition
+%% sequence is taken, i.e.\ for any transition sequence $S\alpha$ if
+%% $init(S)$ holds, then there exists a transition sequence $\beta S'$
+%% such that $S\alpha\beta S'\in\Theta$ and $final(S')$ holds.
 
 The lemma above ensures that what we should do is to find a state
 predicate $p$ such that $(init\ra p)$ and $p$ satisfies the sufficient
 conditions for $(p~\mbstt{leads-to}~final)$. However such $p$ is
 specific to the individual problem, one of the most typical and
-general ones is that $p(S)$ means $S$ has a next state, i.e. $S$ will
+general ones is that $p(S)$ means $S$ has a next state, i.e.\ $S$ will
 transits.  When a state machine has such general $p$, it always
 continues to transit until it reaches a final state.
 
 \begin{definition}[continuous predicate]
   The \ul{continuous predicate, $cont$}, is the predicate which holds
   iff there exists some next state of a given state.  Let
-  $TS=(St,Tr,In)$ be a state machine, then $\forall S\in St:cont(S)
-  ~\mbstt{iff}~ \exists S'\in St:(S,S')\in Tr$.
+  $TS=(S\!t,T\!r,In)$ be a state machine, then $\forall S\in S\!t:cont(S)
+  ~\mbstt{iff}~ \exists S'\in S\!t:(S,S')\in T\!r$.
 \end{definition}
 
 \begin{lemma}[sufficient conditions for $init~\mbstt{leads-to}~final$]
-  Let $TS=(St,Tr,In)$ be a state machine, $inv$ be a conjunction of
-  some state predicates and $m$ be a natural number function of $St$,
+  Let $TS=(S\!t,T\!r,In)$ be a state machine, $inv$ be a conjunction of
+  some state predicates and $m$ be a natural number function of $S\!t$,
   then the following six conditions are sufficient for
   ($init~\mbstt{leads-to}~final$) to hold.
   \begin{eqnarray}
   \label{exp:cond1}
-  \forall S\in St:&&(init(S)\ra cont(S))\\
+  \forall S\in S\!t:&&(init(S)\ra cont(S))\\
   \label{exp:cond2}
-  \forall (S,S')\in Tr:&&((inv(S)\land\neg final(S))
+  \forall (S,S')\in T\!r:&&((inv(S)\land\neg final(S))
   \ra(cont(S')\lor final(S')))\\
   \label{exp:cond3}
-  \forall (S,S')\in Tr:&&((inv(S)\land\neg final(S))\ra(m(S)> m(S')))\\
+  \forall (S,S')\in T\!r:&&((inv(S)\land\neg final(S))\ra(m(S)> m(S')))\\
   \label{exp:cond4}
-  \forall S\in St:&&((inv(S)\land (cont(S)\lor final(S))
+  \forall S\in S\!t:&&((inv(S)\land (cont(S)\lor final(S))
   \land(m(S) = 0))\ra final(S))\\
   \label{exp:cond5}
-  \forall S\in St:&&(init(S)\ra inv(S))\\
+  \forall S\in S\!t:&&(init(S)\ra inv(S))\\
   \label{exp:cond6}
-  \forall (S,S')\ Tr:&&(inv(S)\ra inv(S'))
+  \forall (S,S')\ T\!r:&&(inv(S)\ra inv(S'))
   \end{eqnarray}
 \end{lemma}
 Proof: Let $p$ in the ``sufficient conditions for leads-to'' lemma
-be $cont$, then $\forall (S,S')\in Tr:p(S)=true$ holds and
-$\forall S\in St:(p(s)\ra\exists S'\in St:(S,S')\in Tr)$. $\Box$\\
+be $cont$, then $\forall (S,S')\in T\!r:p(S)=true$ holds and
+$\forall S\in S\!t:(p(s)\ra\exists S'\in S\!t:(S,S')\in T\!r)$. $\Box$\\
 
 Condition~(\ref{exp:cond1}) means an initial state should be a
 continuing state, i.e.\ it should start
@@ -3210,7 +3212,7 @@ $m(S)$ keeps to decrease properly while $final(S)$ does not
 hold. Since $m(S)$ is a natural number, it should stop to decrease in
 finite steps and the state machine should get to state $S'$ such that
 $((cont(S')\ \lor\ final(S'))$ $\land\ (m(S') = 0))$.
-Condition~(\ref{exp:cond4}) then ensures $final(S')$. Here, $m$ is
+Condition~(\ref{exp:cond4}) then ensures $final(S')$ holds. Here, $m$ is
 called a {\it state measuring function}. When
 condition~(\ref{exp:cond5}) and~(\ref{exp:cond6}) hold, each state
 predicate included in $inv$ is called an invariant.
@@ -3237,6 +3239,7 @@ be represented by \cafeobj as follows:
   pred init : State
   eq init(< SetRS,SetPR >)
      = wfs(< SetRS,SetPR >) and
+       noRSCycle(< SetRS,SetPR >) and
        allRSInStates(SetRS,initial) and 
        allPRInStates(SetPR,notready) .
 
@@ -3248,8 +3251,7 @@ be represented by \cafeobj as follows:
   eq wfs(S)
      = wfs-atLeastOneRS(S) and
        wfs-uniqRS(S)       and wfs-uniqPR(S) and 
-       wfs-allPRHaveRS(S)  and wfs-allPRHaveRRS(S) and
-       wfs-noRSCycle(S) .
+       wfs-allPRHaveRS(S)  and wfs-allPRHaveRRS(S) .
 
   pred wfs-atLeastOneRS : State
   eq wfs-atLeastOneRS(< SetRS,SetPR >) = not (SetRS = empRS) .
@@ -3265,26 +3267,24 @@ be represented by \cafeobj as follows:
 
   pred wfs-allPRHaveRRS : State
   eq wfs-allPRHaveRRS(< SetRS,SetPR >) = allPRHaveRRS(SetPR,SetRS) .
-
-  pred wfs-noRSCycle : State
-  eq wfs-noRSCycle(S) = noRSCycle(S) .
 \end{verbatim}
 \normalsize
 %% =======================================================================
 Among conditions composing $init(S)$, one without referring any local
 states of objects is called a {\it wfs (well-formed state)} and we
 usually gather them and define predicate {\tt wfs} as a conjunction of
-them. It is because representing a global state as a tuple of sets of
+them. The reason why we need several wfs predicates
+is because representing a global state as a tuple of sets of
 objects is too general to represent structural constraints, such as
 identifiers should be unique, there is no dangling link, and so on. Each
 structural constraint is typically represented as a wfs and should be
-an invariant. In addition, do not forget to define $noCycle$ as a wfs
-and to include it in the $init$ predicate when using the Cyclic
+an invariant. In addition, do not forget to include $noCycle$
+in the $init$ predicate when using the Cyclic
 Dependency Lemma.\\
 
 \noindent{\bf Step 0-2:} Define $cont$. \\ Since $cont(S)$ means that
 state $S$ has at least one next state, it can be specified as follows
-using the search predicate of \cafeobj:
+using the unconditional search predicate of \cafeobj:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -3342,7 +3342,7 @@ Section~\ref{sec:lemma}.
 Predicate $inv$ is a conjunction of all the invariants, however, the
 straightforward representation is not so efficient. \cafeobj needs to
 internally maintain long ANDed terms and to spend much processing
-time. There is more efficient representation. Since the sufficient
+time. Fortunately, there is more efficient representation. Since the sufficient
 conditions (2), (3), (4), and (6) include $inv$ in their antecedent
 parts, it is enough to know whether each invariant does or does not
 reduce to false. Thereby, we can define $inv$ such that it reduces to
@@ -3374,18 +3374,18 @@ Section~\ref{sec:invariant}.\\
 \noindent{\bf Step 0-5:} Prepare for using the Cyclic Dependency
 Lemma. \\ When using the Cyclic Dependency Lemma, we firstly introduce
 an object which is in one of the pre-transit local states of a
-transition rule and then we claim that $DDS_C$ of the object includes
+transition rule and then we claim that $DDS\!_C$ of the object includes
 no object in the pre-transit local states.
 
 CITP method used a {\tt :init} command to introduce a lemma on the way
 of proofs.  The lemma should be defined in the non-execute mode and be
-labeled in advance. The :init command is used to name the label and
-specify the appropriate substitution of variables.
+labeled in advance. The {\tt :init} command is used to specify the labeled lemma and
+the appropriate substitution of variables.
 
 In the CloudFormation example case, we will introduce an {\tt initial}
-resource and claim that every resource in $DDS_c$ of the resource is
+resource and claim that every resource in $DDS\!_c$ of the resource is
 not {\tt initial}. The following conditional equation is defined in
-advance and means that there is a contradiction when $DDS_C$ of the
+advance and means that there is a contradiction when $DDS\!_C$ of the
 specified resource includes any {\tt initial} resource.
 %% =======================================================================
 \small
@@ -3415,9 +3415,9 @@ of constants for the CloudFormation example case:
 %% =======================================================================
 \small
 \begin{verbatim}
-  ops idRS idRS' idRS1 idRS2 idRS3 : -> RSIDLt
-  ops idRRS idRRS' idRRS1 idRRS2 idRRS3 : -> RSIDLt
-  ops idPR idPR' idPR1 idPR2 idPR3 : -> PRIDLt
+  ops idRS idRS' idRS1 : -> RSIDLt
+  ops idRRS idRRS' idRRS1 : -> RSIDLt
+  ops idPR idPR' idPR1 : -> PRIDLt
   ops sRS sRS' sRS'' sRS''' : -> SetOfResource
   ops sPR sPR' sPR'' sPR''' : -> SetOfProperty
   ops trs trs' trs'' trs''' : -> RSType
@@ -3434,10 +3434,10 @@ of constants for the CloudFormation example case:
 \label{sec:initcont}
 %% ===============================================================
 The verification procedure is basically a process to repeat three
-actions; (1) pick up an unproved case which is referred to as the
+actions; (1) pick up an unproved case which is then called the
 {\it current case}, (2) split the current case into cases which
 collectively cover the current case, (3) try to reduce the split cases
-to true.
+to true.\\
 
 \noindent{\bf Step 1-0:} Define a predicate to be proved. \\
 Predicate {\tt initcont} to represent condition~(\ref{exp:cond1}) can be defined as follows:
@@ -3481,8 +3481,8 @@ specification. For the CloudFormation example case, the first rule is
 \noindent{\bf Step 1-3:} Split the current case into cases which
 collectively cover the current case and one of which matches to LHS of
 the current rule. \\ Since LHS of rule {\tt R01} requires the global
-state to have at least one {\tt initial} resource, the case is split
-into three more cases, i.e., no resource, at least one {\tt initial}
+state to have at least one {\tt initial} resource, the current case is split
+into three more cases, i.e.\ no resource, at least one {\tt initial}
 or {\tt started} resource. In the following proof score, {\tt trs},
 {\tt idRS}, and {\tt sRS'} are arbitrary constants for a type of the
 resource, an identifier of the resource, and a set of resources
@@ -3513,9 +3513,9 @@ Note that \stt{res(trs,idRS,srs)} represents an arbitrary resource.
 The goal of Case 1 is proved because \stt{wfs-atLeastOneRS(S)} does
 not hold and thus \stt{init(S)} does not hold. The goal of Case 2-2 is
 also proved because \stt{allRSInStates(SetRS,initial)} does not hold.
-Only Case 2-1 remains too general.\\
+Only Case 2-1 remains unproved and it then becomes the current case.\\
 
-\noindent{\bf Step 1-4:} Split the current rule case into cases where
+\noindent{\bf Step 1-4:} Split the current case into cases where
 the condition of the rule does or does not hold. \\
 Since the condition of rule {\tt R01} requires all properties of the
 {\tt initial} resource are {\tt ready}, Case 2-1 is split into two
@@ -3544,12 +3544,12 @@ the property, and a set of properties respectively:
 Note that \stt{prop(tpr,idPR,notready,idRS,idRRS)} represents an
 arbitrary {\tt notready} property whose parent is {\tt idRS}. In Case
 2-1-1, rule {\tt R01} can be applied, which means \stt{cont(S)} holds. Only
-Case 2-1-2 remains too general.\\
+Case 2-1-2 remains unproved.\\
 
 \noindent{\bf Step 1-5:} When there is a dangling link, split the
 current case into cases where the linked object does or does not
 exist. \\
-In Case 2-1-2, a property has a link to a resource with identifier
+In Case 2-1-2, property {\tt idPR} has a link to a resource with identifier
 {\tt idRRS}. Thereby, it is split into three more cases; a resource
 with identifier {\tt idRRS} does not exist, does exist and it is {\tt
   initial} or {\tt started}. The nonexistence can be represented as
@@ -3584,7 +3584,7 @@ cases.
 The goal of Case 2-1-2-1 is proved because \stt{wfs-allPRHaveRRS(S)}
 does not holds and the goal of Case 2-1-2-2-2 is proved because
 \stt{allRSInStates(SetRS,initial)} does not holds.  Only Case
-2-1-2-2-1 remains.\\
+2-1-2-2-1 remains unproved.\\
 
 \noindent{\bf Step 1-6:} When falling in a cyclic situation, use the
 Cyclic Dependency Lemma. \\
@@ -3594,7 +3594,7 @@ ensures there exists some {\tt initial} resource {\tt RS} such that no
 resource in \stt{DDSC(RS,S)} is {\tt initial}. Recalling that we chose
 {\tt idRS} as an arbitrary {\tt initial} resource in Step 1-3, we can
 assume that itself is such {\tt RS} and can claim that there is a
-contradiction when its $DDS_C$ includes any {\tt initial} resource
+contradiction when its $DDS\!_C$ includes any {\tt initial} resource
 using a {\tt :init} command as follows:
 %% =======================================================================
 \small
@@ -3610,8 +3610,20 @@ using a {\tt :init} command as follows:
 \end{verbatim}
 \normalsize
 %% =======================================================================
-Variable {\tt RS} is substituted by the resource idRS and {\tt S} is
-substitute by the current state. Since $DDS_C$ of the resource
+The {\tt :init} command substitutes variable {\tt T} and {\tt IDRS}
+with the type and identifier of the resource and {\tt S} with the
+global state. It has the same effect as adding the following equation
+into the current case:
+%% =======================================================================
+\small
+\begin{verbatim}
+  ceq true = false
+     if someRSInStates(DDSC(res(trs, idRS, initial),< sRS, sPR >),
+                       initial) .
+\end{verbatim}
+\normalsize
+%% =======================================================================
+Since $DDS\!_C$ of the resource
 includes resource \stt{res(trs',idRRS,initial)}, there is a
 contradiction and the goal of this case is proved.
 
@@ -3720,14 +3732,13 @@ Remember that in Step 1-4 explained above, we used a {\tt :csp}
 command for case splitting based on the condition of rule {\tt R01}
 because we need more consideration for the negative case.  In Step
 2-2, we can simply use a {\tt :ctf} command, since Case 2 has no next
-state and its goal can be proved. Thereby, only Case 1 remains too
-general. \\
+state and its goal can be proved. Thereby, only Case 1 remains unproved.\\
 
-\noindent{\bf Step 2-3:} Split the rule applied case into cases where
+\noindent{\bf Step 2-3:} Split the current case into cases where
 predicate $final$ does or does not hold in the next state.\\ 
 In Case 1, rule {\tt R01} makes an {\tt initial} resource transit to
 {\tt started} and the next state becomes a final state if all other
-resources included the set of resources {\tt sRS} are already {\tt
+resources included the set {\tt sRS} of resources are already {\tt
   started}. Otherwise there is at least one other {\tt initial}
 resource.  Using the Set Lemma, we can split the case as follows where
 {\tt trs'}, {\tt idRS'}, and {\tt sRS'} are arbitrary constants for a
@@ -3750,7 +3761,7 @@ resources respectively:
 \normalsize
 %% =======================================================================
 The goal of Case 1-1 is proved because the next state is final.  Case
-1-2 remains too general.\\
+1-2 remains unproved.\\
 
 \noindent{\bf Step 2-4:} Similarly as Step 1-2, think which rule can
 be applied to the next state. The rule is referred to as the {\it current
@@ -3759,13 +3770,13 @@ Since the next state in Case 1-2 includes an {\tt initial} resource
 with identifier {\tt idRS'}, rule {\tt R01} can be applied to it.\\
 
 \noindent{\bf Step 2-5:} Similarly as Step 1-3, split the current case
-into cases which collectively cover the current case and one of which
+into cases which collectively cover the current case and the next state of one of the split cases
 matches to LHS of the current rule. \\ 
-In this example, the case already matches to LHS of rule {\tt R01}.\\
+In this example, the next state of the current case already matches to LHS of rule {\tt R01}.\\
 
 \noindent{\bf Step 2-6:} Similarly as Step 1-4, split the current case
 into cases where the condition of the current rule does or does not
-hold. \\
+hold in the next state. \\
 Again the Set lemma can be used similarly as Step 1-4 as follows:
 %% =======================================================================
 \small
@@ -3790,7 +3801,7 @@ Again the Set lemma can be used similarly as Step 1-4 as follows:
 \end{verbatim}
 \normalsize
 %% =======================================================================
-The goal of Case 1-2-1 is proved. Case 1-2-2 remains and this is somewhat
+The goal of Case 1-2-1 is proved. Case 1-2-2 remains unproved and this is somewhat
 troublesome for \cafeobj system.
 
 Remember that in Step 2-2 we already introduced an equation which
@@ -3815,7 +3826,7 @@ it claims that the term reduces to true, which is the work of the {\tt
 
 The command \stt{:set(normalize-init,on)} means that substituted
 variables should be reduced to normal forms when the equation is
-introduced by the {\tt :init} command; it default option is {\tt off}.
+introduced by the {\tt :init} command; its default option is {\tt off}.
 When the variable {\tt B1} reduces to true, {\tt B2} also reduces to
 true and the equation to be introduced becomes ``\stt{ceq true = true if
   not true .}''  which has no meaning because the condition part never
@@ -3866,22 +3877,22 @@ into the following three cases:
 \normalsize
 %% =======================================================================
 The goal of Case 1-2-2-1 is proved because \stt{wfs-allPRHaveRRS(S)}
-does not holds and then \stt{inv(S)} does not hold described in
+does not holds and then \stt{inv(S)} does not hold as described in
 Section~\ref{sec:support}.  The goal of Case 1-2-2-2-2 is also proved
 because the {\tt notready} property {\tt idPR} refers the {\tt
-  started} resource and so rule {\tt R02} is applicable.  Only Case
-1-2-2-2-1 remains.\\
+  started} resource and so rule {\tt R02} is applicable in the next state.  Only Case
+1-2-2-2-1 remains unproved.\\
 
 \noindent{\bf Step 2-8:} Similarly as Step 1-6, when falling in a
-cyclic situation, use the Cyclic Dependency Lemma \\
+cyclic situation, use the Cyclic Dependency Lemma. \\
 If the invariant property of {\tt noRSCycle} is proved, we can use the
 Cyclic Dependency Lemma in any reachable state. In Case 1-2-2-2-1,
-there is a {\tt initial} resource {\tt idRS'} and so the lemma ensures
+there is an {\tt initial} resource {\tt idRS'} and so the lemma ensures
 there exists some {\tt initial} resource {\tt RS} such that no
 resource in \stt{DDSC(RS,S)} is {\tt initial}. Recalling that we chose
 {\tt idRS'} as an arbitrary {\tt initial} resource in Step 2-3, we can
 assume that itself is such {\tt RS} and can claim that there is a
-contradiction when its $DDS_C$ includes any {\tt initial} resource
+contradiction when its $DDS\!_C$ includes any {\tt initial} resource
 using a {\tt :init} command as follows:
 %% =======================================================================
 \small
@@ -3900,7 +3911,7 @@ The goal of this case is proved by the contradiction.
 
 The following is the result of a ``\stt{show proof}'' command, which shows
 that goals of all split cases are proved and thus
-condition~(\ref{exp:cond1}) is proved.
+condition~(\ref{exp:cond2}) for rule {\tt R01} is proved:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -4039,7 +4050,7 @@ several natural number axioms to enable such deduction as follows:
 \end{verbatim}
 \normalsize
 %% ===============================================================
-Note that {\tt Nz} is a subsort of {\tt Nat} which does not
+Note that {\tt NzNat} is a subsort of {\tt Nat} which does not
 include {\tt 0}.\\
 
 \noindent{\bf Step 4-1:} Define a predicate to be proved. \\ Predicate
@@ -4095,13 +4106,13 @@ as follows:
 \section{Procedure: Proof of Condition~(\ref{exp:cond5}) \&~(\ref{exp:cond6})}
 \label{sec:invariant}
 %% ===============================================================
-Since $inv$ is a conjunction of typically many predicates, it is
+Since predicate $inv$ is a conjunction of typically many predicates, it is
 better to prove each of them separately. Suppose $inv(S) =
 inv_1(S)\land inv_2(S)\land\dots\land inv_n(S)$, then we can
 separately prove the invariant property of each $inv_k(S)$ since the
 followings hold:
 \[\forall S\in St: (\forall k:init(S)\ra inv_k(S))\ra(init(S)\ra inv(S))\]
-\[\forall (S,S')\in Tr: (\forall k:inv(S)\ra inv_k(S'))\ra(inv(S)\ra inv(S'))\]
+\[\forall (S,S')\in T\!r: (\forall k:inv(S)\ra inv_k(S'))\ra(inv(S)\ra inv(S'))\]
 
 \vspace{0.3cm}
 The rest of this section describes the proof procedure for three
@@ -4138,9 +4149,7 @@ prove the invariant property of such a predicate. \\
 
 \noindent{\bf Step 5-1:} Instantiate proved lemmas for predefined
 predicates. \\
-Since every resource is {\tt initial} in an initial state,
-\stt{init(S)} intuitively implies
-\\ \stt{inv-ifRSStartedThenPRReady(S)}. The proved lemma {\tt
+As described in Section~\ref{sec:linklemma}, proved lemma {\tt
   m2o-lemma07} can be instantiated and used for proof of
 condition~(\ref{exp:cond5}) as follows:
 %% ===============================================================
@@ -4208,7 +4217,7 @@ reduces to false as described in Section~\ref{sec:support}.\\
 \noindent{\bf Step 6-1:} Instantiate proved lemmas for predefined
 predicates. \\ Rule {\tt R02} increases {\tt ready} properties which
 has intuitively no effect on \\ {\tt inv-ifRSStartedThenPRReady}. As
-explained in Section~\ref{sec:lemma}, the proved lemma {\tt
+explained in Section~\ref{sec:linklemma}, proved lemma {\tt
   m2o-lemma11} ensures it and can be used for proof of
 condition~(\ref{exp:cond6}) as follows:
 %% ===============================================================
@@ -4244,7 +4253,9 @@ cases where the condition of the rule does or does not hold.
 
 We can begin with two cases for two rules. Since rule {\tt R01} is
 conditional, the general case should be split into two cases according
-to Step 6-3. Then, the goals of totally three cases can be proved and
+to Step 6-3. The first case should be split into more two cases
+where the set of properties is or is not empty.
+Then, the goals of totally four cases can be proved and
 thus condition~(\ref{exp:cond6}) is proved as follows:
 %% ===============================================================
 \small
@@ -4281,10 +4292,11 @@ thus condition~(\ref{exp:cond6}) is proved as follows:
 \subsubsection*{Proof of Invariants for Structural Constraints}
 %% ===============================================================
 We should prove all wfs predicates as invariants, however, they are
-included in $init$ and so we should only prove
+included in $init$ and so we only need to prove
 condition~(\ref{exp:cond6}) for each of them. Most of them check some
 structural constraints of the cloud systems, which should usually keep
-to hold when some transition rule changes a local state of some
+to hold when some transition rule only changes a local state and
+does not change any links of some
 object. When a wfs predicate is defined using predefined predicates, it
 is easy to prove the invariant property of the wfs because the framework
 provides many lemmas for the predefined predicates.
@@ -4355,14 +4367,14 @@ cases where the condition of the rule does or does not hold.
 %% ===============================================================
 
 %% ===============================================================
-\subsubsection*{Proof of $noCycle$ as an Invariant}
+\subsubsection*{Proof of $noCycle_C$ as an Invariant}
 %% ===============================================================
 We should prove the invariant property of $noCycle_C(S)$ in order to
 use the Cyclic Dependency Lemma, however, it is included in $init$ and
-thus we should only prove condition~(\ref{exp:cond6}) for $noCycle$.
+thus we only need to prove condition~(\ref{exp:cond6}) for $noCycle_C$.
 The Depending Subset Lemma described in Section~\ref{sec:lemma}
-ensures that we should prove that $\forall (S,S') \in Tr, \forall X\in
-C:DDS_C(X,S')\subseteq DDS_C(X,S)$ instead of
+ensures that we should prove that $\forall (S,S') \in T\!r, \forall X\in
+C:DDS\!_C(X,S')\subseteq DDS\!_C(X,S)$ instead of
 condition~(\ref{exp:cond6}).\\
 
 \noindent{\bf Step 6-0:} Define a predicate to be proved. 
@@ -4420,7 +4432,7 @@ LHS of each rule. \\
 \noindent{\bf Step 6-3:} Split the current case for a rule into
 cases where the condition of the rule does or does not hold. \\
 
-The following is a proof score for $DDS_C(X,S')\subseteq DDS_C(X,S)$ for
+The following is a proof score for $DDS\!_C(X,S')\subseteq DDS\!_C(X,S)$ for
 rule {\tt R01}:
 %% ===============================================================
 \small
@@ -4457,7 +4469,7 @@ where the considering resource {\tt x} is the resource {\tt idRS}
 (Case 1-1), is not {\tt idRS} and is {\tt initial} (Case 1-2-1), and
 is neither {\tt idRS} nor {\tt initial} (Case 1-2-2).\\
 
-The following is a proof score for $DDS_C(X,S')\subseteq DDS_C(X,S)$ for
+The following is a proof score for $DDS\!_C(X,S')\subseteq DDS\!_C(X,S)$ for
 rule {\tt R02}:
 %% ===============================================================
 \small
@@ -4516,7 +4528,7 @@ LHS of each rule.
 \noindent{\bf Step 2-2:} Split the current case for a rule into
 cases where the condition of the rule does or does not hold. \\
 Rule {\tt R02} is unconditional.\\
-\noindent{\bf Step 2-3:} Split the rule applied case into cases where
+\noindent{\bf Step 2-3:} Split the current case into cases where
 predicate $final$ does or does not hold in the next state.\\
 If all of the other resources are started, the next state is final.
 But it is not the case because we know a notready property has
@@ -4555,7 +4567,7 @@ resource {\tt RS} such that no resource in \stt{DDSC(RS,S)} is {\tt
 of Case 1-2 for {\tt R01}. In addition, since we choose an arbitrary
 {\tt initial} resource in Case 1-2 for {\tt R01}, we can assume itself
 is the resource {\tt RS} which the Cyclic Dependency Lemma ensures to
-exist. However in this case, the {\tt initial} resource we have is
+exist. In this case, however, the {\tt initial} resource we have is
 a parent of the property which rule {\tt R02} make transit. It means
 that we should consider two similar cases where the resource {\tt RS}
 is the parent resource or another arbitrary resource. We might have 
@@ -4871,9 +4883,9 @@ automate to set up the cloud system.
 \section{Structure Model of TOSCA Templates}
 \label{sec:TOSCAstructure}
 %% ===============================================================
-A TOSCA topology of a cloud system is modeled as it mainly consists of
+A TOSCA topology models a cloud system that it consists of
 four classes of objects corresponding to the four main kinds of
-elements of a topology, i.e., nodes, relationships, capabilities, and
+elements of a topology, i.e.\ nodes, relationships, capabilities, and
 requirements. There is an additional object, a message pool, to
 represent messaging between resources inside of different VMs because
 they cannot communicate directly. The message pool is simply a bag of
@@ -5222,6 +5234,9 @@ includes {\tt CAPABILITY} and {\tt REQUIREMENT} as follows:
 \end{verbatim}
 \normalsize
 %% =======================================================================
+Sort {\tt RLType} is declared as a subsort of {\tt CPType} and {\tt RQType}
+which means types of relationships can be used as types of capabilities
+and requirements.
 The types of relationships are {\tt hostedOn}, {\tt dependsOn}, and
 {\tt connectsTo}.  Among them,\\ {\tt hostedOn} and {\tt dependsOn} are
 {\tt isLocal}.  Note that {\tt cap} and {\tt req} are selectors for
@@ -5390,7 +5405,7 @@ their corresponding capabilities and requirements are one-to-one.
 
 In addition to the predefined predicates/operators explained in
 Section~\ref{sec:linkpred}, module {\tt LINKS} uses {\tt
-  OBJLINKMANY2ONE} to instantiate several ones concerning object
+  OBJLINKMANY2ONE} to instantiate several operators concerning object
 types. The following is the list of them whereas argument $seto$ is a
 set of linking objects, $setls$ is a set of local states of linking
 objects, $lobj$ is a linked object, $lid$ is an identifier of a linked
@@ -5672,7 +5687,7 @@ requirements, and $pool$ is a message pool\footnote{Note that here we
   constraint, which means that if the type of a relationship is local,
   it should be between a capability and a requirement of the nodes
   hosted on the same virtual machine, while if the type is not local
-  (i.e. remote), it should be between a capability and a requirement
+  (i.e.\ remote), it should be between a capability and a requirement
   of the nodes hosted on the different virtual machines.
 \item \stt{allNDHaveAtMostOneHost} (categorized as (3))\\ 
   Predicate used as \stt{allNDHaveAtMostOneHost($setND$,$setRQ$)}
@@ -5737,8 +5752,8 @@ requirements, and $pool$ is a message pool\footnote{Note that here we
 \section{Behavior Model of TOSCA Templates}
 \label{sec:TOSCAbehavior}
 %% ===============================================================
-The framework models the behavior of an automated operation as a state
-machine in which a set of transition rules of states specifies the
+The framework models the behavior of an automated system operation as a state
+machine in which a set of transition rules of global states specifies the
 behavior. As described in Section~\ref{sec:TOSCA}, the behavior of a
 topology of TOSCA is decided by the behavior of types of nodes and
 relationships included in the topology. Here, we propose to model the
@@ -5751,7 +5766,7 @@ As described in Section \ref{sec:TOSCA}, type operations and their
 invocation rules should be defined by type architects. When an
 application architect defines a topology, the set of all invocation
 rules of included node/relationship types collectively composes a
-state machine which specifies the behavior of the topology.
+state machine which specifies the whole behavior of the topology.
 
 In the example of Fig.~\ref{fig:exampletopology}, we assume that
 behavior of four node types is the same focusing on when a node is
@@ -5799,51 +5814,51 @@ detailed definitions of them in English:
 \item[] Invocation Rule of Node Type Operations:
   \begin{itemize}
   \item $CREATE$ operation can be invoked if all of the HostedOn
-    requirements of the node become $ready$ and changes the state from
+    requirements of the node are $ready$ and changes the local state of the node from
     $initial$ to $created$.
   \item $START$ operation can be invoked if all of the requirements
-    become $ready$ and changes the state from $created$ to $started$.
+    are $ready$ and changes the local state from $created$ to $started$.
   \end{itemize}
 \item[] Invocation Rule of Operations of HostedOn Relationship Type:
   \begin{itemize}
   \item $CAPAVAILABLE$ operation can be invoked if the target node is
-    already created, i.e.\ $created$ or $started$ and changes the state
+    already created, i.e.\ $created$ or $started$ and changes the local state
     of its capability from $closed$ to $available$.
   \item $REQREADY$ operation can be invoked if its capability is
-    $available$ and changes the state of the requirement from $unbound$
+    $available$ and changes the local state of the requirement from $unbound$
     to $ready$.
   \end{itemize}
 \item[] Invocation Rule of Operations DependsOn Relationship Type:
   \begin{itemize}
   \item $CAPOPEN$ operation can be invoked if the target node is
-    already created and changes the state of its capability from
+    already created and changes the local state of its capability from
     $closed$ to $open$.
   \item $CAPAVAILABLE$ operation can be invoked if the target node is
-    $started$ and changes the state of its capability from
+    $started$ and changes the local state of its capability from
     $open$ to $available$.
   \item $REQWAITING$ operation can be invoked if its capability is already
     activated, i.e.\ $open$ or $available$, and the source node is
-    $created$. It changes the state of its requirement from
+    $created$. It changes the local state of its requirement from
     $unbound$ to $waiting$.
   \item $REQREADY$ operation can be invoked if its capability is
-    $available$ and changes the state of its requirement from
+    $available$ and changes the local state of its requirement from
     $waiting$ to $ready$.
   \end{itemize}
 \item[] Invocation Rule Operations of ConnectsTo Relationship Type:
   \begin{itemize}
   \item $CAPOPEN$ operation can be invoked if the target node is
-    already created. It changes the state of its capability from
+    already created. It changes the local state of its capability from
     $closed$ to $open$ and also issues an open message of the
     capability to the message pool.
   \item $CAPAVAILABLE$ operation can be invoked if the target node is
-    $started$. It changes the state of its capability from $open$ to
+    $started$. It changes the local state of its capability from $open$ to
     $available$ and also issues an available message of the capability
     to the message pool.
   \item $REQWAITING$ operation can be invoked if it finds an open
     message of its capability and the source node is $created$. It
-    changes the state of its requirement from $unbound$ to $waiting$.
+    changes the local state of its requirement from $unbound$ to $waiting$.
   \item $REQREADY$ operation can be invoked if it finds an available
-    message of its capability and changes the state of its requirement from
+    message of its capability and changes the local state of its requirement from
     $waiting$ to $ready$.
   \end{itemize}
 \end{description}
@@ -6007,6 +6022,7 @@ The initial and final states of the TOSCA models are represented in
     eq init(< SetND,SetCP,SetRQ,SetRL,MP >)
        = not (SetND = empND) and (MP = empMsg) and
          wfs(< SetND,SetCP,SetRQ,SetRL,MP >) and
+         noNDCycle(< SetND,SetCP,SetRQ,SetRL,MP >) and
          allNDInStates(SetND,initial) and 
          allCPInStates(SetCP,closed) and 
          allRQInStates(SetRQ,unbound) .
@@ -6025,8 +6041,7 @@ The initial and final states of the TOSCA models are represented in
          wfs-allRLHaveSameTypeCPRQ(S) and
          wfs-allRLNotInSameND(S) and
          wfs-allRLHoldLocality(S) and
-         wfs-allNDHaveAtMostOneHost(S) and
-         wfs-noNDCycle(S) .
+         wfs-allNDHaveAtMostOneHost(S) .
   
     pred wfs-uniqND : State
     eq wfs-uniqND(< SetND,SetCP,SetRQ,SetRL,MP >)
@@ -6052,7 +6067,7 @@ Another technique used in this chapter is to design the system having
 a simpler constraint where some relationship between objects have no
 cyclic chains. Recalling Lemma~\ref{lemma:simplerel}, we can define
 {\tt DDSC} to implement some simpler relationship $r$ instead of the
-true $DDS_C$ and use {\tt noCycle} defined by $r$ instead of the true
+true $DDS\!_C$ and use {\tt noCycle} defined by using $r$ instead of the true
 $noCycle_c$. Module {\tt STATECyclefuns} defines an example of such
 {\tt DDSC}:
 %% =======================================================================
@@ -6085,12 +6100,12 @@ $noCycle_c$. Module {\tt STATECyclefuns} defines an example of such
 Since this {\tt DDSC} firstly finds the corresponding requirements of
 the given node, then finds the corresponding capabilities of the
 requirements, and finally finds and returns the parents of the
-capabilities, the true $DDS_C$ is obviously a subset of this {\tt
+capabilities, the true $DDS\!_C$ is obviously a subset of this {\tt
   DDSC}.  Moreover this {\tt DDSC} does not refer local states of
 objects and twelve transition rules of the example behavior model
 never change links of objects. It means that \stt{DDSC(X,$S$)} for any
-reachable global state $S$ from an initial state $S_0$ is the same as
-\stt{DDS(X,$S_0$)} and {\tt noCycle} defined using {\tt DDSC} is an
+reachable global state $S$ from an initial state $S\!_0$ is the same as
+\stt{DDS(X,$S\!_0$)} and {\tt noCycle} defined by using {\tt DDSC} is an
 invariant. {\tt noCycle} can be defined using template module {\tt CYCLEPRED}
 as follows:
 
@@ -6192,13 +6207,13 @@ as follows:
 \noindent{\bf Step 0-5:} Prepare for using the Cyclic Dependency
 Lemma. \\
 For the CloudFormation example, the Cyclic Dependency Lemma is
-required to use for only one transition rule, {\tt R01}. However, for
-the TOSCA example, there are two transition rules, {\tt R01} and {\tt
+required to use for only one transition rule, {\tt R01}. For
+the TOSCA example, however, there are two transition rules, {\tt R01} and {\tt
   R02} which cause cyclic situations in the verification. Thus, we
 need to define two lemmas in advance.  One of them means that there is
-a contradiction when $DDS_C$ of the specified {\tt initial} resource
+a contradiction when $DDS\!_C$ of the specified {\tt initial} resource
 includes any {\tt initial} resource.  Another means that there is a
-contradiction when $DDS_C$ of the specified {\tt created} resource
+contradiction when $DDS\!_C$ of the specified {\tt created} resource
 includes any {\tt created} resource.  They are defined as the
 following two conditional equations:
 %% =======================================================================
@@ -6316,9 +6331,14 @@ the condition of the current rule does or does not hold.
   -- Case 1: When all of the hostedOn requirements are ready:
   :apply (rd) -- 1
   -- Case 2: When there is an unbound hostedOn requirement of the node:
+  ... -- More consideration needed.
+  -- Case 3: When there is a waiting hostedOn requirement of the node:
+  :apply (rd) -- 3
 \end{verbatim}
 \normalsize
 %% =======================================================================
+Only Case 2 remains unproved and it then becomes the current case.\\
+
 \noindent{\bf Step 1-2:} Think which rule is applied to the 
 global state in the current case. \\
 The applicable rule may be {\tt R04} because the global state in Case
@@ -6329,6 +6349,7 @@ into cases where the linked object does or does not exist.
 %% =======================================================================
 \small
 \begin{verbatim}
+  -- Case 2: When there is an unbound hostedOn requirement of the node:
   :csp {
     eq onlyOneRLOfRQ(sRL,idRQ) = false .
     eq sRL = (rel(hostedOn,idRL,idCP,idRQ) sRL') .
@@ -6351,24 +6372,36 @@ into cases where the linked object does or does not exist.
   :apply (rd) -- 2-2-2-1
   -- Case 2-2-2-2: When the node of capability idCP is not
   --                              the same of requiement idRQ:
+  ... -- More consideration needed.
 \end{verbatim}
 \normalsize
 %% =======================================================================
+Only Case 2-2-2-2 remains unproved.\\
+
 \noindent{\bf Step 1-3:} Split the current case into cases which
 collectively cover the current case and one of which matches to LHS of
 the current rule. 
 %% =======================================================================
 \small
 \begin{verbatim}
+  -- Case 2-2-2-2: When the node of capability idCP is not
+  --                              the same of requiement idRQ:
   :csp {
     eq scp = closed .
     eq scp = open .
     eq scp = available .
   }
   -- Case 2-2-2-2-1: When the capability of idCP is closed:
+  ... -- More consideration needed.
+  -- Case 2-2-2-2-2: When the capability of idCP is open:
+  :apply (rd) -- 2-2-2-2-2
+  -- Case 2-2-2-2-2: When the capability of idCP is avialable:
+  :apply (rd) -- 2-2-2-2-3
 \end{verbatim}
 \normalsize
 %% =======================================================================
+Only Case 2-2-2-2-1 remains unproved.\\
+
 \noindent{\bf Step 1-2:} Think which rule is applied to the 
 global state in the current case. \\
 The applicable rule may be {\tt R03} because the global state in Case
@@ -6379,6 +6412,7 @@ into cases where the linked object does or does not exist.
 %% =======================================================================
 \small
 \begin{verbatim}
+  -- Case 2-2-2-2-1: When the capability of idCP is closed:
   :csp {
     eq existND(sND,idND') = false .
     eq sND = (node(tnd',idND',snd') sND') .
@@ -6386,45 +6420,46 @@ into cases where the linked object does or does not exist.
   -- Case 2-2-2-2-1-1: When the node of the capability of idCP does not exist:
   :apply (rd) -- 2-2-2-2-1-1
   -- Case 2-2-2-2-1-2: When the node of the capability of idCP exists:
+  ... -- More consideration needed.
 \end{verbatim}
 \normalsize
 %% =======================================================================
+Only Case 2-2-2-2-1-2 remains unproved.\\
+
 \noindent{\bf Step 1-4:} Split the current case into cases where
 the condition of the current rule does or does not hold.
 %% =======================================================================
 \small
 \begin{verbatim}
-:csp {
-  eq snd' = initial .
-  eq snd' = created .
-  eq snd' = started .
-}
--- Case 2-2-2-2-1-2-1: When the node of idND' is initial:
+  -- Case 2-2-2-2-1-1: When the node of the capability of idCP does not exist:
+  :csp {
+    eq snd' = initial .
+    eq snd' = created .
+    eq snd' = started .
+  }
+  -- Case 2-2-2-2-1-2-1: When the node of idND' is initial:
+  ... -- More consideration needed.
+  -- Case 2-2-2-2-1-2-2: When the node of idND' is created:
+  :apply (rd) -- 2-2-2-2-1-2-2
+  -- Case 2-2-2-2-1-2-3: When the node of idND' is started:
+  :apply (rd) -- 2-2-2-2-1-2-3
 \end{verbatim}
 \normalsize
 %% =======================================================================
+Only Case 2-2-2-2-1-2-1 remains unproved.\\
+
 \noindent{\bf Step 1-6:} When falling in a cyclic situation, use the
 Cyclic Dependency Lemma. 
 %% =======================================================================
 \small
 \begin{verbatim}
+  -- Case 2-2-2-2-1-2-1: When the node of idND' is initial:
   :init [CycleR01] by {
     T:NDType <- tnd;
     I:NDID   <- idND;
     S:State  <- < (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >;
   }
   :apply (rd) -- 2-2-2-2-1-2-1
-  -- Case 2-2-2-2-2-2: When the node of idND' is created:
-  :apply (rd) -- 2-2-2-2-1-2-2
-  -- Case 2-2-2-2-2-3: When the node of idND' is started:
-  :apply (rd) -- 2-2-2-2-1-2-3
-  -- Case 2-2-2-2-2: When the capability of idCP is open:
-  :apply (rd) -- 2-2-2-2-2
-  -- Case 2-2-2-2-2: When the capability of idCP is avialable:
-  :apply (rd) -- 2-2-2-2-3
-  -- Case 3: When there is a waiting hostedOn requirement of the node:
-  :apply (rd) -- 3
-  show proof
 \end{verbatim}
 \normalsize
 %% =======================================================================
@@ -6498,9 +6533,14 @@ the condition of the current rule does or does not hold.
   -- Case 1: When all of the requirements are ready:
   :apply (rd) -- 1
   -- Case 2: When there is an unbound requirement of node idND:
+  ... -- More consideration needed.
+  -- Case 3: When there is a waiting requirement of node idND:
+  ... -- More consideration needed.
 \end{verbatim}
 \normalsize
 %% =======================================================================
+Both Case 2 and 3 remain unproved. Let Case 2 be the current state.\\
+
 \noindent{\bf Step 1-2:} Think which rule is applied to the 
 global state in the current case. \\
 The applicable rule may be {\tt R04}, {\tt R07}, or {\tt R11} because
@@ -6510,12 +6550,10 @@ the applicable rule depends on its type.\\
 \noindent{\bf Step 1-3:} Split the current case into cases which
 collectively cover the current case and one of which matches to LHS of
 the current rule. \\ 
-Note that Case 2-1 is not a reachable global state because a node never
-becomes {\tt created} when one of its {\tt hostedOn} requirement is
-{\tt unbound}, which makes \stt{inv(S)} reduce to false.
 %% =======================================================================
 \small
 \begin{verbatim}
+  -- Case 2: When there is an unbound requirement of node idND:
   :csp {
     eq trl = hostedOn .
     eq trl = dependsOn .
@@ -6524,14 +6562,23 @@ becomes {\tt created} when one of its {\tt hostedOn} requirement is
   -- Case 2-1: When the type of requirement idRQ is hostedOn:
   :apply (rd) -- 2-1
   -- Case 2-2: When the type of requirement idRQ is dependsOn:
+  ... -- More consideration needed.
+  -- Case 2-3: When the type of requirement idRQ is connectsTo:
+  ... -- More consideration needed.
 \end{verbatim}
 \normalsize
 %% =======================================================================
+Case 2-1 is not a reachable global state because a node never
+becomes {\tt created} when one of its {\tt hostedOn} requirement is
+{\tt unbound}, which makes \stt{inv(S)} reduce to false.
+Thus, Case 2-2 and 2-3 remains unproved. Let Case 2-2 be the current case.\\
+
 \noindent{\bf Step 1-5:} When there is a dangling link, split the case
 into cases where the linked object does or does not exist.
 %% =======================================================================
 \small
 \begin{verbatim}
+  -- Case 2-2: When the type of requirement idRQ is dependsOn:
   :csp {
     eq onlyOneRLOfRQ(sRL,idRQ) = false .
     eq sRL = (rel(dependsOn,idRL,idCP,idRQ) sRL') .
@@ -6554,6 +6601,7 @@ into cases where the linked object does or does not exist.
   :apply (rd) -- 2-2-2-2-1
   -- Case 2-2-2-2-2: When the node of capability idCP is not
   --                              the same of requiement idRQ:
+  ... -- More consideration needed.
 \end{verbatim}
 \normalsize
 %% =======================================================================
@@ -6563,15 +6611,25 @@ the current rule.
 %% =======================================================================
 \small
 \begin{verbatim}
+  -- Case 2-2-2-2-2: When the node of capability idCP is not
+  --                              the same of requiement idRQ:
   :csp {
     eq scp = closed .
     eq scp = open .
     eq scp = available .
   }
   -- Case 2-2-2-2-2-1: When capability idCP is closed:
+  ... -- More consideration needed.
+  -- Case 2-2-2-2-2-2: When capability idCP is open:
+  :apply (rd) -- 2-2-2-2-2-2
+  -- Case 2-2-2-2-2-3: When capability idCP is available:
+  :apply (rd) -- 2-2-2-2-2-3
 \end{verbatim}
 \normalsize
 %% =======================================================================
+Case 2-2-2-2-2-2 and 2-2-2-2-2-2 are proved because {\tt R07} is
+applicable.  Thus, only Case 2-2-2-2-2-1 remains unproved.\\
+
 \noindent{\bf Step 1-2:} Think which rule is applied to the 
 global state in the current case. \\
 The applicable rule may be {\tt R05} because the global state in Case
@@ -6582,6 +6640,7 @@ into cases where the linked object does or does not exist.
 %% =======================================================================
 \small
 \begin{verbatim}
+  -- Case 2-2-2-2-2-1: When capability idCP is closed:
   :csp {
     eq existND(sND,idND') = false .
     eq sND = (node(tnd',idND',snd') sND') .
@@ -6589,14 +6648,18 @@ into cases where the linked object does or does not exist.
   -- Case 2-2-2-2-2-1-1: When the node of capability idCP does not exist:
   :apply (rd) -- 2-2-2-2-2-1-1
   -- Case 2-2-2-2-2-1-2: When the node of capability idCP exists:
+  ... -- More consideration needed.
 \end{verbatim}
 \normalsize
 %% =======================================================================
+Case 2-2-2-2-2-1-2 remains unproved.\\
+
 \noindent{\bf Step 1-4:} Split the current case into cases where
 the condition of the current rule does or does not hold.
 %% =======================================================================
 \small
 \begin{verbatim}
+  -- Case 2-2-2-2-2-1-2: When the node of capability idCP exists:
   :csp {
     eq snd' = initial .
     eq snd' = created .
@@ -6608,21 +6671,13 @@ the condition of the current rule does or does not hold.
   :apply (rd) -- 2-2-2-2-2-1-2-2
   -- Case 2-2-2-2-2-1-2-3: When node idND' is started:
   :apply (rd) -- 2-2-2-2-2-1-2-3
-  -- Case 2-2-2-2-2-2: When capability idCP is open:
-  :apply (rd) -- 2-2-2-2-2-2
-  -- Case 2-2-2-2-2-3: When capability idCP is available:
-  :apply (rd) -- 2-2-2-2-2-3
-  -- Case 2-3: When the type of requirement idRQ is connectsTo:
-  ...
-  -- Proved similarly as Case 2-2-*
-  ...
 \end{verbatim}
 \normalsize
 %% =======================================================================
 Note that Case 2-2-2-2-2-1-2-1 is proved by the initial-cont lemma,
 Case 2-2-2-2-2-1-2-2 and 2-2-2-2-2-1-2-3 are proved because {\tt R05}
-is applicable, and Case 2-2-2-2-2-2 and 2-2-2-2-2-2 are proved because
-{\tt R07} is applicable.  Case 2-3 is split into totally 21 cases all
+is applicable. Thus, Case 2-2 is proved and Case 2-3 reminds unprove.
+Case 2-3 is split into totally 21 cases all
 of which are proved similarly as split cases of Case 2-2.
 
 Similarly Case 3 is split into totally 33 cases two of which require
@@ -6735,7 +6790,7 @@ The first rule is {\tt R01}. \\
 collectively cover the current case and one of which matches to LHS of
 the current rule. \\
 Since LHS of rule {\tt R01} requires the global state to have at least
-one {\tt initial} node, the case is split into four more cases, i.e., no
+one {\tt initial} node, the case is split into four more cases, i.e.\ no
 node, at least one {\tt initial}, {\tt created}, or {\tt started}
 node.
 %% =======================================================================
@@ -6960,7 +7015,7 @@ cases where the condition of the rule does or does not hold.
 Note that Case 2-1 and 2-2 are proved by the initial-cont lemma and
 the created-cont lemma respectively.\\
 
-\noindent{\bf Step 2-3:} Split the rule applied case into cases where
+\noindent{\bf Step 2-3:} Split the current case into cases where
 predicate $final$ does or does not hold in the next state.\\
 We know that $final$ never holds in the next state of this case.\\
 
@@ -6988,8 +7043,8 @@ exist.
 %% =======================================================================
 
 \noindent{\bf Step 2-5:} Split the current case into cases which
-collectively cover the current case and one of which matches to LHS of
-the current rule. \\
+collectively cover the current case and the next state of one of the split cases
+matches to LHS of the current rule. \\
 LHS of rule {\tt R08} requires the type of the corresponding relationship
 to be {\tt dependsOn}.
 %% =======================================================================
@@ -7003,9 +7058,13 @@ to be {\tt dependsOn}.
   -- Case 2-3-2-1: The relationship is hostedOn:
   :apply (rd) -- 2-3-2-1
   -- Case 2-3-2-2: The relationship is dependsOn:
+  ... -- More consideration needed.
+  -- Case 2-3-2-3: The relationship is connectsTo:
+  :apply (rd) -- 2-3-2-3
 \end{verbatim}
 \normalsize
 %% =======================================================================
+Only Case 2-3-2-2 remains unproved.\\
 
 \noindent{\bf Step 2-7:} When there is a dangling link, split the
 current case into cases where the linked object does or does not
@@ -7013,6 +7072,7 @@ exist.
 %% =======================================================================
 \small
 \begin{verbatim}
+  -- Case 2-3-2-2: The relationship is dependsOn:
   :csp {
     eq existRQ(sRQ,idRQ) = false .
     eq sRQ = (req(trl',idRQ,srq,idND') sRQ') .
@@ -7020,18 +7080,21 @@ exist.
   -- Case 2-3-2-2-1: There is not a corresponding requirement:
   :apply (rd) -- 2-3-2-2-1
   -- Case 2-3-2-2-2: There is a corresponding requirement:
+  ... -- More consideration needed.
 \end{verbatim}
 \normalsize
 %% =======================================================================
+Only Case 2-3-2-2-2 remains unproved.\\
 
 \noindent{\bf Step 2-5:} Split the current case into cases which
-collectively cover the current case and one of which matches to LHS of
-the current rule. \\
+collectively cover the current case and the next state of one of the split cases
+matches to LHS of the current rule. \\
 LHS of rule {\tt R08} requires the type of the corresponding requirement
 to be {\tt dependsOn} and the local state of it to be {\tt waiting}.
 %% =======================================================================
 \small
 \begin{verbatim}
+  -- Case 2-3-2-2-2: There is a corresponding requirement:
   :csp {
     eq trl' = hostedOn .
     eq trl' = dependsOn .
@@ -7046,9 +7109,17 @@ to be {\tt dependsOn} and the local state of it to be {\tt waiting}.
     eq srq = ready .
   }
   -- Case 2-3-2-2-2-2-1: The requirement is unbound:
+  ... -- More consideration needed.
+  -- Case 2-3-2-2-2-2-2: The requirement is waiting:
+  :apply (rd) -- 2-3-2-2-2-2-2
+  -- Case 2-3-2-2-2-2-3: The requirement is ready:
+  :apply (rd) -- 2-3-2-2-2-2-3
+  -- Case 2-3-2-2-2-3: The requirement is connectsTo:
+  :apply (rd) -- 2-3-2-2-2-3
 \end{verbatim}
 \normalsize
 %% =======================================================================
+Only Case 2-3-2-2-2-2-1 remains unproved.\\
 
 \noindent{\bf Step 2-4:} Think which rule can be applied to the next
 state. \\
@@ -7062,6 +7133,7 @@ exist.
 %% =======================================================================
 \small
 \begin{verbatim}
+  -- Case 2-3-2-2-2-2-1: The requirement is unbound:
   :csp {
     eq existND(sND',idND') = false .
     eq sND' = (node(tnd',idND',snd') sND'') .
@@ -7069,20 +7141,23 @@ exist.
   -- Case 2-3-2-2-2-2-1-1: The node of requirement idRQ does not exist:
   :apply (rd) -- 2-3-2-2-2-2-1-1
   -- Case 2-3-2-2-2-2-1-2: The node of requirement idRQ exists:
+  ... -- More consideration needed.
 \end{verbatim}
 \normalsize
 %% =======================================================================
+Only Case 2-3-2-2-2-2-1-2 remains unproved.\\
 
 \noindent{\bf Step 2-5:} Split the current case into cases which
-collectively cover the current case and one of which matches to LHS of
-the current rule. \\
+collectively cover the current case and the next state of one of the split cases
+matches to LHS of the current rule. \\
 The global state already matches to LHS of {\tt RO7}.\\
 
 \noindent{\bf Step 2-6:} Split the current case into cases where the
-condition of the current rule does or does not hold.
+condition of the current rule does or does not hold in the next state.
 %% =======================================================================
 \small
 \begin{verbatim}
+  -- Case 2-3-2-2-2-2-1-2: The node of requirement idRQ exists:
   :csp {
     eq snd' = initial .
     eq snd' = created .
@@ -7094,18 +7169,9 @@ condition of the current rule does or does not hold.
   :apply (rd) -- 2-3-2-2-2-2-1-2-2
   -- Case 2-3-2-2-2-2-1-2-3: The node is started:
   :apply (rd) -- 2-3-2-2-2-2-1-2-3
-  -- Case 2-3-2-2-2-2-2: The requirement is waiting:
-  :apply (rd) -- 2-3-2-2-2-2-2
-  -- Case 2-3-2-2-2-2-3: The requirement is ready:
-  :apply (rd) -- 2-3-2-2-2-2-3
-  -- Case 2-3-2-2-2-3: The requirement is connectsTo:
-  :apply (rd) -- 2-3-2-2-2-3
-  -- Case 2-3-2-3: The relationship is connectsTo:
-  :apply (rd) -- 2-3-2-3
 \end{verbatim}
 \normalsize
 %% =======================================================================
-
 All cases are successfully proved.
 
 %% ===============================================================
@@ -7185,15 +7251,6 @@ Condition~(\ref{exp:cond3}) for other rules can be similarly proved.
 \subsection{Proof of Condition~(\ref{exp:cond4})}
 \label{sec:TOSCAmesfinal}
 %% ===============================================================
-Generally speaking, when the antecedent part of a goal includes
-disjunctions, it requires much consideration for case splitting in
-order to collectively cover the general case. Fortunately, we can use
-the following equivalent condition instead of
-condition~(\ref{exp:cond4}) which includes no disjunction in its
-antecedent part.
-\[\forall S\in St:((inv(S)\land cont(S)\land(m(S) = 0))
-  \ra final(S))~~~~~~~~~~(4')\]
-  
 \noindent{\bf Step 4-0:} Use natural number axioms. \\
 Module {\tt ProofMesFinal} should protecting import {\tt NATAXIOM} as
 well as {\tt ProofBase}:
@@ -7267,19 +7324,19 @@ definitions of arbitrary constants used in proofs. 104 of them can be
 just instantiated and renamed form predefined operators. 11
 predicates, such as {\tt initcont}, {\tt contcont}, and so on, are the
 same as in proofs of the CloudFormation example and so can be copied
-from them.  27 state predicates are simple rappers of other
+from them.  27 state predicates are simple wrappers of other
 predicates, such as {\tt wfs-*} and {\tt inv-*}.
 
-Thus, 76 operators are problem specific ones. 23 of them are
+Thereby, 76 operators are problem specific ones. 23 of them are
 constructors including local state and type literals. 15 operators are
 selectors such as {\tt id}, {\tt type}, {\tt state}, and ones for
-links. The framework requires users to define 8 operators, i.e., {\tt
+links. The framework requires users to define 8 operators, i.e.\ {\tt
   init}, {\tt final}, {\tt wfs}, {\tt inv}, {\tt m}, {\tt invK}, {\tt
   getAllNDInState}, and {\tt DDSC}.
 
 Remaining 30 operators are fully original ones of this problem,
 however almost all of them can be easily defined combining predefined
-operators and can be written in several code lines. As described in
+operators and can be written in only several code lines. As described in
 Section~\ref{sec:TOSCAstructRep}, there are three kinds of them:
 \begin{itemize}
 \item Check the consistency between messages and local states of
@@ -7301,7 +7358,7 @@ The representation of the TOSCA model in \cafeobj consists of about
 represent the structure model and 70 lines represent twelve rules. We
 estimate that the size of the structure model representation is 40\%
 compared to when we would code it without using the framework, whereas
-the size of the behavior model(rules) is the same.
+the size of the behavior model (transition rules) is the same.
 
 The size of codes for proofs is essentially the same as when not using
 the framework because reusable codes for proofs are proved lemmas
@@ -7343,7 +7400,7 @@ maintainability by consistent structure of models and proofs.
 \section{Related Work}
 %% ===============================================================
 %% ===============================================================
-\subsection{Formal Approach for Cloud Orchestration}
+\subsubsection{Formal Approach for Cloud Orchestration}
 %% ===============================================================
 Sala{\"u}n, G., et
 al.~\cite{EtcheversCBP11,SalaunBCPEG13,SalaunEPBC13} designed a system
@@ -7369,13 +7426,13 @@ structural and deep understanding that is required to develop trusted
 systems.
 
 %% ===============================================================
-\subsection{Dependency Management between Internal Resources}
+\subsubsection{Dependency Management between Internal Resources}
 %% ===============================================================
 CloudFormation and OpenStack Heat can manage resources on the IaaS
 layer, however, they support to manage dependencies between resources
-in VMs. For example, suppose a software component(SC$_1$) on a
-VM(VM$_1$) can be activated only after waiting for activation of
-another component(SC$_2$) on another VM(VM$_2$), CloudFormation
+in VMs. For example, suppose a software component (SC$_1$) on a
+VM (VM$_1$) can be activated only after waiting for activation of
+another component (SC$_2$) on another VM (VM$_2$), CloudFormation
 requires a pair of special purpose resources, namely, {\it
   WaitCondition} and {\it WaitConditionHandle}. VM$_1$ should be
 declared to depend on the WaitCondition resource. The corresponding
@@ -7399,7 +7456,7 @@ finer grained dependencies, which is shown as invocation rules
 described in Section \ref{sec:TOSCAbehavior}.
 
 %% ===============================================================
-\subsection{Next Version of OASIS TOSCA}
+\subsubsection{Next Version of OASIS TOSCA}
 %% ===============================================================
 OASIS TOSCA TC currently discusses the next version (v1.1) to define a
 standard set of nodes, relationships, and
@@ -7414,10 +7471,10 @@ used for verification.
 %% ===============================================================
 \section{Future Issues}
 %% ===============================================================
-While more than one seventh of operators and one third of lemmas for
+While more than six seventh of operators and one third of lemmas for
 the TOSCA example can be easily defined using predefined operators and
 proved lemmas, several extensions of our framework are desired to
-reduce problem specific coding and proving. The general formalization
+further reduce problem specific coding and proving. The general formalization
 for messaging mechanism and chains of links is required.
 
 CloudFormation provides a default roll back mechanism when an
@@ -7433,7 +7490,7 @@ In this paper, we explain our framework using examples of system setup
 operations of cloud systems because cloud orchestration tools
 currently focus on them. However, TOSCA is designed to be used for any
 types of system operations such as scale-out and scale-in. One of the
-main difficulties to specify scale-in/out operations is that they
+main difficulties to specify scaling operations is that they
 dynamically change the structure of cloud systems, for which our
 framework should be enforced from two points of view. Firstly, some
 additional guidance is required to design state measuring functions,
@@ -7485,7 +7542,7 @@ theorem proving and (2) it introduces the idea of frameworks from
 software development to proof development which results in high
 productivity and high maintainability of proofs.
 
-All \cafeobj codes of the framework and example proof scores
+All \cafeobj codes of the framework and example proof scores in this paper
 can be downloaded at \url{https://github.com/yuki-yoshida/JAIST}.
 
 \appendix

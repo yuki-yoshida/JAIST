@@ -97,7 +97,6 @@ module! ProofBase {
   ceq inv(S) = false if not wfs-allRLHaveRQ(S) .
   ceq inv(S) = false if not wfs-allCPHaveRL(S) .
   ceq inv(S) = false if not wfs-allRQHaveRL(S) .
-  ceq inv(S) = false if not wfs-noNDCycle(S) .
   -- Problem specific wfs's for type constraint.
   ceq inv(S) = false if not wfs-allRLHaveSameTypeCPRQ(S) .
   -- Other problem specific wfs's.

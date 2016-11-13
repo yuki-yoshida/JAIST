@@ -597,9 +597,7 @@ module* PRMCYCLE {
   [State]
   op getAllObjInState : State -> SetOfObject
 
-  -- DDSC means get Direct Depending Set of the same class.
-  -- DDSC is required to have the following properties.
-  --   (O \in DDSC(O,S)) = false .
+  -- DDSC means get Direct Depending Set of the same Class.
   op DDSC : Object State -> SetOfObject
 }
 

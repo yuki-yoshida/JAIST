@@ -340,11 +340,10 @@ show proof
 select
 
 --> *************************************
---> Proof of wfs-noRSCycle.
--->  eq wfs-noRSCycle(S) = noRSCycle(S) .
+--> Proof of noRSCycle.
 --> *************************************j
 --> Proof of inv(S) implies inv(SS)
-module! Proofwfs-noRSCycle {
+module! Proof-noRSCycle {
   protecting(ProofInv)
 
   vars S SS : State
@@ -376,7 +375,7 @@ module! Proofwfs-noRSCycle {
     if id(RS) = id(RS') and not state(RS') \in SetSRS .
 }
 
-select Proofwfs-noRSCycle 
+select Proof-noRSCycle 
 --> ***************************
 --> (5) init(S) implies inv(S).
 --> ***************************

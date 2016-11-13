@@ -39,21 +39,19 @@ module! UPDATE {
   if # SVS > 0 .
 }
 
-open UPDATE .
+select UPDATE .
  execute < sv(1,closed) sv(2,open) > .
    -- to < sv(1,ready)  sv(2,ready) > .
  execute < sv(1,closed) > .
    -- to < sv(1,open) > .
-close
 
-open UPDATE .
+select UPDATE .
  reduce < sv(1,closed) sv(2,open) > =(*,1)=>+ < SVS > .
    -- to true.
  reduce < sv(3,closed) sv(4,ready) > =(*,1)=>+ < SVS > .
    -- to true.
  reduce < sv(5,open) > =(*,1)=>+ < SVS > .
    -- to false.
-close
 
 open UPDATE .
  pred anyOpen : SvSet .
@@ -76,22 +74,21 @@ module! ProofUPDATE {
  protecting(UPDATE)
 
  -- Theorem to be proved.
- pred theorem : State
+ pred theorem : Nat LocalState Nat LocalState SvSet
 
  vars N N1 N2 : Nat
  vars Lst1 Lst2 : LocalState .
- vars SVS SVS' : SvSet
+ var SVS : SvSet
+ var SS : State
 
- eq theorem(< sv(N1,Lst1) sv(N2,Lst2) SVS >)
+ eq theorem(N1,Lst1,N2,Lst2,SVS)
    = ((Lst1 == ready) = false and (Lst2 == ready) = false)
-     implies < sv(N1,Lst1) sv(N2,Lst2) SVS > =(*,1)=>+ < SVS' > .
+     implies < sv(N1,Lst1) sv(N2,Lst2) SVS > =(*,1)=>+ SS .
 
  -- Axiom of Nat
  eq (1 + N > 0) = true .
 
  -- Arbitrary constants.
- op s : -> State
- ops sv1 sv2 : -> Service
  ops st1 st2 : -> LocalState
  ops n1 n2 : -> Nat
  op svs : -> SvSet
@@ -99,37 +96,33 @@ module! ProofUPDATE {
 
 -- The most general case.
 open ProofUPDATE .
- eq s = < sv1 sv2 svs > .
- reduce theorem(s) . -- to false.
+ reduce theorem(n1,st1,n2,st2,svs) . -- to false.
 close
 
 -- Case 1: Both services are closed.
 open ProofUPDATE .
- eq s = < sv1 sv2 svs > .
- eq sv1 = sv(n1,closed) .
- eq sv2 = sv(n2,closed) .
- reduce theorem(s) . -- to true.
+ eq st1 = closed .
+ eq st2 = closed .
+ reduce theorem(n1,st1,n2,st2,svs) . -- to true.
 close
 
 -- Case 2: Both services are open.
 open ProofUPDATE .
- eq s = < sv1 sv2 svs > .
- eq sv1 = sv(n1,open) .
- eq sv2 = sv(n2,open) .
- reduce theorem(s) . -- to true.
+ eq st1 = open .
+ eq st2 = open .
+ reduce theorem(n1,st1,n2,st2,svs) . -- to true.
 close
 
 -- Case 3: A closed service and an open service.
 open ProofUPDATE .
- eq s = < sv1 sv2 svs > .
- eq sv1 = sv(n1,closed) .
- eq sv2 = sv(n2,open) .
- reduce theorem(s) . -- to true.
+ eq st1 = closed .
+ eq st2 = open .
+ reduce theorem(n1,st1,n2,st2,svs) . -- to true.
 close
 
 select ProofUPDATE .
 :goal {
-  eq theorem(< sv(n1,st1) sv(n2,st2) svs >) = true .
+  eq theorem(n1,st1,n2,st2,svs) = true .
 }
 :def csp-st1 = :csp {
  eq st1 = closed .
