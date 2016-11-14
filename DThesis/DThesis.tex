@@ -94,7 +94,7 @@ be effective for reducing generic routine work and making a
 verification engineer concentrate on the work specific to each
 individual system. The example of OASIS TOSCA shows that the framework
 can be used to specify, represent, and verify the behavior models of
-TOSCA where the standard has not yet provided any way to do so. It
+TOSCA where the standard has not yet provided any ways to do so. It
 also shows a general way to manage dependencies of cloud resources
 which is a smarter one than that of the most popular tool,
 CloudFormation.
@@ -173,7 +173,7 @@ called a {\it topology} and a TOSCA tool is expected to automate
 system operations based on resource dependencies declaratively defined
 by topologies.  Currently, however, there is no practical
 implementation of declarative specifications of TOSCA because it has
-not yet explicitly provided any way to specify behavior of a topology,
+not yet explicitly provided any ways to specify behavior of a topology,
 i.e.\ how to automate a topology.
 
 We believe formal approaches will provide systematic ways to guarantee
@@ -1051,7 +1051,7 @@ checks whether all possible next states of global state
 \normalsize
 %% =======================================================================
 This style of coding is we call the {\it double negation idiom}
-because it returns true when it CANNOT find any next state of the
+because it returns true when it CANNOT find any next states of the
 given global state such that NO open service is appearing. The reduction
 proceeds as follows:
 \begin{enumerate}
@@ -1069,7 +1069,7 @@ proceeds as follows:
   \stt{<~SVS~>}.
 \item Evaluate the substituted {\tt suchThat} clause which reduces to
   true because \stt{sv(2,ready) sv(1,closed)} does not include any
-  open service.
+  open services.
 \item Then the search predicate returns true and the whole term
   reduces to false.
 \end{enumerate}
@@ -2834,7 +2834,7 @@ Using these operators, template module {\tt CYCLEPRED} defines predicate
 {\tt noCylce}. Given
 a global state {\tt S}, predicate \stt{noCycle(S)} transitively visits objects in
 directly depending sets \stt{DDSC(O,S)} and checks not to find any
-object already visited.
+objects already visited.
 
 In the CloudFormation example case, {\tt getAllObjInState} and {\tt DDSC} can be defined as
 follows:
@@ -3083,7 +3083,8 @@ However {\tt noCycle} defined by using the simpler {\tt DDSC} above is
 \label{chap:verification}
 %% ===============================================================
 The framework provides an overall verification procedure for a kind of
-liveness properties, {\it leads-to} properties, as well as invariant
+liveness properties, {\it leads-to} properties adopted from UNITY
+logic~\cite{DBLP:books/daglib/0067338}, as well as invariant
 properties.  The procedure assists the users of the framework to
 systematically think and develop proof scores for verification of
 cloud orchestration.
@@ -3092,16 +3093,11 @@ A typical property of an automated system setup operation, which we
 want to verify, is that the operation surely brings a cloud system to
 a global state where all of its resources are started.  We say ``surely''
 to mean that the system always reaches some final state from any
-initial state. This kind of reachability is one of the most important
+initial states. This kind of reachability is one of the most important
 properties of practical automation of cloud systems.
 
 Futatsugi~\cite{Futatsugi15} defines leads-to property based on
-transition sequences of state machines\footnote{However adopting (p
-  leads-to q) property from UNITY
-  logic~\cite{DBLP:books/daglib/0067338}, this definition is not the
-  same as the original one. In the UNITY logic, the basic model is the
-  parallel program with parallel assignments, and (p leads-to q) is
-  defined through applications of inference rules.} and proposes a set
+transition sequences of state machines and proposes a set
 of sufficient conditions for it as follows:
 \begin{definition}[$p~\mbstt{leads-to}~q$]
 \label{def:leadsto}
@@ -3117,6 +3113,7 @@ of sufficient conditions for it as follows:
 \end{definition}
 
 \begin{lemma}
+\label{def:p0leadstoq}
   Let $p_0$, $p$, and $q$ be predicates of $S\!t$:
   $(p_0 \ra p) \land (p~\mbstt{leads-to}~q) \ra
   p_0~\mbstt{leads-to}~q$.
@@ -3132,20 +3129,21 @@ of sufficient conditions for it as follows:
 \forall (S,S')\in T\!r:&&((inv(S)\land p(S)\land\neg q(S))\ra(p(S')\lor q(S')))\\
 \forall (S,S')\in T\!r:&&((inv(S)\land p(S)\land\neg q(S))\ra(m(S) > m(S')))\\
 \forall S\in S\!t:&&((inv(S)\land p(S)\land\neg q(S))\ra\exists S'\in S\!t:(S,S')\in T\!r)\\
-\forall S\in S\!t:&&((inv(S)\land (p(S)\lor q(S))\land(m(S) = 0)) \ra q(S))
+\forall S\in S\!t:&&((inv(S)\land p(S)\land(m(S) = 0)) \ra q(S))
 \end{eqnarray*}
 \end{lemma}
-Since Futatsugi~\cite{Futatsugi15} does not assume fairness
-constraints to ensure any applicable transition rule will be eventually executed,
-Definition~\ref{def:leadsto} of leads-to property includes the case
-where there is an infinite transition sequence
-$\alpha=(S\!_0,S\!_1,\dots)$ such that predicate $q$ never holds, $\forall
-S\!_i\in\alpha:\neg q(S\!_i)$. It may be not what we expect an automated
-operation of a cloud system to have. Fortunately, however, the
-sufficient conditions proposed by Lemma~\ref{def:sufcond} are strong
-enough to reject such infinite cases because the properly decreasing
-natural number function, $m$, ensures that transition sequences never
-become infinite while keeping $q$ not to hold.
+Definition~\ref{def:leadsto} of ($p~\mbstt{leads-to}~q$) includes the
+case where there is an infinite transition sequence
+$\alpha=(S\!_0,S\!_1,\dots)$ such that predicate $q$ never holds,
+$\forall S\!_i\in\alpha:\neg q(S\!_i)$. However, \stt{leads-to} may be
+defined in a narrower sense where no such infinite transition sequence
+is allowed. Here, we call the former as {\it weak-leads-to} and the
+latter as {\it strong-leads-to}. The set of conditions proposed by
+Lemma~\ref{def:sufcond} is sufficient to both meanings of leads-to
+because the properly decreasing natural number function, $m$, ensures
+that transition sequences never become infinite while keeping $q$ not
+to hold. In the rest of this paper, we mean ($p~\mbstt{leads-to}~q$)
+as ($p~\mbstt{strong-leads-to}~q$).
 
 Let the automation of a setup operation be modeled as a state machine
 $TS=(S\!t,T\!r,In)$ specified by sort {\tt State} and a set of transition
@@ -3163,12 +3161,12 @@ Fn$.
 %% $init(S)$ holds, then there exists a transition sequence $\beta S'$
 %% such that $S\alpha\beta S'\in\Theta$ and $final(S')$ holds.
 
-The lemma above ensures that what we should do is to find a state
+The lemma~\ref{def:p0leadstoq} ensures that what we should do is to find a state
 predicate $p$ such that $(init\ra p)$ and $p$ satisfies the sufficient
 conditions for $(p~\mbstt{leads-to}~final)$. However such $p$ is
 specific to the individual problem, one of the most typical and
 general ones is that $p(S)$ means $S$ has a next state, i.e.\ $S$ will
-transits.  When a state machine has such general $p$, it always
+transit.  When a state machine has such general $p$, it always
 continues to transit until it reaches a final state.
 
 \begin{definition}[continuous predicate]
@@ -3192,8 +3190,7 @@ continues to transit until it reaches a final state.
   \label{exp:cond3}
   \forall (S,S')\in T\!r:&&((inv(S)\land\neg final(S))\ra(m(S)> m(S')))\\
   \label{exp:cond4}
-  \forall S\in S\!t:&&((inv(S)\land (cont(S)\lor final(S))
-  \land(m(S) = 0))\ra final(S))\\
+  \forall S\in S\!t:&&((inv(S)\land cont(S)\land(m(S) = 0))\ra final(S))\\
   \label{exp:cond5}
   \forall S\in S\!t:&&(init(S)\ra inv(S))\\
   \label{exp:cond6}
@@ -3323,7 +3320,7 @@ When a rule makes an object of class $C$ transit from state $s_c^k$ to
 $st_C^{k+1}$, $\#st_C^k$ decreases by 1 and $\#st_C^{k+1}$ increases by 1 so that
 $m(S')=m(S)-(n_c-k)+(n_c-k-1)=m(S)-1$ holds.
 
-When the state machine has a rule without changing any local state
+When the state machine has a rule without changing any local states
 of objects, $m$ should include an additional term that decreases when
 the rule is applied. But, instead, we recommend introducing some local
 state representing whether the rule is already applied or not yet.
@@ -4024,15 +4021,6 @@ condition~(\ref{exp:cond3}) is proved as follows:
 \section{Procedure: Proof of Condition~(\ref{exp:cond4})}
 \label{sec:mesfinal}
 %% ===============================================================
-Generally speaking, when the antecedent part of a goal includes
-disjunctions, it requires much consideration for case splitting in
-order to collectively cover the general case. Fortunately, we can use
-the following equivalent condition instead of
-condition~(\ref{exp:cond4}) which includes no disjunction in its
-antecedent part.
-\[\forall S\in St:((inv(S)\land cont(S)\land(m(S) = 0))
-  \ra final(S))~~~~~~~~~~(4')\]
-
 \noindent{\bf Step 4-0:} Use natural number axioms. \\
 Since the measuring function $m$ is defined as the sum of natural
 numbers, $m(S) = 0$ means each of the numbers is also zero. Thereby,
@@ -4054,7 +4042,7 @@ Note that {\tt NzNat} is a subsort of {\tt Nat} which does not
 include {\tt 0}.\\
 
 \noindent{\bf Step 4-1:} Define a predicate to be proved. \\ Predicate
-         {\tt mesfinal} for condition~(4') can be defined as follows:
+         {\tt mesfinal} for condition~(\ref{exp:cond4}) can be defined as follows:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -4074,7 +4062,7 @@ cases where the condition of the rule does or does not hold.
 For the CloudFormation example case, we can begin with two cases for
 two rules. Since rule {\tt R01} is conditional, the general case
 should be split into two cases according to Step 4-3. Then, the goals
-of totally three cases can be proved and thus condition~(4') is proved
+of totally three cases can be proved and thus condition~(\ref{exp:cond4}) is proved
 as follows:
 %% ===============================================================
 \small
@@ -6212,9 +6200,9 @@ the TOSCA example, however, there are two transition rules, {\tt R01} and {\tt
   R02} which cause cyclic situations in the verification. Thus, we
 need to define two lemmas in advance.  One of them means that there is
 a contradiction when $DDS\!_C$ of the specified {\tt initial} resource
-includes any {\tt initial} resource.  Another means that there is a
+includes any {\tt initial} resources.  Another means that there is a
 contradiction when $DDS\!_C$ of the specified {\tt created} resource
-includes any {\tt created} resource.  They are defined as the
+includes any {\tt created} resources.  They are defined as the
 following two conditional equations:
 %% =======================================================================
 \small
@@ -7374,7 +7362,7 @@ three kinds of problem specific operators described above.
 However the framework does not remarkably reduce the size of codes,
 time and efforts to develop them is radically reduced. Of course, it
 is mainly because this is our second experience of the same problem,
-whereas the previous proof scores did not have any unified policy of
+whereas the previous proof scores did not have any unified policies of
 splitting and so were very difficult to understand even for us. The
 framework makes the new proof scores become much clear, especially
 those of conditions (2)(3)(6) which should be proved for each of
@@ -7510,15 +7498,23 @@ be also effective for the solution.
 %% ===============================================================
 A general formalization of declarative cloud orchestration is proposed
 and a framework is provided for interactive developing proof
-scores. The framework provides a general model and a procedure for
-verifying leads-to properties of declarative cloud orchestration.  The
-procedure systematically assists the verification process and makes
-its generic part be routine work whose efforts are reduced by the
-provided logic templates and predicate libraries. As a result, a
-verification engineer can concentrate on the work specific to the
-individual problem, which brings high productivity by minimizing
-development efforts and high maintainability by consistent structure
-of models and proofs.
+scores. The framework provides (1) a general way to formalize
+specifications of different kinds of cloud orchestration tools and (2)
+a procedure for how to verifying leads-to properties, as well as
+invariant properties, of formalized specifications.  It also provides
+(3) general templates and libraries of formal descriptions for
+specifying orchestration of cloud systems and (4) proved lemmas for
+general predicates of the libraries to be used for verification.
+
+The framework has been applied to the verification of specifications
+of AWS CloudFormation and also of OASIS TOSCA. The provided procedure
+systematically assists the verification process and makes its generic
+part be routine work whose efforts are reduced by the provided logic
+templates and predicate libraries. As a result, a verification
+engineer can concentrate on the work specific to the individual
+problem, which brings high productivity by minimizing development
+efforts and high maintainability by consistent structure of models and
+proofs.
 
 A related work applied their model checking method to a typical
 problem in the domain of cloud orchestration, in which many of
@@ -7534,7 +7530,7 @@ the most popular tool, AWS CloudFormation.
 It is also demonstrated that the framework can be used to specify,
 represent, and verify the behavior models of the standard
 specification language, OASIS TOSCA, of cloud orchestration where the
-standard has not yet provided any way to do so.
+standard has not yet provided any ways to do so.
 
 The major contributions of this paper are (1) it shows that cloud
 orchestration is a practical and suitable domain to apply interactive
