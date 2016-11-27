@@ -60,8 +60,8 @@ module! ProofBase {
 --> Step 0-6: Prepare arbitrary constants.
 --> **************************************
   ops idRS idRS' idRS1 : -> RSIDLt
-  ops idRRS idRRS' idRRS1  : -> RSIDLt
-  ops idPR idPR' idPR1  : -> PRIDLt
+  ops idRRS idRRS' idRRS1 : -> RSIDLt
+  ops idPR idPR' idPR1 : -> PRIDLt
   ops sRS sRS' sRS'' sRS''' : -> SetOfResource
   ops sPR sPR' sPR'' sPR''' : -> SetOfProperty
   ops trs trs' trs'' trs''' : -> RSType

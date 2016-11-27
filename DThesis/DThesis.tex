@@ -1239,19 +1239,19 @@ commands\footnote{As its name suggests, CITP has capability to
   automatically produce inductive goals based on constructors, however
   we use it only for management of proof trees in this paper.}:
 \begin{itemize}
-\item \stt{:goal \{eq $term$ = true .\}}\\ Define the goal to be
+\item \stt{:goal \{ eq $term$ = true . \}}\\ Define the goal to be
   proved and let it be the current case. Multiple goal equations
   can be specified.
-\item \stt{:ctf \{eq $LHS$ = $RHS$ .\}}\\
+\item \stt{:ctf \{ eq $LHS$ = $RHS$ . \}}\\
   Split the current case into two cases adding \stt{eq~$LHS$~=~$RHS$~.} to one case and\\
   \stt{eq~($LHS$~=~$RHS$)~=~false~.} to another.
-\item \stt{:csp \{eq $LHS\!_1$ = $RHS\!_1$ . eq $LHS\!_2$ = $RHS\!_2$ . $\dots$\}}\\
+\item \stt{:csp \{ eq $LHS\!_1$ = $RHS\!_1$ . eq $LHS\!_2$ = $RHS\!_2$ . $\dots$ \}}\\
   Split the current case into cases adding 
   \stt{eq~$LHS\!_i$~=~$RHS\!_i$~.} to each case.
 \item \stt{:apply (rd)}\\
  Reduce the goal in the current case.
-\item \stt{:def $name$ = :ctf \{$\dots$\}}\\
-  \stt{:def $name$ = :csp \{$\dots$\}}\\
+\item \stt{:def $name$ = :ctf \{ $\dots$ \}}\\
+  \stt{:def $name$ = :csp \{ $\dots$ \}}\\
   Name the case splitting tactic.
 \item \stt{:apply ($name_1\ name_2$)}\\ 
   Combine named case splitting tactics. When tactic $name_1$ splits an case into
