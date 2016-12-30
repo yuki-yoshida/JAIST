@@ -99,7 +99,7 @@ also shows a general way to manage dependencies of cloud resources
 which is a smarter one than that of the most popular tool,
 CloudFormation.
 
-The major contributions of this paper are (1) it shows that cloud
+The major contributions of this paper are that (1) it shows that cloud
 orchestration is a practical and suitable domain to apply interactive
 theorem proving and (2) it introduces the idea of frameworks from
 software development to proof development which results in high
@@ -921,16 +921,16 @@ This section summarizes the formal definitions of state machines in
 \cafeobj. Please refer to \cite{Futatsugi15} for detailed
 definitions.
 \begin{definition}[transition rule]
-  Let {\tt State} be a sort of global states, $l$ and $r$ be terms of
+  Let {\tt State} be a sort of global states, $l$ and $r$ terms of
   sort {\tt State}, and let $c$ be a term of sort {\tt Bool}, then a
   triple $R = [l,r,c]$ is called a \ul{transition rule} and
   represented as ``\stt{ctrans $l$ => $r$ if $c$ .}''~(or ``\stt{trans
     $l$ => $r$ .}'' when $c$ is \stt{true}).
 \end{definition}
 \begin{definition}[transition]
-  Let $S\!t$ be a set of global states (i.e.\ ground terms of sort {\tt
-    State}), $Rule$ be a set of transition rules, then a pair of
-  global states $(S,S')\in T\!r\subseteq S\!t\times S\!t$ is called a
+  Let $\mathit{St}$ be a set of global states (i.e.\ ground terms of sort {\tt
+    State}), and let $Rule$ be a set of transition rules, then a pair of
+  global states $(S,S')\in \mathit{Tr}\subseteq \mathit{St}\times \mathit{St}$ is called a
   \ul{transition specified by} $Rule$ iff there exists a transition
   rule $R=[l,r,c]\in Rule$ and some ground substitution $\sigma$ such
   that $S=l\sigma$, $S'=r\sigma$, and $c\sigma$ reduces to $true$. We
@@ -939,34 +939,34 @@ definitions.
 \end{definition}
 \begin{definition}[state machine]
   Let $Rule$ be a set of transition rules, then a \ul{state machine}
-  is a triple $(S\!t,T\!r,In)$ where $S\!t$ is a set of global state,
-  $T\!r\subseteq S\!t\times S\!t$ is a set of transitions specified by
-  $Rule$, and $In \subseteq S\!t$. An element of $In$ is called an
+  is a triple $(\mathit{St},\mathit{Tr},In)$ where $\mathit{St}$ is a set of global state,
+  $\mathit{Tr}\subseteq \mathit{St}\times \mathit{St}$ is a set of transitions specified by
+  $Rule$, and $In \subseteq \mathit{St}$. An element of $In$ is called an
   \ul{initial state}.
 \end{definition}
 \begin{definition}[transition sequence]
-  Let $(S\!t,T\!r,In)$ be a state machine, then a \ul{transition sequence} is a
-  sequence of global states $(S\!_0,S\!_1,\dots,S\!_n)$ where each adjacent
-  pair $(S\!_i,S\!_{i+1}) \in T\!r$. 
+  Let $(\mathit{St},\mathit{Tr},In)$ be a state machine, then a \ul{transition sequence} is a
+  sequence of global states $(\mathit{S_0},\mathit{S_1},\dots,\mathit{S_n})$ where each adjacent
+  pair $(\mathit{S_i},\mathit{S_{i+1}}) \in \mathit{Tr}$. 
 \end{definition}
 \begin{notation}[$S\alpha,\alpha S,\alpha\beta$]
-  Let $S$ be a global state and $\alpha=(S\!_0,S\!_1,\dots,S\!_n)$ be a
+  Let $S$ be a global state, and let $\alpha=(\mathit{S_0},\mathit{S_1},\dots,\mathit{S_n})$ be a
   transition sequence, then \ul{$S\alpha$} is the transition sequence
-  such that $S\alpha=(S,S\!_0,S\!_1,\dots,S\!_n)$.  \ul{$\alpha S$} is the
-  transition sequence such that $\alpha S=(S\!_0,S\!_1,\dots,S\!_n,S)$.  Let
-  $\alpha=(S\!_0,S\!_1,\dots,S\!_n)$ and
-  $\alpha=(S\!_{n+1},S\!_{n+2},\dots,S\!_{n+m})$ be transition sequences,
+  such that $S\alpha=(S,\mathit{S_0},\mathit{S_1},\dots,\mathit{S_n})$.  \ul{$\alpha S$} is the
+  transition sequence such that $\alpha S=(\mathit{S_0},\mathit{S_1},\dots,\mathit{S_n},S)$.  Let
+  $\alpha=(\mathit{S_0},\mathit{S_1},\dots,\mathit{S_n})$ and
+  $\alpha=(\mathit{S_{n+1}},\mathit{S_{n+2}},\dots,\mathit{S_{n+m}})$ be transition sequences,
   then \ul{$\alpha\beta$} is the transition sequence such that
-  $\alpha\beta=(S\!_0,S\!_1,\dots,S\!_n,S\!_{n+1},S\!_{n+2},\dots,S\!_{n+m})$.
+  $\alpha\beta=(\mathit{S_0},\mathit{S_1},\dots,\mathit{S_n},\mathit{S_{n+1}},\mathit{S_{n+2}},\dots,\mathit{S_{n+m}})$.
 \end{notation}
 \begin{definition}[reachable]
-  Let $(S\!t,T\!r,In)$ be a state machine, then a global state $S\in S\!t$
+  Let $(\mathit{St},\mathit{Tr},In)$ be a state machine, then a global state $S\in \mathit{St}$
   is \ul{reachable} iff there exists a transition sequence
-  $(S\!_0,S\!_1,\dots,S\!_n)$ where $S\!_0\in In$ and $S=S\!_n$. Note that $S\!_0\in
-  In$ is reachable because $(S\!_0)$ is a transition sequence with $n=0$.
+  $(\mathit{S_0},\mathit{S_1},\dots,\mathit{S_n})$ where $\mathit{S_0}\in In$ and $S=\mathit{S_n}$. Note that $\mathit{S_0}\in
+  In$ is reachable because $(\mathit{S_0})$ is a transition sequence with $n=0$.
 \end{definition}
 \begin{definition}[invariant]
-  Let $(S\!t,T\!r,In)$ be a state machine, then a global state predicate
+  Let $(\mathit{St},\mathit{Tr},In)$ be a state machine, then a global state predicate
   $p$ is an \ul{invariant} iff $p(S)=true$ holds for any reachable
   global state $S$.
 \end{definition}
@@ -1003,7 +1003,7 @@ states of the given global state, such as
 \stt{<~sv(1,open)~sv(2,open)~>}\footnote{{\tt *}, {\tt 1}, and {\tt +}
   specify the range of search. If {\tt 2} is used instead of {\tt *},
   \cafeobj tries to find at most two next states. If {\tt 3} is used
-  instead of {\tt 1}, \cafeobj finds all global states reachable from the
+  instead of {\tt 1}, \cafeobj finds the all global states reachable from the
   given global state with at most three state transitions. If {\tt *} is used
   instead of {\tt +}, \cafeobj also includes the given global state as a
   search target.  Only \stt{=(*,1)=>+} is used in this paper.}.  The
@@ -1036,9 +1036,9 @@ rule, it binds the rule's condition to Boolean variable {\tt CC} placed at {\tt 
 clause uses {\tt CC} to check \stt{anyOpen(SVS)} only when the rule is
 applied.
 
-On the other hand, when we want to check some condition holds in all
+On the other hand, when we want to check some condition holds in the all
 possible next states, we need some trick. The following code fragment
-checks whether all possible next states of global state
+checks whether the all possible next states of global state
 \stt{<~sv(1,closed)~sv(2,open)~>} include at least one {\tt open} services:
 %% =======================================================================
 \small
@@ -1107,7 +1107,7 @@ double negation idiom works as we intended.
 %% ===============================================================
 This section describes the search predicates more formally.  
 \begin{definition}[unconditional search predicate]
-  Let $Rule$ be a set of transition rules and let $S$ and $S'$ be
+  Let $Rule$ be a set of transition rules, and let $S$ and $S'$ be
   terms of sort {\tt State}. The \ul{unconditional search predicate,
     $FS(S,S')$} is represented as ``\stt{$S$ =(*,1)=>+ $S'$}''
   and holds iff there exists a transition rule $R=[l,r,c]\in Rule$ and
@@ -1115,8 +1115,8 @@ This section describes the search predicates more formally.
   $S'\sigma=r\sigma$ holds, and $c\sigma$ reduces to true.
 \end{definition}
 \begin{definition}[conditional search predicate]
-  Let $Rule$ be a set of transition rules, $S$ and $S'$ be terms of
-  sort {\tt State}, and $CC$ and $B$ be terms of sort {\tt Bool}. The
+  Let $Rule$ be a set of transition rules, $S$ and $S'$ terms of
+  sort {\tt State}, and $CC$ and $B$ terms of sort {\tt Bool}. The
   \ul{conditional search predicate}, \ul{$CFS(S,S',CC,B)$} is
   represented as ``\stt{$S$ =(*,1)=>+ $S'$ if $CC$ suchThat $B$ \{
     $debug\_info$ \}}''\\ and holds iff there exists a transition
@@ -1175,7 +1175,7 @@ theorem to be proved and declares several arbitrary constants.  Note
 that we require an axiom for natural numbers which says that the
 successor of a natural number is always greater than 0.
 
-Firstly, we begin with the most general case where all aruguments of
+Firstly, we begin with the most general case where the all aruguments of
 {\tt theorem} are arbitrary constants:
 %% =======================================================================
 \small
@@ -1218,19 +1218,19 @@ is open. The following is a proof score for the three cases.
 \end{verbatim}
 \normalsize
 %% =======================================================================
-Verification is successfully done because all cases collectively covering
+Verification is successfully done because the all cases collectively covering
 the most general case are proved.
 %% ===============================================================
 \section{Constructor-based Inductive Theorem Prover (CITP)}
 \label{sec:CITP}
 %% ===============================================================
 As described above, interactive theorem proving is a systematic
-process to split general cases into collectively covering cases until
+process to split general cases into collectively covering cases until the
 all cases are specific enough to be proved. Thereby, a proof score should
 be written more carefully when case splitting becomes deeper. It
 sometimes causes to carelessly forget some cases to be proved. In
 fact, it may take considerable time to convince that the three cases in
-the previous section collectively cover all cases.
+the previous section collectively cover the all cases.
 
 In order to assist to develop proof scores which are more systematic
 and easier to understand, \cafeobj provides CITP method consisting of
@@ -1245,9 +1245,9 @@ commands\footnote{As its name suggests, CITP has capability to
 \item \stt{:ctf \{ eq $LHS$ = $RHS$ . \}}\\
   Split the current case into two cases adding \stt{eq~$LHS$~=~$RHS$~.} to one case and\\
   \stt{eq~($LHS$~=~$RHS$)~=~false~.} to another.
-\item \stt{:csp \{ eq $LHS\!_1$ = $RHS\!_1$ . eq $LHS\!_2$ = $RHS\!_2$ . $\dots$ \}}\\
+\item \stt{:csp \{ eq $LH\mathit{S_1}$ = $RH\mathit{S_1}$ . eq $\mathit{LHS_2}$ = $\mathit{RHS_2}$ . $\dots$ \}}\\
   Split the current case into cases adding 
-  \stt{eq~$LHS\!_i$~=~$RHS\!_i$~.} to each case.
+  \stt{eq~$\mathit{LHS_i}$~=~$\mathit{RHS_i}$~.} to each case.
 \item \stt{:apply (rd)}\\
  Reduce the goal in the current case.
 \item \stt{:def $name$ = :ctf \{ $\dots$ \}}\\
@@ -1293,13 +1293,13 @@ The following is a proof score of CITP version of the example in the previous se
 \normalsize
 %% =======================================================================
 Firstly, the goal to be proved should represent the most general case
-where all aruguments of {\tt theorem} are arbitrary constants.
+where the all aruguments of {\tt theorem} are arbitrary constants.
 Then, since class {\tt LocalState} has only
 three constants ({\tt closed, open} , and {\tt ready}) as constructors
 in module {\tt UPDATE}, there are three cases where {\tt st1} (and
 also {\tt st2}) is one of the three constants in each of cases. Thereby
 the combination of case splitting for {\tt st1} and {\tt st2}
-collectively covers all cases.
+collectively covers the all cases.
 
 The final command, \stt{describe proof}, describes the proof tree as
 follows:
@@ -1460,8 +1460,8 @@ explained in Section~\ref{sec:behaviormodel}.
 An object belongs to a class and thus a class is a set of objects. We
 assume this set consists of countably infinite objects each of which
 has its fixed ID and type. Local states or links of objects may be
-dynamically changed.  A class decides the set of possible types, the set
-of possible local states of its objects. A class also decides how its
+dynamically changed.  A class specifies the set of possible types, the set
+of possible local states of its objects. A class also specifies how its
 objects link to other objects.
 
 Users of the framework should design representation of the system
@@ -1500,7 +1500,7 @@ in our framework.
 \label{sec:behaviormodel}
 %% ===============================================================
 The framework models the behavior of an automated operation of a cloud
-system as a state machine in which a set of {\it transition rules} of
+system as a state transition system in which a set of {\it transition rules} of
 states specifies the behavior. We say a {\it global state} as a state
 of the state machine in order to avoid the confusion with local states
 of objects. A global state is a finite set of objects each of which is
@@ -1510,11 +1510,11 @@ are changed.
 
 In the case of a template of CloudFormation, a global state consists
 of finite number of resources and their properties. CloudFormation
-tries to start all resources according to the dependency specified by
+tries to start the all resources according to the dependency specified by
 the template. In this paper, we use a very simple behavior model of
 CloudFormation as an example; a local state of a resource is firstly
 {\it initial} and becomes {\it started} but a dependent resource can
-be {\it started} after all resources it depends become {\it started}.
+be {\it started} after the all resources it depends become {\it started}.
 The dependency is specified such that a property linking some resource
 is firstly {\it notready} and becomes {\it ready} when the linked
 resource is {\it started} and a resource can be {\it started} when all
@@ -1784,7 +1784,7 @@ template module {\tt OBJECTBASE}:
 \end{itemize}
 
 The following is the list of part of operators predefined by
-template module {\tt OBJECTBASE} whereas argument $obj$ is an object,
+template module {\tt OBJECTBASE} whereas argument $\mathit{obj}$ is an object,
 $id$ is an identifier of an object, $seto$ is a set of objects, and
 $setls$ is a set of local states of objects:
 \begin{itemize}
@@ -1814,11 +1814,11 @@ $setls$ is a set of local states of objects:
   object in $seto$ whose identifier is $id$.
 \item \stt{allObjInStates} (as \stt{allRSInStates})\\
   Predicate used as \stt{allObjInStates($seto$,$setls$)} which holds iff
-  the local states of all objects in $seto$ are included
+  the local states of the all objects in $seto$ are included
   in $setls$;\\$~~~~\forall o\in seto:\mbstt{state}(o)\in setls$.
 \item \stt{allObjNotInStates} (as \stt{allRSNotInStates})\\
   Predicate used as \stt{allObjNotInStates($seto$,$setls$)} which holds iff
-  the local states of all objects in $seto$ are not included
+  the local states of the all objects in $seto$ are not included
   in $setls$;\\$~~~~\forall o\in seto:\mbstt{state}(o)\not\in setls$.
 \item \stt{someObjInStates} (as \stt{someRSInStates})\\ 
   Predicate used as \stt{someObjInStates($seto$,$setls$)} which holds
@@ -2041,14 +2041,14 @@ module {\tt OBJLINKMANY2ONE}:
 \end{itemize}
 
 The following is the list of five operators assumed by
-module {\tt OBJLINKMANY2ONE} whereas argument $obj$ is a linking
+module {\tt OBJLINKMANY2ONE} whereas argument $\mathit{obj}$ is a linking
 object, $lid$ is an identifier of a linked object, $setlo$ is a set of
 linked objects, and $setlls$ is a set of local states of linked
 objects:
 \begin{itemize}
 \item \stt{link} (actually named as \stt{parent} and \stt{refer} in this case)\\
-  Selector used as \stt{link($obj$)} which returns the identifier of
-  the object linked by $obj$.
+  Selector used as \stt{link($\mathit{obj}$)} which returns the identifier of
+  the object linked by $\mathit{obj}$.
 \item \stt{empLObj} (as \stt{empRS})\\
   Constant representing an empty set of linked objects.
 \item \stt{existLObj} (as \stt{existRS})\\
@@ -2072,27 +2072,27 @@ selector {\tt link} is specified differently, {\tt parent} and {\tt
 Many operators/predicates between linking (Z) and linked (X) objects
 are provided. In this case, each of them is twice renamed differently.
 The following is the list of part of operators predefined by template
-module {\tt OBJLINKMANY2ONE} whereas argument $obj$ is a linking
+module {\tt OBJLINKMANY2ONE} whereas argument $\mathit{obj}$ is a linking
 object, $seto$ is a set of linking objects, $setls$ is a set of local
-states of linking objects, $lobj$ is a linked object, $lid$ is an
+states of linking objects, $\mathit{lobj}$ is a linked object, $lid$ is an
 identifier of a linked object, $setlo$ is a set of linked objects, and
 $setlls$ is a set of local states of linked objects:
 \begin{itemize}
 \item \stt{hasLObj} (renamed as \stt{hasParent} and \stt{hasRefRS} in this case)\\
-  Predicate used as \stt{hasLObj($obj$,$setlo$)} which holds iff
-  the object linked by $obj$ is included in $setlo$;\\$~~~~\exists lo\in
-  setlo:\mbstt{id}(lo)=\mbstt{link}(obj)$.
+  Predicate used as \stt{hasLObj($\mathit{obj}$,$setlo$)} which holds iff
+  the object linked by $\mathit{obj}$ is included in $setlo$;\\$~~~~\exists lo\in
+  setlo:\mbstt{id}(lo)=\mbstt{link}(\mathit{obj})$.
 \item \stt{getXOfZ} (as \stt{getRSOfPR} and \stt{getRRSOfPR})\\
-  Operator used as \stt{getXOfZ($setlo$,$obj$)} which returns an
-  object linked by $obj$ and included in $setlo$. When there is no such
+  Operator used as \stt{getXOfZ($setlo$,$\mathit{obj}$)} which returns an
+  object linked by $\mathit{obj}$ and included in $setlo$. When there is no such
   object in $setlo$, what it returns is undefined.
 \item \stt{getZsOfX} (as \stt{getPRsOfRS} and \stt{getPRsOfRRS})\\
-  Operator used as \stt{getZsOfX($seto$,$lobj$)} which returns a subset
-  $seto$ each of whose element object links to $lobj$.
+  Operator used as \stt{getZsOfX($seto$,$\mathit{lobj}$)} which returns a subset
+  $seto$ each of whose element object links to $\mathit{lobj}$.
 \item \stt{getZsOfXInStates} (as \stt{getPRsOfRSInStates} and \stt{getPRsOfRRSInStates})\\
-  Operator used as \stt{getZsOfXInStates($seto$,$lobj$,$setls$)} which
+  Operator used as \stt{getZsOfXInStates($seto$,$\mathit{lobj}$,$setls$)} which
   returns a subset of $seto$ each of whose element object links to
-  $lobj$ and is in one of local states of $setls$.
+  $\mathit{lobj}$ and is in one of local states of $setls$.
 \item \stt{getXsOfZs} (as \stt{getRSsOfPRs} and \stt{getRRSsOfPRs})\\
   Operator used as \stt{getXsOfZs($setlo$,$seto$)} which returns a
   subset of $setlo$ each of whose element object is linked by some
@@ -2122,10 +2122,10 @@ $setlls$ is a set of local states of linked objects:
   is in one of locals state in $setls$;\\$~~~~\forall o\in
   seto:(\mbstt{link}(o)=lid\ra\mbstt{state}(o)\in setls)$.
 \item \stt{ifOfXThenInStates} (as \stt{ifOfRSThenInStates} and \stt{ifOfRRSThenInStates})\\
-  Predicate used as \stt{ifOfXThenInStates($obj$,$lid$,$setls$)} which
-  holds iff the link of $obj$ is not $lid$ or the local state of
-  $obj$ is included in
-  $setls$;\\$~~~~\mbstt{link}(obj)=lid\ra\mbstt{state}(obj)\in setls$.
+  Predicate used as \stt{ifOfXThenInStates($\mathit{obj}$,$lid$,$setls$)} which
+  holds iff the link of $\mathit{obj}$ is not $lid$ or the local state of
+  $\mathit{obj}$ is included in
+  $setls$;\\$~~~~\mbstt{link}(\mathit{obj})=lid\ra\mbstt{state}(\mathit{obj})\in setls$.
 \item \stt{ifXInStatesThenZInStates}\\
 (as \stt{ifRSInStatesThenPRInStates} and \stt{ifRRSInStatesThenPRInStates})\\
   Predicate used as
@@ -2211,31 +2211,31 @@ style from goals as follows:
 \normalsize
 %% =======================================================================
 
-\begin{lemma}[Set Lemma]
-Let {\tt S} be a set of object, {\tt P} be a predicate of an object,
-{\tt allObjP} be a predicate of a set of objects where
+\begin{lemma}[Set Predicate Lemma]
+Let {\tt S} be a set of object, {\tt P} a predicate of an object,
+{\tt allObjP} a predicate of a set of objects where
 \stt{allObjP(S)} holds iff \stt{P(O)} holds for every object {\tt O}
 in {\tt S}. Then, if \stt{allObjP(S)} does not hold, then there exists
 an object {\tt O'} and a set {\tt S'} of objects such that \stt{S=(O'
   S')} holds and \stt{P(O')} does not hold\footnote{Many proved lemmas
-  including the Set Lemma are proved using the mathematical induction
+  including the Set Predicate Lemma are proved using the mathematical induction
   about constructors. Therefor, the user should not additionally define
   constructors of predefined sorts.}.
 \end{lemma}
 \begin{corollary}
-Let {\tt S} be a set of object, {\tt P} be a predicate of an object,
-{\tt someObjP} be a predicate of a set of objects where
+Let {\tt S} be a set of object, {\tt P} a predicate of an object,
+{\tt someObjP} a predicate of a set of objects where
 \stt{someObjP(S)} holds iff \stt{P(O)} holds for some object {\tt O}
 in {\tt S}. Then, if \stt{someObjP(S)} holds, then there exists an
 object {\tt O'} and a set {\tt S'} of objects such that \stt{S=(O'
   S')} holds and \stt{P(O')} holds.
 \end{corollary}
 Since a cloud system structure is modeled as a collection of several
-classes of objects, proof is often split into two cases where all
+classes of objects, proof is often split into two cases where the all
 elements in a certain set of objects do or do not satisfy a certain
 condition.  For example, since the condition of rule {\tt R01} is 
 \stt{allPROfRSInStates(SetPR, IDRS,ready)}, proof is split into two
-cases; all properties of resource {\tt IDRS} are or are not
+cases; the all properties of resource {\tt IDRS} are or are not
 {\tt ready}.
 
 Template module {\tt OBJECTBASE} predefines a general predicate {\tt
@@ -2250,7 +2250,7 @@ For example, {\tt allZOfXInStates} is instantiated from {\tt allObjP}
 where \stt{P(O)} holds iff {\tt O} is in one of given local
 states whenever it links to a given linked object.  As explained in
 Section~\ref{sec:linkpred}, {\tt allPROfRSInStates} is renamed
-from {\tt allZOfXInStates} and thus the Set Lemma can be used to
+from {\tt allZOfXInStates} and thus the Set Predicate Lemma can be used to
 split cases where the condition of rule {\tt R01} does or does not
 hold as follows:
 %% =======================================================================
@@ -2268,7 +2268,7 @@ resource {\tt idRS} but is not {\tt ready} (i.e.\ is {\tt
   notready}). Thus, it can be represented as
 \stt{prop(tpr,idPR,notready,idRS,idRRS)} where {\tt tpr}, {\tt idPR},
 and {\tt idRRS} are arbitrary constants. Then, the following case splitting
-collectively covers all cases:
+collectively covers the all cases:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -2302,10 +2302,10 @@ provided by\\ {\tt OBJLINKMANY2ONE} and {\tt OBJLINKONE2ONE}. This
 section describes two of them with example usages.
 
 \begin{lemma}[Many-2-One Lemma 07]
-  Let {\tt S\_X} be a set of linking objects, {\tt S\_Z} be a set of
-  linked objects, {\tt St\_X} be a set of local states of linking
-  objects, {\tt St\_Z} be a set of local states of linked objects, and
-  {\tt SX} be a local state of linking object where {\tt SX} is not
+  Let {\tt S\_X} be a set of linking objects, {\tt S\_Z} a set of
+  linked objects, {\tt St\_X} a set of local states of linking
+  objects, {\tt St\_Z} a set of local states of linked objects, and
+  {\tt SX} a local state of linking object where {\tt SX} is not
   included in {\tt St\_X}. Then, \stt{allObjInStates(S\_X,St)} implies
   \stt{ifXInStatesThenZInStates(S\_X,St\_X,S\_Z,St\_Z)}.
 \end{lemma}
@@ -2350,7 +2350,7 @@ only. It is represented as follows:
 \normalsize
 %% =======================================================================
 In order to show the invariant property of {\tt
-  inv-ifRSStartedThenPRReady}, we need a lemma which says that if all
+  inv-ifRSStartedThenPRReady}, we need a lemma which says that if the all
 resources are {\tt initial} then {\tt inv-ifRSStartedThenPRReady}
 holds.  The lemma could be defined as follows:
 %% =======================================================================
@@ -2404,10 +2404,10 @@ Implication Lemma, this lemma can be define as follows:
 %% =======================================================================
 
 \begin{lemma}[Many-2-One Lemma 11]
-  Let {\tt S\_X} be a set of linking objects, {\tt S\_Z} be a set of
-  linked objects, {\tt St\_X} be a set of local states of linking
-  objects, {\tt St\_Z} be a set of local states of linked objects, and
-  {\tt Z} and {\tt Z'} be linked objects where {\tt Z} and {\tt Z'}
+  Let {\tt S\_X} be a set of linking objects, {\tt S\_Z} a set of
+  linked objects, {\tt St\_X} a set of local states of linking
+  objects, {\tt St\_Z} a set of local states of linked objects, and
+  {\tt Z} and {\tt Z'} linked objects where {\tt Z} and {\tt Z'}
   are identical (i.e.\ whose identifiers, links, and types are the
   same) and only their local states are different\footnote{Exactly
     speaking, {\tt Z} and {\tt Z'} are terms of \cafeobj representing
@@ -2535,7 +2535,7 @@ mutually dependent and no transition rule could be applied.
 In order to start transitions and reach a desired final state, a cloud
 system should not include such cyclic dependency. Verification of the
 system requires (1) to formalize that the dependency is acyclic, (2)
-to prove that the acyclicness is an invariant, and (3) to prove that
+to prove the invariant property of the acyclicness, and (3) to prove that
 when acyclic there exists at least one applicable transition rule and the
 state machine continues to transit. The framework provides a template module
 to formalize acyclicness of dependency for (1) and a lemma that
@@ -2550,20 +2550,20 @@ Fig.~\ref{fig:AWSExample} and transition rules {\tt R01} and {\tt R02}
 in Section~\ref{sec:behaviormodel}.
 
 \begin{notation}[$X \in C$]
-Let $C$ be a class of objects in a cloud system and $X$ be an object
+Let $C$ be a class of objects in a cloud system, and let $X$ be an object
 the system consisting of, then we denote \ul{$X \in C$} when $X$ is of
 $C$.
 \end{notation}
 
 \begin{notation}[$st(X,S)$]
-Let $S$ be a global state of a cloud system and $X$ be an object in
+Let $S$ be a global state of a cloud system, and let $X$ be an object in
 $S$, then \ul{$st(X,S)$} is the local state of $X$ in the context of
 $S$.
 \end{notation}
 
 \begin{definition}[can make an object transit]
-Let $R = [l,r,c]$ be a transition rule, $C$ be a class of objects, $S$
-be a global state, and $X$ be an object of $C$. We say \ul{$R$ can
+Let $R = [l,r,c]$ be a transition rule, $C$ a class of objects, $S$
+a global state, and $X$ an object of $C$. We say \ul{$R$ can
   make $X$ transit in $S$} iff there exists a ground substitution
 $\sigma$ such that $S = l\sigma$, $c\sigma$ reduces to true, and
 $st(X,l\sigma) \ne st(X,r\sigma)$. We also say \ul{$R$ can make $X$
@@ -2574,7 +2574,7 @@ such that $R$ can make an object of $C$ transit form $s$ to $s'$ in $S$.
 \end{definition}
 
 \begin{definition}[pre-transit local states]
-Let $R$ be a transition rule and $C$ be a class of objects, then
+Let $R$ be a transition rule, and $C$ a class of objects, then
 the \ul{pre-transit local states of $R$ for $C$}, denoted
 \ul{$prels(R,C)$}, is the set of local states of $C$ where $s \in
 prels(R,C)$ iff there exists some local state $s'$ of $C$ such that
@@ -2587,8 +2587,8 @@ $\{~\mbstt{initial}~\}$. Note that a transition rule can make objects
 of more than one classes transit.
 
 \begin{notation}($S[X/s]$)\
-Let $S$ be a global state, $C$ be a class of objects, $X$ be an object
-of $C$ in $S$, and $s$ be a local state of $C$, then
+Let $S$ be a global state, $C$ a class of objects, $X$ an object
+of $C$ in $S$, and $s$ a local state of $C$, then
 \ul{$S[X/s]$} is the global state such that:
 \begin{itemize}
 \item $S[X/s]$ consists of the identical objects (i.e.\ identifiers and
@@ -2601,7 +2601,7 @@ This notation can specify more than one objects such that
 an object and a local state, $\Sigma = \{~ (X_1,s_1), (X_2,s_2), \dots~\}$,
 then we denote \ul{$S[\Sigma]$} as $S[X_1/s_1,X_2/s_2,\dots]$.
 \end{notation}
-Let $S\!_0$ be the following global state:
+Let $\mathit{S_0}$ be the following global state:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -2614,7 +2614,7 @@ Let $S\!_0$ be the following global state:
 Let us denote an object by its identifier and let $\Sigma_0$ be a set
 of pairs of an object and a local state such that $\Sigma_0=\{$
 $(\mbstt{myInstance,started}),$ $(\mbstt{myEIP::InsID,ready})\}$, then
-$S\!_0[\Sigma_0]$ is the following global state:
+$\mathit{S_0}[\Sigma_0]$ is the following global state:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -2626,58 +2626,58 @@ $S\!_0[\Sigma_0]$ is the following global state:
 %% =======================================================================
 
 \begin{definition}[depends on]
-Let $S$ be a global state, $X$ and $X'$ be objects in $S$, and $R$ be
+Let $S$ be a global state, $X$ and $X'$ objects in $S$, and $R$
 a transition rule where $R$ cannot make $X$ transit in $S$.  We say
-\ul{$X$ depends on $X'$ in $S$ w.r.t.\ $R$}, denoted \ul{$dep_R(X,
+\ul{$X$ depends on $X'$ in $S$ w.r.t.\ $R$}, denoted \ul{$\mathit{dep}_R(X,
   X',S)$}, iff there exists a set $\Sigma$ of pairs of an object and a
 local state such that $\Sigma$ includes a pair whose first element is
 $X'$, $R$ can make $X$ transit in $S[\Sigma]$, and $\Sigma$ is
 minimal.  Here we say ``minimal'' which means that there exists no
 subset $\Sigma'$ of $\Sigma$ such that $R$ can make $X$ transit in
 $S[\Sigma']$. We also say \ul{$X$ depends on $X'$ in $S$}, denoted
-\ul{$dep(X, X',S)$}, when there exists some transition rule $R$ such
-that $dep_R(X,X',S)$.
+\ul{$\mathit{dep}(X, X',S)$}, when there exists some transition rule $R$ such
+that $\mathit{dep}_R(X,X',S)$.
 \end{definition}
 For example, rule {\tt R01} can make {\tt myEIP} transit from {\tt
-  initial} to {\tt started} in $S\!_0[\Sigma_0]$, however, there is a
+  initial} to {\tt started} in $\mathit{S_0}[\Sigma_0]$, however, there is a
 subset of $\Sigma_0$ such that
 $\Sigma_{R01}=\{\mbstt{(myEIP:InsID,ready)}\}$ where rule {\tt R01}
-can make {\tt myEIP} transit also in $S\!_0[\Sigma_{R01}]$. Thereby, {\tt
+can make {\tt myEIP} transit also in $\mathit{S_0}[\Sigma_{R01}]$. Thereby, {\tt
   myEIP} depends only on {\tt myEIP:InsID} but not on {\tt myInstance}
-in $S\!_0$ w.r.t.\ {\tt R01}. Similarly, when
+in $\mathit{S_0}$ w.r.t.\ {\tt R01}. Similarly, when
 $\Sigma_{R02}=\{(\mbstt{myInstance,started})\}$, rule {\tt R02} can
 make {\tt myEIP::InsID} transit from {\tt notready} to {\tt ready} in
-$S\!_0[\Sigma_{R02}]$ and thus {\tt myEIP::InsID} depends on {\tt
-  myInstance} in $S\!_0$ w.r.t.\ {\tt R02}.
+$\mathit{S_0}[\Sigma_{R02}]$ and thus {\tt myEIP::InsID} depends on {\tt
+  myInstance} in $\mathit{S_0}$ w.r.t.\ {\tt R02}.
 
 \begin{definition}[depending set]
-Let $X$ be an object, $R$ be a transition rule, and $S$ be a global
+Let $X$ be an object, $R$ a transition rule, and $S$ a global
 state, then the \ul{depending set of $X$ in $S$}, denoted
 \ul{$DS(X,S)$}, is recursively defined as (1) if $X$ depends on some
 other object $X'$ in $S$ then $X'$ is included in
-$DS(X,S)$, i.e.\ $\forall X': (dep(X,X',S) \ra X'\in DS(X,S))$, and
+$DS(X,S)$, i.e.\ $\forall X': (\mathit{dep}(X,X',S) \ra X'\in DS(X,S))$, and
 (2) if $X' \in DS(X,S)$ and $X'$ depends on some other object $X''$
 in $S$ then $X''$ is included in $DS(X,S)$, i.e.\ $\forall
-X',X'': (X'\in DS(X,S) \land dep(X',X'',S) \ra X''\in DS(X,S))$.
+X',X'': (X'\in DS(X,S) \land \mathit{dep}(X',X'',S) \ra X''\in DS(X,S))$.
 \end{definition}
 
 \begin{definition}[no cyclic dependency]
-Let $C$ be a class, $X$ be an object of $C$, and $S$ be a global
+Let $C$ be a class, $X$ an object of $C$, and $S$ a global
 state. We say \ul{$X$ is in no cyclic dependency in $S$}, denoted
 \ul{$noCycle(X,S)$}, iff $X$ itself is not included in $DS(X,S)$. We
 also say \ul{there is no cyclic dependency of $C$ in $S$}, denoted
-\ul{$noCycle_C(S)$}, iff all objects of $C$ in $S$ are in no cyclic
+\ul{$noCycle_C(S)$}, iff the all objects of $C$ in $S$ are in no cyclic
 dependency in $S$.
 \end{definition}
-For example, $DS(\mbstt{myEIP},S\!_0) =
+For example, $DS(\mbstt{myEIP},\mathit{S_0}) =
 \{~\mbstt{myEIP::InsID},\mbstt{myInstance}~\}$ because {\tt myEIP}
-depends on \stt{myEIP::InsID} in $S\!_0$ w.r.t.\ {\tt R01} and
-\stt{myEIP::InsID} depends on {\tt myInstance} in $S\!_0$ w.r.t.\ {\tt
+depends on \stt{myEIP::InsID} in $\mathit{S_0}$ w.r.t.\ {\tt R01} and
+\stt{myEIP::InsID} depends on {\tt myInstance} in $\mathit{S_0}$ w.r.t.\ {\tt
   R02}. Since the depending set of {\tt myEIP} does not include {\tt
-  myEIP} itself, {\tt myEIP} is in no cyclic dependency in $S\!_0$, and
-there is no cyclic dependency of {\tt Resource} in $S\!_0$.
+  myEIP} itself, {\tt myEIP} is in no cyclic dependency in $\mathit{S_0}$, and
+there is no cyclic dependency of {\tt Resource} in $\mathit{S_0}$.
 \begin{lemma}[Cyclic Dependency Lemma]
-Let $S$ be a global state, $R$ be a transition rule, and $C$ be a
+Let $S$ be a global state, $R$ a transition rule, and $C$ a
 class of objects. If there is no cyclic dependency of $C$ in $S$
 and there exists some object $X$ of $C$ in $S$ whose local state
 is included in $prels(R,C)$, then there exists some object $O$ of $C$ in
@@ -2700,8 +2700,8 @@ DS(O,S)$ then there should be some object $O$ in $C^R$ such that $O
 it means there is cyclic dependency of $C$ in $S$. $\Box$\\
 
 \noindent
-For example, let $S\!_0$ be a global state shown above, then there is no
-cyclic dependency of {\tt Resource} in $S\!_0$ and there exists {\tt
+For example, let $\mathit{S_0}$ be a global state shown above, then there is no
+cyclic dependency of {\tt Resource} in $\mathit{S_0}$ and there exists {\tt
   myEIP} whose local state is {\it initial}. Thereby, the Cyclic
 Dependency Lemma ensures that there exists a {\tt Resource} object
 whose local state is {\it initial} and whose depending set includes no
@@ -2719,58 +2719,58 @@ $prels(\mbstt{R01,Resource})$, i.e.\ is {\tt initial}. The following
 is a modified version of the formalization focusing on one class.
 
 \begin{definition}[depending set of the same class as]
-Let $C$ be a class , $X$ be an object of $C$, $R$ be a transition
-rule, and $S$ be a global state, then the \ul{depending set of the same
-class as $X$ in $S$}, denoted \ul{$DS\!_C(X,S)$}, is defined
-as $DS\!_C(X,S)=\{~X'\in C\mid X'\in DS(X,S)~\}$
+Let $C$ be a class , $X$ an object of $C$, $R$ a transition
+rule, and $S$ a global state, then the \ul{depending set of the same
+class as $X$ in $S$}, denoted \ul{$\mathit{DS_C}(X,S)$}, is defined
+as $\mathit{DS_C}(X,S)=\{~X'\in C\mid X'\in DS(X,S)~\}$
 \end{definition}
 \begin{lemma}
-Let $C$ be a class, $X$ be an object of $C$, and $S$ be a global
-state. If $X$ itself is not included in $DS\!_C(X,S)$, then $X$ is in no
+Let $C$ be a class, $X$ an object of $C$, and $S$ a global
+state. If $X$ itself is not included in $\mathit{DS_C}(X,S)$, then $X$ is in no
 cyclic dependency of $C$ in $S$.
 \end{lemma}
 \begin{corollary}
-Let $S$ be a global state, $R$ be a transition rule, and $C$ be a
+Let $S$ be a global state, $R$ a transition rule, and $C$ a
 class of objects. If there is no cyclic dependency of $C$ in $S$ and
 there exists some object $X$ of $C$ in $S$ whose local state is
 included in $prels(R,C)$, then there exists some object $O$ of $C$ in
 $S$ such that the local state of $O$ is included in $prels(R,C)$ and
-$DS\!_C(O,S)$ includes no object whose local state is included in
-$prels(R,C)$; typically $DS\!_C(O,S)$ is empty.
+$\mathit{DS_C}(O,S)$ includes no object whose local state is included in
+$prels(R,C)$; typically $\mathit{DS_C}(O,S)$ is empty.
 \end{corollary}
 \begin{definition}[dependency chain]
-Let $X_1, X_2, \dots,X_n$ be objects and $S$ be a global state, then the
+Let $X_1, X_2, \dots,X_n$ be objects, and $S$ a global state, then the
 \ul{dependency chain} in $S$, denoted \ul{$dc([X_1, X_2,\dots,
-    X_n],S)$}, is defined as $\forall i \in \{1 \dots n-1\} : dep(X_i,
+    X_n],S)$}, is defined as $\forall i \in \{1 \dots n-1\} : \mathit{dep}(X_i,
 X_{i+1},S)$.
 \end{definition}
 For example, since {\tt myEIP} depends on {\tt myEIP::InsID} and it in
-turn depends on {\tt myInstance} in $S\!_0$, there is a dependency chain
-in $S\!_0$, $dc([\mbstt{myEIP,myEIP::InsID,myInstance}],S\!_0)$.
+turn depends on {\tt myInstance} in $\mathit{S_0}$, there is a dependency chain
+in $\mathit{S_0}$, $dc([\mbstt{myEIP,myEIP::InsID,myInstance}],\mathit{S_0})$.
 
 \begin{definition}[directly depending set of the same class as]
-Let $C$ be a class of objects, $X$ be an object of $C$, and $S$ be a
+Let $C$ be a class of objects, $X$ an object of $C$, and $S$ a
 global state. The \ul{directly depending set of the same class as $X$
-  in $S$}, denoted \ul{$DDS\!_C(X,S)$}, is defined as $\{~X'\mid\exists
+  in $S$}, denoted \ul{$\mathit{DDS_C}(X,S)$}, is defined as $\{~X'\mid\exists
 dc([X,X_1,\dots,X_n,X'],S)\land X' \in C\land\forall i\in [1 \dots
   n]:X_i \not\in C~\}$. We also say \ul{$X$ directly depends on $X'$
-  in $S$} when $X'\in DDS\!_c(X,S)$.
+  in $S$} when $X'\in \mathit{DDS_c}(X,S)$.
 \end{definition}
-When $X$ and $X'$ are objects of $C$, $X' \in DDS\!_C(X)$ means that
+When $X$ and $X'$ are objects of $C$, $X' \in \mathit{DDS_C}(X)$ means that
 there exists a dependency chain in which the first object is $X$, the
 last object is $X'$, and every object between $X$ and $X'$ is not of
-$C$. For example, $DDS\!_C(\mbstt{myEIP},S\!_0)$ $=\{~\mbstt{myInstance}~\}$
+$C$. For example, $\mathit{DDS_C}(\mbstt{myEIP},\mathit{S_0})$ $=\{~\mbstt{myInstance}~\}$
 since there is a dependency chain
-$dc([\mbstt{myEIP,myEIP::InsID,myInstance}],S\!_0)$.
+$dc([\mbstt{myEIP,myEIP::InsID,myInstance}],\mathit{S_0})$.
 
 \begin{corollary}
-Let $S$ be a global state, $R$ be a transition rule, and $C$ be a
+Let $S$ be a global state, $R$ a transition rule, and $C$ a
 class of objects. If there is no cyclic dependency of $C$ in $S$ and
 there exists some object $X$ of $C$ in $S$ whose local state is
 included in $prels(R,C)$, then there exists some object $O$ of $C$ in
 $S$ such that the local state of $O$ is included in $prels(R,C)$ and
-$DDS\!_C(O,S)$ includes no object whose local state is included in
-$prels(R,C)$; typically $DDS\!_C(O,S)$ is empty.
+$\mathit{DDS_C}(O,S)$ includes no object whose local state is included in
+$prels(R,C)$; typically $\mathit{DDS_C}(O,S)$ is empty.
 \end{corollary}
 %% ===============================================================
 \subsubsection{Using a Template Module to Represent $noCycle_C$}
@@ -2825,7 +2825,7 @@ The user of the framework should appropriately define {\tt
   getAllObjInState} and {\tt DDSC} because they are specific to each
 problem. 
 Given a global state {\tt S}, operator \stt{getAllObjInState(S)} should return
-the set of all objects of the specific class we focus; that is the
+the set of the all objects of the specific class we focus; that is the
 resource class in the CloudFormation example case. Operator
 \stt{DDSC(O,S)} should return the directly depending set of the same class
 as the given object {\tt O} in the given global state {\tt S}.
@@ -2872,7 +2872,7 @@ whose parents are the resource {\tt RS}, and whose local states are
 {\tt notready}. And \stt{getRRSsOfPRsInStates(SetRS,$setPR$,initial)}
 returns a set of resources which are included in the set
 {\tt SetRS} of resources, which are referred by one of the properties in the set $setPR$,
-and whose local states are {\tt initial}. Thereby, $DDS\!_C(X,S)$ can be
+and whose local states are {\tt initial}. Thereby, $\mathit{DDS_C}(X,S)$ can be
 defined by combining these operators.
 
 Using {\tt getAllRSInState} and {\tt DDSC} as parameters template
@@ -2896,10 +2896,10 @@ module {\tt CYCLEPRED} can be instantiated as follows:
  parameter.  {\tt noCycle} is renamed as {\tt noRSCycle}.
 
 %% ===============================================================
-\subsubsection{Lemmas for Proving Acyclicness is an Invariant}
+\subsubsection{Lemmas for Proving the Invariant Property of Acyclicness}
 %% ===============================================================
 In order to use the Cyclic Dependency Lemma, the user of the framework
-should prove that $noCycle_C$ is an invariant, especially should
+should prove the invariant property of $noCycle_C$, especially should
 prove that $noCycle_c(S) \ra noCycle_C(S')$ for any global state $S$
 and any possible next state $S'$ of $S$. Although such proof is
 specific to each problem, there are several common techniques and the
@@ -2926,21 +2926,21 @@ which implies that $X\not\in DS(X,S')$ because $DS(X,S')\subseteq
 DS(X,S)$.  $\Box$
 
 \begin{corollary}
-Let $C$ be a class of objects and $S$ and $S'$ be global states.  If
-$DS\!_C(X,S')\subseteq DS\!_C(X,S)$ for all objects $X$ of $C$ in $S$,
+Let $C$ be a class of objects and let $S$ and $S'$ be global states.  If
+$\mathit{DS_C}(X,S')\subseteq \mathit{DS_C}(X,S)$ for all objects $X$ of $C$ in $S$,
 then $noCycle_C(S) \ra noCycle_C(S')$.
 \end{corollary}
 
 \begin{corollary}
-Let $C$ be a class of objects and $S$ and $S'$ be global states.  If
-$DDS\!_C(X,S')\subseteq DDS\!_C(X,S)$ for all objects $X$ of $C$ in $S$,
+Let $C$ be a class of objects and let $S$ and $S'$ be global states.  If
+$\mathit{DDS_C}(X,S')\subseteq \mathit{DDS_C}(X,S)$ for all objects $X$ of $C$ in $S$,
 then $noCycle_C(S) \ra noCycle_C(S')$.
 \end{corollary}
 
 \begin{lemma}[Many-2-One Lemma 24]
-  Let {\tt S\_X} be a set of linking objects, {\tt S\_Z} be a set of
-  linked objects, {\tt St\_X} be a set of local states of linking
-  objects, and {\tt X} and {\tt X'} be linking objects where {\tt X}
+  Let {\tt S\_X} be a set of linking objects, {\tt S\_Z} a set of
+  linked objects, {\tt St\_X} a set of local states of linking
+  objects, and let {\tt X} and {\tt X'} be linking objects where {\tt X}
   and {\tt X'} are identical and only their local states are different
   Then, if the local state of {\tt X'} is not included in {\tt St\_X},
   \stt{getXsOfZsInStates((X' S\_X),S\_Z,St\_X)} is a subset of or equal to
@@ -3015,50 +3015,50 @@ complicated controls of dependencies of objects, it is typically easier
 to check the constraints than to use $noCycle$ defined above.
 
 \begin{notation}[$rel(X,X',S)$]
-  Let $S$ be a global state and $X$ and $X'$ be objects in $S$.  When
+  Let $S$ be a global state, and let $X$ and $X'$ be objects in $S$.  When
   there is some relationship $r$ between $X$ and $X'$, we denote it
   as \ul{$r(X,X',S)$}. Note that ``$X$ depends on $X'$ in $S$'' is one
   of such relationships.
 \end{notation}
 
 \begin{definition}[directly relating set]
-Let $S$ be a global state, $X$ be an object in $S$, and $r$ be a
+Let $S$ be a global state, $X$ an object in $S$, and $r$ a
 relationship of objects. Then, the \ul{directly relating set of $X$ in
-  $S$ w.r.t.\ $r$}, denoted \ul{$DRS\!_r(X,S)$}, is defined as
-$DRS\!_r(X,S)=\{~X'\mid r(X,X',S)~\}$.
+  $S$ w.r.t.\ $r$}, denoted \ul{$\mathit{DRS_r}(X,S)$}, is defined as
+$\mathit{DRS_r}(X,S)=\{~X'\mid r(X,X',S)~\}$.
 \end{definition}
 
 \begin{definition}[relating set]
-Let $X$ be an object, $S$ be a global state, and $r$ be a relationship
+Let $X$ be an object, $S$ a global state, and $r$ a relationship
 of objects, then the \ul{relating set of $X$ in $S$
-  w.r.t.\ $r$}, denoted \ul{$RS\!_r(X,S)$}, is recursively defined
-as (1) $\forall X': (r(X,X',S) \ra X'\in RS\!_r(X,S))$, and (2)
-$\forall X',X'': (X'\in RS\!_r(X,S) \land r(X',X'',S) \ra X''\in
-RS\!_r(X,S))$.
+  w.r.t.\ $r$}, denoted \ul{$\mathit{RS_r}(X,S)$}, is recursively defined
+as (1) $\forall X': (r(X,X',S) \ra X'\in \mathit{RS_r}(X,S))$, and (2)
+$\forall X',X'': (X'\in \mathit{RS_r}(X,S) \land r(X',X'',S) \ra X''\in
+\mathit{RS_r}(X,S))$.
 \end{definition}
 
 \begin{definition}[no cyclic relationship]
-Let $X$ be an object, $S$ be a global state, and $r$ be a relationship
+Let $X$ be an object, $S$ a global state, and $r$ a relationship
 of objects, then we say \ul{$X$ is in no cyclic relationship in $S$
   w.r.t.\ $r$}, denoted \ul{$noCycle_r(X,S)$}, iff $X$ itself is not
-included in $RS\!_r(X,S)$.
+included in $\mathit{RS_r}(X,S)$.
 \end{definition}
 
 \begin{lemma}
 \label{lemma:simplerel}
-Let $C$ is a class, $X$ be an object of $C$, $S$ be a global state,
-and $r$ be a relationship of objects. If $DDS\!_c(X,S)$ is a subset of
-$DRS\!_R(X,S)$ for all $X$ in $S$, then $noCycle_r(X,S)$ implies
+Let $C$ is a class, $X$ an object of $C$, $S$ a global state,
+and $r$ a relationship of objects. If $\mathit{DDS_c}(X,S)$ is a subset of
+$\mathit{DRS_R}(X,S)$ for all $X$ in $S$, then $noCycle_r(X,S)$ implies
 $noCycle_c(X,S)$ for all $X$, i.e.:
-\[\forall X:DDS\!_c(X,S)\subseteq DRS\!_r(X,S) \ra \forall X: (noCycle_r(X,S) \ra
+\[\forall X:\mathit{DDS_c}(X,S)\subseteq \mathit{DRS_r}(X,S) \ra \forall X: (noCycle_r(X,S) \ra
 noCycle_C(X,S))\]
 \end{lemma}
-Proof: $DDS\!_c(X,S)\subseteq DRS\!_r(X,S)$ means that $DS\!_c(X,S)\subseteq
-RS\!_r(X,S)$.  Thereby, if $noCycle_c(X,S)$ does not holds, then $X\in
-DS\!_C(X,S)$ and $X\in RS\!_r(X,S)$, which is a contradiction. $\Box$\\
+Proof: $\mathit{DDS_c}(X,S)\subseteq \mathit{DRS_r}(X,S)$ means that $\mathit{DS_c}(X,S)\subseteq
+\mathit{RS_r}(X,S)$.  Thereby, if $noCycle_c(X,S)$ does not holds, then $X\in
+\mathit{DS_C}(X,S)$ and $X\in \mathit{RS_r}(X,S)$, which is a contradiction. $\Box$\\
 
 This lemma allows the user of the framework to define {\tt DDSC}
-implementing some simpler relationship $r$ instead of the true $DDS\!_C$
+implementing some simpler relationship $r$ instead of the true $\mathit{DDS_C}$
 and use {\tt noCycle} defined by using the {\tt DDSC} instead of the true
 $noCycle_c$. For example, when we adopt the constraint of no cyclic
 chains of links in the CloudFormation example case, {\tt DDSC} can be
@@ -3101,41 +3101,41 @@ transition sequences of state machines and proposes a set
 of sufficient conditions for it as follows:
 \begin{definition}[$p~\mbstt{leads-to}~q$]
 \label{def:leadsto}
-  Let $TS=(S\!t,T\!r,In)$ be a state machine, $p$ and $q$ be predicates of
-  $S\!t$, $S\!t^R\subseteq S\!t$ be the set of reachable states of $TS$, and
-  $\Theta$ be the set of transition sequences of $TS$, then
+  Let $TS=(\mathit{St},\mathit{Tr},In)$ be a state machine, $p$ and $q$ predicates of
+  $\mathit{St}$, $\mathit{St}^R\subseteq \mathit{St}$ the set of reachable states of $TS$, and
+  $\Theta$ the set of transition sequences of $TS$, then
   \ul{$p~\mbstt{leads-to}~q$} defined as follows:
   \begin{eqnarray*}
-  \forall S\alpha\in \Theta: (S\in S\!t^R \land p(S) \land
+  \forall S\alpha\in \Theta: (S\in \mathit{St}^R \land p(S) \land
   \forall S'\in S\alpha: \neg q(S')\\
-  \ra \exists T\in S\!t, \exists\beta\in\Theta:(q(T) \land S\alpha\beta T\in \Theta))
+  \ra \exists T\in \mathit{St}, \exists\beta\in\Theta:(q(T) \land S\alpha\beta T\in \Theta))
   \end{eqnarray*}
 \end{definition}
 
 \begin{lemma}
 \label{def:p0leadstoq}
-  Let $p_0$, $p$, and $q$ be predicates of $S\!t$:
+  Let $p_0$, $p$, and $q$ be predicates of $\mathit{St}$:
   $(p_0 \ra p) \land (p~\mbstt{leads-to}~q) \ra
   p_0~\mbstt{leads-to}~q$.
 \end{lemma}
 
 \begin{lemma}[sufficient conditions for leads-to]
 \label{def:sufcond}
-  Let $TS=(S\!t,T\!r,In)$ be a state machine, $p$ and $q$ be predicates of
-  $S\!t$, $inv$ be an invariant of $TS$, and $m$ be a natural number
-  function of $S\!t$, then the following four conditions are sufficient
+  Let $TS=(\mathit{St},\mathit{Tr},In)$ be a state machine, $p$ and $q$ predicates of
+  $\mathit{St}$, $inv$ an invariant of $TS$, and $m$ a natural number
+  function of $\mathit{St}$, then the following four conditions are sufficient
   for ($p~\mbstt{leads-to}~q$) to hold.
 \begin{eqnarray*}
-\forall (S,S')\in T\!r:&&((inv(S)\land p(S)\land\neg q(S))\ra(p(S')\lor q(S')))\\
-\forall (S,S')\in T\!r:&&((inv(S)\land p(S)\land\neg q(S))\ra(m(S) > m(S')))\\
-\forall S\in S\!t:&&((inv(S)\land p(S)\land\neg q(S))\ra\exists S'\in S\!t:(S,S')\in T\!r)\\
-\forall S\in S\!t:&&((inv(S)\land p(S)\land(m(S) = 0)) \ra q(S))
+\forall (S,S')\in \mathit{Tr}:&&((inv(S)\land p(S)\land\neg q(S))\ra(p(S')\lor q(S')))\\
+\forall (S,S')\in \mathit{Tr}:&&((inv(S)\land p(S)\land\neg q(S))\ra(m(S) > m(S')))\\
+\forall S\in \mathit{St}:&&((inv(S)\land p(S)\land\neg q(S))\ra\exists S'\in \mathit{St}:(S,S')\in \mathit{Tr})\\
+\forall S\in \mathit{St}:&&((inv(S)\land p(S)\land(m(S) = 0)) \ra q(S))
 \end{eqnarray*}
 \end{lemma}
 Definition~\ref{def:leadsto} of ($p~\mbstt{leads-to}~q$) includes the
 case where there is an infinite transition sequence
-$\alpha=(S\!_0,S\!_1,\dots)$ such that predicate $q$ never holds,
-$\forall S\!_i\in\alpha:\neg q(S\!_i)$. However, \stt{leads-to} may be
+$\alpha=(\mathit{S_0},\mathit{S_1},\dots)$ such that predicate $q$ never holds,
+$\forall \mathit{S_i}\in\alpha:\neg q(\mathit{S_i})$. However, \stt{leads-to} may be
 defined in a narrower sense where no such infinite transition sequence
 is allowed. Here, we call the former as {\it weak-leads-to} and the
 latter as {\it strong-leads-to}. The set of conditions proposed by
@@ -3146,20 +3146,13 @@ to hold. In the rest of this paper, we mean ($p~\mbstt{leads-to}~q$)
 as ($p~\mbstt{strong-leads-to}~q$).
 
 Let the automation of a setup operation be modeled as a state machine
-$TS=(S\!t,T\!r,In)$ specified by sort {\tt State} and a set of transition
-rules
-%% , $\Theta$ be the set of transition sequences of $TS$, 
-and
-$Fn\subseteq S\!t$ be a set of expected final states, reachability
+$TS=(\mathit{St},\mathit{Tr},In)$ specified by sort {\tt State} and a set of transition
+rules, and let
+$Fn\subseteq \mathit{St}$ be a set of expected final states, reachability
 we want to verify is formalized as ($init~\mbstt{leads-to}~final$) where
 $init$ and $final$ are predicates for a given global state $S$ such
 that $init(S)$ holds iff $S \in In$ and $final(S)$ holds iff $S \in
 Fn$. 
-%% This means that any transition sequence from any initial state
-%% always reaches some final state no matter what possible transition
-%% sequence is taken, i.e.\ for any transition sequence $S\alpha$ if
-%% $init(S)$ holds, then there exists a transition sequence $\beta S'$
-%% such that $S\alpha\beta S'\in\Theta$ and $final(S')$ holds.
 
 The lemma~\ref{def:p0leadstoq} ensures that what we should do is to find a state
 predicate $p$ such that $(init\ra p)$ and $p$ satisfies the sufficient
@@ -3172,34 +3165,34 @@ continues to transit until it reaches a final state.
 \begin{definition}[continuous predicate]
   The \ul{continuous predicate, $cont$}, is the predicate which holds
   iff there exists some next state of a given state.  Let
-  $TS=(S\!t,T\!r,In)$ be a state machine, then $\forall S\in S\!t:cont(S)
-  ~\mbstt{iff}~ \exists S'\in S\!t:(S,S')\in T\!r$.
+  $TS=(\mathit{St},\mathit{Tr},In)$ be a state machine, then $\forall S\in \mathit{St}:cont(S)
+  ~\mbstt{iff}~ \exists S'\in \mathit{St}:(S,S')\in \mathit{Tr}$.
 \end{definition}
 
 \begin{lemma}[sufficient conditions for $init~\mbstt{leads-to}~final$]
-  Let $TS=(S\!t,T\!r,In)$ be a state machine, $inv$ be a conjunction of
-  some state predicates and $m$ be a natural number function of $S\!t$,
+  Let $TS=(\mathit{St},\mathit{Tr},In)$ be a state machine, $inv$ a conjunction of
+  some state predicates and $m$ a natural number function of $\mathit{St}$,
   then the following six conditions are sufficient for
   ($init~\mbstt{leads-to}~final$) to hold.
   \begin{eqnarray}
   \label{exp:cond1}
-  \forall S\in S\!t:&&(init(S)\ra cont(S))\\
+  \forall S\in \mathit{St}:&&(init(S)\ra cont(S))\\
   \label{exp:cond2}
-  \forall (S,S')\in T\!r:&&((inv(S)\land\neg final(S))
+  \forall (S,S')\in \mathit{Tr}:&&((inv(S)\land\neg final(S))
   \ra(cont(S')\lor final(S')))\\
   \label{exp:cond3}
-  \forall (S,S')\in T\!r:&&((inv(S)\land\neg final(S))\ra(m(S)> m(S')))\\
+  \forall (S,S')\in \mathit{Tr}:&&((inv(S)\land\neg final(S))\ra(m(S)> m(S')))\\
   \label{exp:cond4}
-  \forall S\in S\!t:&&((inv(S)\land cont(S)\land(m(S) = 0))\ra final(S))\\
+  \forall S\in \mathit{St}:&&((inv(S)\land cont(S)\land(m(S) = 0))\ra final(S))\\
   \label{exp:cond5}
-  \forall S\in S\!t:&&(init(S)\ra inv(S))\\
+  \forall S\in \mathit{St}:&&(init(S)\ra inv(S))\\
   \label{exp:cond6}
-  \forall (S,S')\ T\!r:&&(inv(S)\ra inv(S'))
+  \forall (S,S')\ \mathit{Tr}:&&(inv(S)\ra inv(S'))
   \end{eqnarray}
 \end{lemma}
 Proof: Let $p$ in the ``sufficient conditions for leads-to'' lemma
-be $cont$, then $\forall (S,S')\in T\!r:p(S)=true$ holds and
-$\forall S\in S\!t:(p(s)\ra\exists S'\in S\!t:(S,S')\in T\!r)$. $\Box$\\
+be $cont$, then $\forall (S,S')\in \mathit{Tr}:p(S)=true$ holds and
+$\forall S\in \mathit{St}:(p(s)\ra\exists S'\in \mathit{St}:(S,S')\in \mathit{Tr})$. $\Box$\\
 
 Condition~(\ref{exp:cond1}) means an initial state should be a
 continuing state, i.e.\ it should start
@@ -3295,7 +3288,7 @@ number function that properly decreases in transitions. If we can
 model a cloud system as a state machine where every transition rule
 changes at least one local state of an object and there is no loop
 transition, then the measuring function, $m$, can be easily defined as
-the weighted sum of counting local states of all classes of objects.
+the weighted sum of counting local states of the all classes of objects.
 Suppose that local states of class $C$ are $st_C^0, st_C^1, \dots ,
 st_C^{n_c}$ and they are straightforward, that is, there is no
 backward transition, then $m$ can be $\sum_{C} \sum_{0 \le k \le n_C}
@@ -3336,7 +3329,7 @@ the framework. For example, the CloudFormation example case requires
 an invariant {\tt inv-ifRSStartedThenPRReady} as explained in
 Section~\ref{sec:lemma}.
 
-Predicate $inv$ is a conjunction of all the invariants, however, the
+Predicate $inv$ is a conjunction of the all invariants, however, the
 straightforward representation is not so efficient. \cafeobj needs to
 internally maintain long ANDed terms and to spend much processing
 time. Fortunately, there is more efficient representation. Since the sufficient
@@ -3371,7 +3364,7 @@ Section~\ref{sec:invariant}.\\
 \noindent{\bf Step 0-5:} Prepare for using the Cyclic Dependency
 Lemma. \\ When using the Cyclic Dependency Lemma, we firstly introduce
 an object which is in one of the pre-transit local states of a
-transition rule and then we claim that $DDS\!_C$ of the object includes
+transition rule and then we claim that $\mathit{DDS_C}$ of the object includes
 no object in the pre-transit local states.
 
 CITP method used a {\tt :init} command to introduce a lemma on the way
@@ -3380,9 +3373,9 @@ labeled in advance. The {\tt :init} command is used to specify the labeled lemma
 the appropriate substitution of variables.
 
 In the CloudFormation example case, we will introduce an {\tt initial}
-resource and claim that every resource in $DDS\!_c$ of the resource is
+resource and claim that every resource in $\mathit{DDS_c}$ of the resource is
 not {\tt initial}. The following conditional equation is defined in
-advance and means that there is a contradiction when $DDS\!_C$ of the
+advance and means that there is a contradiction when $\mathit{DDS_C}$ of the
 specified resource includes any {\tt initial} resource.
 %% =======================================================================
 \small
@@ -3514,10 +3507,10 @@ Only Case 2-1 remains unproved and it then becomes the current case.\\
 
 \noindent{\bf Step 1-4:} Split the current case into cases where
 the condition of the rule does or does not hold. \\
-Since the condition of rule {\tt R01} requires all properties of the
+Since the condition of rule {\tt R01} requires the all properties of the
 {\tt initial} resource are {\tt ready}, Case 2-1 is split into two
-more cases; all properties are or are not {\tt ready}. As explained in
-Section~\ref{sec:lemma}, the Set Lemma ensures that these cases are
+more cases; the all properties are or are not {\tt ready}. As explained in
+Section~\ref{sec:lemma}, the Set Predicate Lemma ensures that these cases are
 represented as follows where {\tt tpr}, {\tt idPR}, {\tt idRRS}, and
 {\tt sPR'} are arbitrary constants for a type of the property, an
 identifier of the property, an identifier of a resource referred by
@@ -3531,7 +3524,7 @@ the property, and a set of properties respectively:
     eq allPROfRSInStates(sPR,idRS,ready) = true .
     eq sPR = (prop(tpr,idPR,notready,idRS,idRRS) sPR') .
   }
-  -- Case 2-1-1: When all of properties of the resource are ready.
+  -- Case 2-1-1: When the all of properties of the resource are ready.
   :apply (rd) -- 2-1-1
   -- Case 2-1-2: When there is a not-ready property of the resource:
   ... -- More case splitting needed.
@@ -3591,7 +3584,7 @@ ensures there exists some {\tt initial} resource {\tt RS} such that no
 resource in \stt{DDSC(RS,S)} is {\tt initial}. Recalling that we chose
 {\tt idRS} as an arbitrary {\tt initial} resource in Step 1-3, we can
 assume that itself is such {\tt RS} and can claim that there is a
-contradiction when its $DDS\!_C$ includes any {\tt initial} resource
+contradiction when its $\mathit{DDS_C}$ includes any {\tt initial} resource
 using a {\tt :init} command as follows:
 %% =======================================================================
 \small
@@ -3620,12 +3613,12 @@ into the current case:
 \end{verbatim}
 \normalsize
 %% =======================================================================
-Since $DDS\!_C$ of the resource
+Since $\mathit{DDS_C}$ of the resource
 includes resource \stt{res(trs',idRRS,initial)}, there is a
 contradiction and the goal of this case is proved.
 
 The following is the result of a ``\stt{show proof}'' command, which shows
-that goals of all split cases are proved and thus
+that goals of the all split cases are proved and thus
 condition~(\ref{exp:cond1}) is proved.
 %% =======================================================================
 \small
@@ -3708,9 +3701,9 @@ be explained in Section~\ref{sec:initialcont}.\\
 
 \noindent{\bf Step 2-2:} Split the current case for a rule into
 cases where the condition of the rule does or does not hold. \\
-Since the condition of rule {\tt R01} requires all properties of the
+Since the condition of rule {\tt R01} requires the all properties of the
 {\tt initial} resource are {\tt ready}, the root case is split into
-two cases; all properties are or are not {\tt ready}.
+two cases; the all properties are or are not {\tt ready}.
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -3737,7 +3730,7 @@ In Case 1, rule {\tt R01} makes an {\tt initial} resource transit to
 {\tt started} and the next state becomes a final state if all other
 resources included the set {\tt sRS} of resources are already {\tt
   started}. Otherwise there is at least one other {\tt initial}
-resource.  Using the Set Lemma, we can split the case as follows where
+resource.  Using the Set Predicate Lemma, we can split the case as follows where
 {\tt trs'}, {\tt idRS'}, and {\tt sRS'} are arbitrary constants for a
 type of the resource, an identifier of the resource, and a set of
 resources respectively:
@@ -3774,7 +3767,7 @@ In this example, the next state of the current case already matches to LHS of ru
 \noindent{\bf Step 2-6:} Similarly as Step 1-4, split the current case
 into cases where the condition of the current rule does or does not
 hold in the next state. \\
-Again the Set lemma can be used similarly as Step 1-4 as follows:
+Again the Set Predicate Lemma can be used similarly as Step 1-4 as follows:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -3889,7 +3882,7 @@ there exists some {\tt initial} resource {\tt RS} such that no
 resource in \stt{DDSC(RS,S)} is {\tt initial}. Recalling that we chose
 {\tt idRS'} as an arbitrary {\tt initial} resource in Step 2-3, we can
 assume that itself is such {\tt RS} and can claim that there is a
-contradiction when its $DDS\!_C$ includes any {\tt initial} resource
+contradiction when its $\mathit{DDS_C}$ includes any {\tt initial} resource
 using a {\tt :init} command as follows:
 %% =======================================================================
 \small
@@ -3907,7 +3900,7 @@ using a {\tt :init} command as follows:
 The goal of this case is proved by the contradiction.
 
 The following is the result of a ``\stt{show proof}'' command, which shows
-that goals of all split cases are proved and thus
+that goals of the all split cases are proved and thus
 condition~(\ref{exp:cond2}) for rule {\tt R01} is proved:
 %% =======================================================================
 \small
@@ -4100,7 +4093,7 @@ inv_1(S)\land inv_2(S)\land\dots\land inv_n(S)$, then we can
 separately prove the invariant property of each $inv_k(S)$ since the
 followings hold:
 \[\forall S\in St: (\forall k:init(S)\ra inv_k(S))\ra(init(S)\ra inv(S))\]
-\[\forall (S,S')\in T\!r: (\forall k:inv(S)\ra inv_k(S'))\ra(inv(S)\ra inv(S'))\]
+\[\forall (S,S')\in \mathit{Tr}: (\forall k:inv(S)\ra inv_k(S'))\ra(inv(S)\ra inv(S'))\]
 
 \vspace{0.3cm}
 The rest of this section describes the proof procedure for three
@@ -4279,7 +4272,7 @@ thus condition~(\ref{exp:cond6}) is proved as follows:
 %% ===============================================================
 \subsubsection*{Proof of Invariants for Structural Constraints}
 %% ===============================================================
-We should prove all wfs predicates as invariants, however, they are
+We should prove the all wfs predicates as invariants, however, they are
 included in $init$ and so we only need to prove
 condition~(\ref{exp:cond6}) for each of them. Most of them check some
 structural constraints of the cloud systems, which should usually keep
@@ -4361,8 +4354,8 @@ We should prove the invariant property of $noCycle_C(S)$ in order to
 use the Cyclic Dependency Lemma, however, it is included in $init$ and
 thus we only need to prove condition~(\ref{exp:cond6}) for $noCycle_C$.
 The Depending Subset Lemma described in Section~\ref{sec:lemma}
-ensures that we should prove that $\forall (S,S') \in T\!r, \forall X\in
-C:DDS\!_C(X,S')\subseteq DDS\!_C(X,S)$ instead of
+ensures that we should prove that $\forall (S,S') \in \mathit{Tr}, \forall X\in
+C:\mathit{DDS_C}(X,S')\subseteq \mathit{DDS_C}(X,S)$ instead of
 condition~(\ref{exp:cond6}).\\
 
 \noindent{\bf Step 6-0:} Define a predicate to be proved. 
@@ -4420,7 +4413,7 @@ LHS of each rule. \\
 \noindent{\bf Step 6-3:} Split the current case for a rule into
 cases where the condition of the rule does or does not hold. \\
 
-The following is a proof score for $DDS\!_C(X,S')\subseteq DDS\!_C(X,S)$ for
+The following is a proof score for $\mathit{DDS_C}(X,S')\subseteq \mathit{DDS_C}(X,S)$ for
 rule {\tt R01}:
 %% ===============================================================
 \small
@@ -4457,7 +4450,7 @@ where the considering resource {\tt x} is the resource {\tt idRS}
 (Case 1-1), is not {\tt idRS} and is {\tt initial} (Case 1-2-1), and
 is neither {\tt idRS} nor {\tt initial} (Case 1-2-2).\\
 
-The following is a proof score for $DDS\!_C(X,S')\subseteq DDS\!_C(X,S)$ for
+The following is a proof score for $\mathit{DDS_C}(X,S')\subseteq \mathit{DDS_C}(X,S)$ for
 rule {\tt R02}:
 %% ===============================================================
 \small
@@ -4674,7 +4667,7 @@ Cyclic Dependency Lemma.
 \end{verbatim}
 \normalsize
 %% =======================================================================
-Thus, all cases are successfully proved and we can assume that $cont(S)$
+Thus, the all cases are successfully proved and we can assume that $cont(S)$
 holds for any global state $S$ which include an {\tt initial}
 resource.
 
@@ -5396,7 +5389,7 @@ Section~\ref{sec:linkpred}, module {\tt LINKS} uses {\tt
   OBJLINKMANY2ONE} to instantiate several operators concerning object
 types. The following is the list of them whereas argument $seto$ is a
 set of linking objects, $setls$ is a set of local states of linking
-objects, $lobj$ is a linked object, $lid$ is an identifier of a linked
+objects, $\mathit{lobj}$ is a linked object, $lid$ is an identifier of a linked
 object, $setlo$ is a set of linked objects, $setlls$ is a set of local
 states of linked objects, and $ty$ is a type of an object:
 \begin{itemize}
@@ -5410,15 +5403,15 @@ states of linked objects, and $ty$ is a type of an object:
   seto:(\mbstt{type}(o)=ty\land\mbstt{link}(o)=lid\ra\mbstt{state}(o)\in
   setls)$.
 \item \stt{getZsOfTypeOfX} (as \stt{getCPsOfTypeOfND} and \stt{getRQsOfTypeOfND})\\
-  Operator used as \stt{getZsOfTypeOfX($seto$,$ty$,$lobj$)} which
+  Operator used as \stt{getZsOfTypeOfX($seto$,$ty$,$\mathit{lobj}$)} which
   returns a subset $seto$ each of whose element object is of type $ty$
-  and links to $lobj$.
+  and links to $\mathit{lobj}$.
 \item \stt{getZsOfTypeOfXInStates}\\
   (as \stt{getCPsOfTypeOfNDInStates} and \stt{getRQsOfTypeOfNDInStates})\\
   Operator used as
-  \stt{getZsOfTypeOfXInStates($seto$,$ty$$lobj$,$setls$)} which
+  \stt{getZsOfTypeOfXInStates($seto$,$ty$$\mathit{lobj}$,$setls$)} which
   returns a subset of $seto$ each of whose element object is of type
-  $ty$, links to $lobj$, and is in one of local states of $setls$.
+  $ty$, links to $\mathit{lobj}$, and is in one of local states of $setls$.
 \item \stt{getZsOfTypeOfXsInStates}\\
   (as \stt{getCPsOfTypeOfNDsInStates} and \stt{getRQsOfTypeOfNDsInStates})\\
   Operator used as
@@ -5443,8 +5436,8 @@ m  is $ty$ and whose local sate is included in $setlls$ is linked by
 
 Module {\tt LINKS} also uses {\tt OBJLINKONE2ONE} to instantiate many
 predicates/operators. The following is the list of them whereas argument
-$obj$ is a linking object, $seto$ is a set of linking objects, $setls$
-is a set of local states of linking objects, $lobj$ is a linked
+$\mathit{obj}$ is a linking object, $seto$ is a set of linking objects, $setls$
+is a set of local states of linking objects, $\mathit{lobj}$ is a linked
 object, $lid$ is an identifier of a linked object, $setlo$ is a set of
 linked objects, and $setlls$ is a set of local states of linked
 objects:
@@ -5454,8 +5447,8 @@ objects:
   object whose link is $lid$ is included in $seto$;\\$~~~~\exists o\in
   seto: \mbstt{link}(o)=lid$.
 \item \stt{getXOfY} (as \stt{getCPOfRL} and \stt{getRQOfRL})\\
-  Operator used as \stt{getXOfY($setlo$,$obj$)} which returns an
-  object linked by $obj$ and included in $setlo$.
+  Operator used as \stt{getXOfY($setlo$,$\mathit{obj}$)} which returns an
+  object linked by $\mathit{obj}$ and included in $setlo$.
 \item \stt{getXsOfYs} (as \stt{getCPsOfRLs} and \stt{getRQsOfRLs})\\
   Operator used as \stt{getXsOfYs($setlo$,$seto$)} which returns a
   subset of $setlo$ each of whose element object is linked by some
@@ -5466,9 +5459,9 @@ objects:
   linked by some object included in $seto$ and is in one of local
   states of $setlls$.
 \item \stt{getYOfX} (as \stt{getRLOfCP} and
-  \stt{getRLOfRQ})\\ Operator used as \stt{getYOfX($seto$,$lobj$)}
+  \stt{getRLOfRQ})\\ Operator used as \stt{getYOfX($seto$,$\mathit{lobj}$)}
   which returns an object which included in $seto$ and whose link is
-  $lobj$.
+  $\mathit{lobj}$.
 \item \stt{getYsOfXs} (as \stt{getRLsOfCPs} and \stt{getRLsOfRQs})\\
   Operator used as \stt{getYsOfXs($seto$,$setlo$)} which returns a
   subset of $seto$ each of whose element object links to some object
@@ -5586,7 +5579,7 @@ requires to define several problem specific operators in module {\tt
 invariants for the consistency between messages and local states of
 objects, (2) to represent invariants for the consistency between
 capabilities and requirements connected by relationships, and (3) to
-represent other problem specific constraints. All these operators can
+represent other problem specific constraints. The all these operators can
 be easily implemented by combining predefined operators.
 
 The following is the list of them whereas argument $setCP$ is a set of
@@ -6055,7 +6048,7 @@ Another technique used in this chapter is to design the system having
 a simpler constraint where some relationship between objects have no
 cyclic chains. Recalling Lemma~\ref{lemma:simplerel}, we can define
 {\tt DDSC} to implement some simpler relationship $r$ instead of the
-true $DDS\!_C$ and use {\tt noCycle} defined by using $r$ instead of the true
+true $\mathit{DDS_C}$ and use {\tt noCycle} defined by using $r$ instead of the true
 $noCycle_c$. Module {\tt STATECyclefuns} defines an example of such
 {\tt DDSC}:
 %% =======================================================================
@@ -6088,12 +6081,12 @@ $noCycle_c$. Module {\tt STATECyclefuns} defines an example of such
 Since this {\tt DDSC} firstly finds the corresponding requirements of
 the given node, then finds the corresponding capabilities of the
 requirements, and finally finds and returns the parents of the
-capabilities, the true $DDS\!_C$ is obviously a subset of this {\tt
+capabilities, the true $\mathit{DDS_C}$ is obviously a subset of this {\tt
   DDSC}.  Moreover this {\tt DDSC} does not refer local states of
 objects and twelve transition rules of the example behavior model
 never change links of objects. It means that \stt{DDSC(X,$S$)} for any
-reachable global state $S$ from an initial state $S\!_0$ is the same as
-\stt{DDS(X,$S\!_0$)} and {\tt noCycle} defined by using {\tt DDSC} is an
+reachable global state $S$ from an initial state $\mathit{S_0}$ is the same as
+\stt{DDS(X,$\mathit{S_0}$)} and {\tt noCycle} defined by using {\tt DDSC} is an
 invariant. {\tt noCycle} can be defined using template module {\tt CYCLEPRED}
 as follows:
 
@@ -6199,9 +6192,9 @@ required to use for only one transition rule, {\tt R01}. For
 the TOSCA example, however, there are two transition rules, {\tt R01} and {\tt
   R02} which cause cyclic situations in the verification. Thus, we
 need to define two lemmas in advance.  One of them means that there is
-a contradiction when $DDS\!_C$ of the specified {\tt initial} resource
+a contradiction when $\mathit{DDS_C}$ of the specified {\tt initial} resource
 includes any {\tt initial} resources.  Another means that there is a
-contradiction when $DDS\!_C$ of the specified {\tt created} resource
+contradiction when $\mathit{DDS_C}$ of the specified {\tt created} resource
 includes any {\tt created} resources.  They are defined as the
 following two conditional equations:
 %% =======================================================================
@@ -6451,7 +6444,7 @@ Cyclic Dependency Lemma.
 \end{verbatim}
 \normalsize
 %% =======================================================================
-Thus, all cases are successfully proved and we can assume that $cont(S)$
+Thus, the all cases are successfully proved and we can assume that $cont(S)$
 holds for any reachable global state $S$ which include an {\tt initial} node.
 
 Another similar lemma claims that if there is a {\tt created} node in
@@ -7160,7 +7153,7 @@ condition of the current rule does or does not hold in the next state.
 \end{verbatim}
 \normalsize
 %% =======================================================================
-All cases are successfully proved.
+The all cases are successfully proved.
 
 %% ===============================================================
 \subsection{Proof of Condition~(\ref{exp:cond3})}
@@ -7406,9 +7399,9 @@ different models of system including from four to fifteen components
 in which from 1.4 thousand to 1.4 million transitions are generated
 and checked. They found a bug of their specification because checked
 models fortunately included error cases. The model checking method can
-verify correctness of checked models and so they should include all
+verify correctness of checked models and so they should include the all
 boundary cases. In our formalization, the specification itself is
-verified by interactive theorem proving in which all boundary cases
+verified by interactive theorem proving in which the all boundary cases
 are necessary in consideration in a systematic way. It achieves
 structural and deep understanding that is required to develop trusted
 systems.
@@ -7430,7 +7423,7 @@ activated, the script sends a success signal to the URL, which causes
 the WaitCondition become active and then creation of dependent VM$_1$
 starts. This style of management includes several problems. Firstly,
 it forces complicated and troublesome coding of operations.  Secondly,
-although only SC$_1$ should wait for SC$_2$, all other components on
+although only SC$_1$ should wait for SC$_2$, the all other components on
 VM$_1$ are also forced to wait. This causes unnecessary slowdown of
 system creation. Thirdly, it tends to make cyclic
 dependencies. Suppose SC$_2$ should also wait for another component
@@ -7532,13 +7525,13 @@ represent, and verify the behavior models of the standard
 specification language, OASIS TOSCA, of cloud orchestration where the
 standard has not yet provided any ways to do so.
 
-The major contributions of this paper are (1) it shows that cloud
+The major contributions of this paper are that (1) it shows that cloud
 orchestration is a practical and suitable domain to apply interactive
 theorem proving and (2) it introduces the idea of frameworks from
 software development to proof development which results in high
 productivity and high maintainability of proofs.
 
-All \cafeobj codes of the framework and example proof scores in this paper
+The all \cafeobj codes of the framework and example proof scores in this paper
 can be downloaded at \url{https://github.com/yuki-yoshida/JAIST}.
 
 \appendix

@@ -3,7 +3,7 @@ provide BAG
 mod! BAG(X :: TRIV) {
   [Elt.X < Bag]
   op empty : -> Bag {constr}
-  op _ _ : Bag Bag -> Bag {constr assoc comm id: empty}
+  op _ _ : Bag Bag -> Bag {constr assoc comm}
   eq ((E:Elt.X B1:Bag) = (E B2:Bag)) = (B1 = B2) .
   --
   op _U_ : Bag Bag -> Bag
