@@ -130,16 +130,9 @@ system operations such as setting up, scaling, patching, and so on.
 The total automation of system operations is sometimes called
 ``Infrastructure as Code'' (IaC).
 
-Correctness of automated operations of cloud systems is much more
-crucial than that of the former systems because cloud systems serve to
-much more people in much longer time than the former systems used
-mainly inside of companies. Cloud computing enables to easily,
-cheaply, and repeatedly prepare testing environments for applications,
-however, tests of system operations are meaningful intrinsically when
-done on production environments not on testing environments.  It means
-that test-based quality control is not sufficient for automated
-system operations.
-
+%% ===============================================================
+\section{Correctness of Automated Operations of Cloud Systems}
+%% ===============================================================
 A system on cloud consists of many ``parts,'' such as virtual machines
 (VMs), storages, and network services as well as software packages,
 configuration files, and user accounts in VMs. These parts are called
@@ -159,52 +152,105 @@ configuration files, copying contents, and activating an Httpd
 component. Shell command scripts were commonly used for this layer of
 management and recently several open source tools become popular such
 as {\it Puppet}~\cite{Puppet}, {\it Chef}~\cite{Chef}, and {\it
-  Ansible}~\cite{Ansible}. People have to learn and use these
-several kinds of tools in actual situations, which results in much
-elaboration to guarantee its correctness. In an actual commercial
-experience of the author, more than 50\% of troubles are caused by
-defects in those dependency definitions and scripts.
+  Ansible}~\cite{Ansible}. Currently operation engineers have to learn
+and use these several kinds of tools in actual situations, which
+results in much elaboration to guarantee correctness of automated
+operations. In an actual commercial experience of the author, more
+than 50\% of troubles are caused by defects in those dependency
+definitions and scripts.
 
-While orchestration tools are specialized into two management layers,
-on IaaS and inside VMs, there is a unified standard specification
-language, {\it OASIS TOSCA}~\cite{TOSCA} that can be used to describe
-the structure of both types of resources. The resource structure is
-called a {\it topology} and a TOSCA tool is expected to automate
-system operations based on resource dependencies declaratively defined
-by topologies.  Currently, however, there is no practical
-implementation of declarative specifications of TOSCA because it has
-not yet explicitly provided any ways to specify behavior of a topology,
-i.e.\ how to automate a topology.
+Correctness of cloud orchestration is much more crucial than that of
+the former systems because cloud systems serve to much more people in
+much longer time than the former systems used mainly inside of
+companies. Although cloud computing enables to easily, cheaply, and
+repeatedly prepare testing environments for cloud systems, test-based
+quality control is not sufficient for automated system operations
+because a cloud system is a kind of distributed systems and it is not
+possible to exhaustively test all of its behavior which may occur at
+various situations in the production environment. In practice, typical
+and problematic defects of automated system operations often occur at
+unusual situations, for example, when activation of some component is
+much delayed because of unexpected heavy accesses to file or database
+systems or when some component accidentally terminates and it returns
+no response. In order to test operations at unusual situations,
+Netflix, an American video on demand company, has been using a
+resiliency tool, named {\it Chaos Monkey} ~\cite{ChaosMonkey}, which
+intentionally and randomly terminates some components of their system
+in the production environment. Chaos is controlled to occur during
+business hours of weekdays so that operation engineers can solve the
+problems and learn from them when automated operations fail to deal
+with the situations.
 
-We believe formal approaches will provide systematic ways to guarantee
-correctness of cloud orchestration. Formal approaches are mainly
-classified into two categories, {\it model checking} and {\it theorem
-  proving}. Model checking methods are based on exhaustive analysis of
-states of transition systems and can automatically find counter
-examples included in the specified models. However, the sizes of models
-are limited and thus absence of counter examples can not be proved.
-On the other hand, theorem proving can verify models of arbitrary many
-number of states and so suitable for proving absence of counter
-examples. It requires thinking through meanings of the specified
-models, which is very important aspect of developing trusted
-systems. However, when applying to practical problems, it requires many
-human efforts to develop proofs for splitting the cases, establishing
-lemmas, and proving them in the course of verification.
+%% ===============================================================
+\section{Theorem Proving Framework for Cloud Orchestration}
+%% ===============================================================
+We believe formal approaches will provide more systematic ways to
+guarantee correctness of cloud orchestration because they have
+theoretical bases to exhaustively test all possible behavior of cloud
+systems.  Formal approaches have a long research history of more than
+half a century and many theories and techniques together with the
+remarkable evolution of computing power enable to apply them to
+various domains, such as automotive software, mobile IC chip firmware,
+financial and military applications, and so on.
 
-This paper proposes a framework of interactive proof development for a
-kind of liveness properties, {\it leads-to} property, of cloud
-orchestration. Here we say ``framework'' to mean something like an
-application framework of software development. For example, Ruby on
-Rails (RoR)~\cite{RoR} is one of the most popular application
-frameworks. RoR defines an MVC architecture of web applications,
-provides super classes and utility classes to implement the
-architecture, and gives developers a guide for how to design and code
-web applications. Focusing on a specific application domain, namely web
-applications, RoR brings high productivity by minimizing development
-efforts and high maintainability by consistent structure of
-applications.
+However, it is difficult, as ever, to apply formal approaches to
+practical scale problems because they require distinctive knowledge
+and skills and there are not enough number of engineers who have
+acquired such knowledge and skills. In the computer company, the
+author is working for, there has been many trial projects applying
+various formal approaches, several selected engineers were trained for
+each projects, and most of the trials were reported as succeeded. But
+none of them was expanded to apply to practical projects after trained
+engineers dispersed.
 
-Similarly, our framework provides a general formalization of cloud
+A shortage of competent engineers is a very common problem when a new
+technology is applied to practical scale problems. For example, about
+twenty years ago we had to shift our software development methods from
+structured models to object oriented models. Many projects suffered
+from lack of object oriented architects and Java programmer and some
+of them lost several million dollars. However, object orientation
+becomes a matured technology nowadays and many large scale
+applications are developed using object oriented architectures. It is
+not because the shortage of competent engineers is fully resolved.
+Instead, we successfully make use of high reusability of object
+oriented designs and programs especially as {\it application
+  frameworks}.
+
+For example, Ruby on Rails (RoR)~\cite{RoR} is one of the most popular
+application frameworks. RoR defines an MVC architecture of web
+applications, provides super classes and utility classes to implement
+the architecture, and gives developers a guide for how to design and
+code web applications. RoR brings high productivity by minimizing
+development efforts and high maintainability by consistent structure
+of applications.  In general, an application framework focuses on a
+specific application domain and provides (1) a general application
+model which defines structure and behavior of applications in the
+domain, (2) abstract reusable entities, i.e. super classes and
+utility classes, which can be instantiated to implement the
+application model, and (3) procedures which define how the developers
+design, program, and configure their own applications. Using an
+application framework is a very popular approach to raise the skill
+level of novice engineers and to enable a large number of engineers to
+efficiently develop a practical scale application with the consistent
+structure and behavior.
+
+This paper proposes a ``framework' of interactive proof development
+for a kind of liveness properties, {\it leads-to} property, of cloud
+orchestration. The most important property of an automated system
+operation, which we want to guarantee, is that the operation surely
+brings a cloud system to a desired state.  We say ``surely'' to mean
+that the system always reaches some final state from any initial
+states which is formalized as ($init~\mbstt{leads-to}~final$).  There
+are two major difficulties to verify the reachability.  One is to find
+sufficient conditions for the reachability. The framework assists
+proof developers how to construct them for their own problem.  Another
+difficulty is to manage acyclicness of resource dependency.  In a
+cloud system, dependency among resources should not become cyclic in
+order to reach a desired state. The framework provides how to
+formalize and prove the invariant property of the acyclicness.
+
+Similarly to application frameworks in software development, the
+theorem proving framework provides a general formalization of cloud
 orchestration specifications of different kinds of tools and provides
 a procedure for how to verify leads-to properties, and also invariant
 properties, of the specifications. It also provides logic templates
@@ -212,8 +258,134 @@ and predicate libraries which are defined in a general level of
 abstraction and can be instantiated as problem specific descriptions,
 predicates, and lemmas. Using them, the verification procedure assists
 developers to systematically think and develop proofs of leads-to
-properties.
+properties.  The theorem proving framework is expected to raise the
+skill level of proof developers and to enable a number of engineers to
+efficiently develop a practical scale proofs of cloud orchestration
+with the consistent structure.
 
+%% ===============================================================
+\section{Domain Specific Verification using Formal Approaches}
+%% ===============================================================
+This section describes an overview of existing research for domain
+specific verification of system behavior using formal approaches.
+
+Verification methods using formal approaches are mainly classified
+into two categories, {\it model checking} and {\it theorem
+  proving}. Model checking methods are based on exhaustive analysis of
+states of transition systems and can automatically find counter
+examples included in the specified models. However, the sizes of
+models are limited and thus absence of counter examples can not be
+proved.  On the other hand, theorem proving can verify models of
+arbitrary many number of states and so suitable for proving absence of
+counter examples. It requires thinking through meanings of the
+specified models, which is very important aspect of developing trusted
+systems. However, when applying to practical problems, it requires
+many human efforts to develop proofs for splitting the cases,
+establishing lemmas, and proving them in the course of verification.
+
+Model checking has been used for verification of software behavior
+since 1990's.  For example, Magee, J., et al.~\cite{MageeKG99} used
+model checking to verify safety and liveness properties of software
+architecture. Resently, Sala{\"u}n, G., et
+al.~\cite{EtcheversCBP11,SalaunBCPEG13,SalaunEPBC13} designed a system
+setup protocol in the cloud and demonstrated to verify a liveness
+property of the protocol using their model checking method.
+
+The German Verisoft project~\cite{Verisoft} researches verification of
+a whole software stack from verified hardware to verified application
+programs. In the project, Alkassar, E., et
+al.~\cite{Alkassar:JAR-42-2-38} used the Isabelle/HOL theorem prover
+to verify functional correctness of their page-fault handler in which
+program properties are specified by the Hoare logic, transferred
+or mapped to several lower stack layers, and finally implemented
+by a hardware instruction set. They proved more than twelve thousands
+of lemmas and wrote more than 244 kilo proof steps. They found some
+difficulty to keep a consistent style of proof development in such
+scale of problem which is described as follows:
+\vspace{-0.3cm}
+\begin{quotation}
+``The theories were developed by various people from different sites
+with different backgrounds and Isabelle offers its users quite some
+opportunity to develop an individual proof style. Some prefer rather
+small steps others try to push automation as far as possible. Some
+prefer the ‘apply’ style, which often leads a large number of
+intermediate lemmas, others structure their proofs with Isar.''
+\end{quotation}
+
+Klein, G. et al.~\cite{KleinEHACDEEKNSTW09} also used the Isabelle/HOL
+theorem prover to verify functional correctness of OS Kernel. They
+wrote 4900 lines of the abstract specification, 5700 lines of the
+Haskel prototype which is automatically converted to the executable
+specification, and 8700 lines of the C program which is converted to
+the implementation specification. They proved two step refinements
+(from abstract to executable and from executalbe to implementation
+level) using the forward simulation method and wrote about 200 kilo
+proof steps. Since they focused functional correctness, they do not
+ensure correctness of the abstract specification.
+
+Silva, R., et al.~\cite{SilvaB09} proposed reuse of Event-B proofs.
+Tikhonova, U., et al.~\cite{TikhonovaMBAV13} applied this idea to
+verify LACE DSL programs for controlling lithography machines.
+
+One of the major contributions of this paper is to introduce the idea
+of frameworks from software development to proof development. Compared
+to existing researches for domain specific verification, our framework
+has several unique features;
+\vspace{-0.3cm}
+\begin{itemize}
+\setlength{\parskip}{0cm}
+\setlength{\itemsep}{0cm}
+\item our framework supports verification of leads-to property as well as invariant property,
+\item uses interactive theorem proving to prove absence of counter examples,
+\item provides abstract reusable entities and abstract proved lemmas for high productivity, and
+\item provides a procedure to develop consistent proofs for high maintainability.
+\end{itemize}
+
+%% ===============================================================
+\section{Standard Specificaion Language of Cloud Orchestration}
+%% ===============================================================
+The second major contribution of this paper is to show that the idea
+of theorem proving framework can be effectively used for a non-trivial
+problem, that is, to specify, represent, and verify the behavior
+models of the standard specification language of cloud orchestration
+where the standard has not yet provided any ways to do so.
+
+While orchestration tools are specialized into two management layers,
+on IaaS and inside VMs, there is a unified standard specification
+language, {\it OASIS TOSCA}~\cite{TOSCA} that can be used to describe
+the structure of both types of resources. The resource structure is
+called a {\it topology} and a TOSCA tool is expected to automate
+system operations based on resource dependencies declaratively defined
+by topologies.
+
+TOSCA assumes two main engineering roles, namely a type architect and
+an application architect. In a typical scenario, type architects
+define and provide several types of resources and an application
+architect uses them to define a topology of a cloud system. The type
+architect also defines {\it operations}\footnote{In this paper, we say
+  {\it a type operation} as an operation of a type whereas TOSCA calls
+  it {\it a lifecycle operation}.} of resource types, such as
+creating, starting, stopping, or deleting resources. A system
+operation of a cloud system is implemented as an invocation sequence
+of the type operations, which can be decided in two kinds of
+manners. One is an imperative manner in which the application
+architect uses a process modeling language to define a plan that
+explicitly invokes these type operations. Another is a declarative one
+in which the application architect only defines a topology and a TOSCA
+tool will automatically invoke appropriate type operations based on
+the defined topology. Naturally, the declarative manner is a main
+target of OASIS TOSCA because it promotes more abstract and reusable
+descriptions of topologies.
+
+Currently there are no practical implementations of the declarative
+manner of TOSCA and one of the reasons is that no standard set of type
+operations are defined and there is no way for type architects to
+define behavior of their own types.  In
+Section~\ref{sec:TOSCAbehavior}, we will describe how to use our
+framework to define behavior of TOSCA types and to verify that a
+specified topology can correctly automate to set up the cloud system.
+
+\vspace{0.3cm}
 The rest of this paper is organized as
 follows. Chapter~\ref{chap:cloudorch} introduces several cloud
 orchestration tools. Chapter~\ref{chap:pre} introduces functionalities
@@ -229,7 +401,7 @@ specifications.  Chapter~\ref{chap:conclusion} explains related work
 and future issues.
 
 %% ===============================================================
-\chapter{Cloud Orchestration}
+\chapter{Cloud Orchestration Tools}
 \label{chap:cloudorch}
 %% ===============================================================
 
@@ -617,24 +789,23 @@ has a {\it type}, such as {\tt VirtualMachine}, {\tt HostedOn}, and so
 on. Types are main functionalities of TOSCA that enable reusability of
 topology descriptions.
 
-TOSCA assumes two main engineering roles, namely a type architect and an
-application architect. In a typical scenario, type architects define
-and provide several types of those elements and an application
-architect uses them to define a topology of a cloud system. The
-type architect also defines {\it operations}\footnote{In this paper, we say
-  {\it a type operation} as an operation of a type whereas TOSCA calls
-  it {\it a lifecycle operation}.} of node types, such as creating,
-starting, stopping, or deleting nodes, and of relationship types, such
-as attaching relationships. A system operation of a cloud system
-is implemented as an invocation sequence of the type operations, which
-can be decided in two kinds of manners. One is an imperative manner in
-which the application architect uses a process modeling language to
-define a plan that explicitly invokes these type operations. Another
-is a declarative one in which the application architect only defines a
-topology and a TOSCA tool will automatically invoke appropriate type
-operations based on the defined topology. Naturally, the declarative
-manner is a main target of OASIS TOSCA because it promotes more
-abstract and reusable descriptions of topologies.
+TOSCA assumes two main engineering roles, namely a type architect and
+an application architect. In a typical scenario, type architects
+define and provide several types of those elements and an application
+architect uses them to define a topology of a cloud system. The type
+architect also defines {\it operations} of node types, such as
+creating, starting, stopping, or deleting nodes, and of relationship
+types, such as attaching relationships. A system operation of a cloud
+system is implemented as an invocation sequence of the type
+operations, which can be decided in two kinds of manners. One is an
+imperative manner in which the application architect uses a process
+modeling language to define a plan that explicitly invokes these type
+operations. Another is a declarative one in which the application
+architect only defines a topology and a TOSCA tool will automatically
+invoke appropriate type operations based on the defined
+topology. Naturally, the declarative manner is a main target of OASIS
+TOSCA because it promotes more abstract and reusable descriptions of
+topologies.
 
 In this paper, {\it behavior of topologies} means when
 and which type operations should be invoked in automation. It is
@@ -647,14 +818,6 @@ vendors and so specified by different type architects. An application
 architect is responsible for behavior of a topology
 whereas type architects are responsible for behavior of
 their defined types.
-
-Currently there are no practical implementations of the declarative
-manner of TOSCA and one of the reasons is that no standard set of type
-operations of nodes or relationships are defined and there is no way
-for type architects to define behavior of their own types.  In
-Section~\ref{sec:TOSCAbehavior}, we will describe how to use our
-framework to define behavior of TOSCA types and to verify that a
-specified topology can correctly automate to set up the cloud system.
 
 %% ===============================================================
 \chapter{Preliminaries of \cafeobj}
@@ -2535,11 +2698,12 @@ mutually dependent and no transition rule could be applied.
 In order to start transitions and reach a desired final state, a cloud
 system should not include such cyclic dependency. Verification of the
 system requires (1) to formalize that the dependency is acyclic, (2)
-to prove the invariant property of the acyclicness, and (3) to prove that
-when acyclic there exists at least one applicable transition rule and the
-state machine continues to transit. The framework provides a template module
-to formalize acyclicness of dependency for (1) and a lemma that
-guarantees existence of applicable rules for (3).
+to prove the invariant property of the acyclicness, and (3) to prove
+that when acyclic there exists at least one applicable transition rule
+and the state machine continues to transit. The framework provides a
+template module to formalize acyclicness of dependency for (1) and a
+lemma that guarantees existence of applicable rules for (3). It also
+provides several common techniques and proved lemmas for (2).
 
 %% ===============================================================
 \subsubsection{Formalization of Dependency and Acyclicness}
@@ -2671,7 +2835,7 @@ dependency in $S$.
 \end{definition}
 For example, $DS(\mbstt{myEIP},\mathit{S_0}) =
 \{~\mbstt{myEIP::InsID},\mbstt{myInstance}~\}$ because {\tt myEIP}
-depends on \stt{myEIP::InsID} in $\mathit{S_0}$ w.r.t.\ {\tt R01} and
+depends on\\ \stt{myEIP::InsID} in $\mathit{S_0}$ w.r.t.\ {\tt R01} and
 \stt{myEIP::InsID} depends on {\tt myInstance} in $\mathit{S_0}$ w.r.t.\ {\tt
   R02}. Since the depending set of {\tt myEIP} does not include {\tt
   myEIP} itself, {\tt myEIP} is in no cyclic dependency in $\mathit{S_0}$, and
@@ -2918,7 +3082,7 @@ Thereby, when these rules are applied, the depending sets will become
 smaller than in the previous global states.
 
 \begin{lemma}[Depending Subset Lemma]
-Let $S$ and $S'$ be global states.  If $DS(X,S')\subseteq DS(X,S)$ for all
+Let $S$ and $S'$ be global states, then if $DS(X,S')$ $\subseteq DS(X,S)$ for all
 objects $X$ in $S$, then $noCycle(S) \ra noCycle(S')$.
 \end{lemma}
 Proof: $noCycle(S)$ means that $X\not\in DS(X,S)$ for any $X$ in $S$,
@@ -3134,8 +3298,12 @@ of sufficient conditions for it as follows:
 \end{lemma}
 Definition~\ref{def:leadsto} of ($p~\mbstt{leads-to}~q$) includes the
 case where there is an infinite transition sequence
-$\alpha=(\mathit{S_0},\mathit{S_1},\dots)$ such that predicate $q$ never holds,
-$\forall \mathit{S_i}\in\alpha:\neg q(\mathit{S_i})$. However, \stt{leads-to} may be
+$\alpha_{\infty}\!=\!(\mathit{S_0},\mathit{S_1},\dots)$ such that predicate $q$ never holds in $\alpha_{\infty}$,
+$\forall \mathit{S_i}\!\in\!\alpha_{\infty}\!:\!\neg q(\mathit{S_i})$,
+but any prefix of $\alpha_{\infty}$ reaches a state where $q$ holds,
+$\forall \alpha_i\!=\!(\mathit{S_0},\dots,\mathit{S_i}),\exists T\!\in\!\mathit{St},
+\exists\beta\!\in\!\Theta\!:\!(q(T) \land S\alpha_i\beta T\in \Theta))$.
+However, \stt{leads-to} may be
 defined in a narrower sense where no such infinite transition sequence
 is allowed. Here, we call the former as {\it weak-leads-to} and the
 latter as {\it strong-leads-to}. The set of conditions proposed by
@@ -4843,8 +5011,8 @@ The following list describes the role and content of each module:
   \item Define predicates {\tt invK}, {\tt initinv}, and {\tt invinv}.
   \end{enumerate}
 \item {\tt Proofinv-*  Proofwfs-*}\\
-  Module for proving each invariant. The name of this module is usually
-  {\tt Proof+} $name\_of\_invariant$.
+  Module for proving each invariant. \\The name of this module is usually
+  {\tt Proof+}$name\_of\_invariant$.
   \begin{enumerate}
   \item Protecting import {\tt ProofInv}.
   \item Define predicates {\tt invK} to be the invariant.
@@ -5159,7 +5327,7 @@ the requirement. The local states of requirements are {\tt unbound},
 {\tt waiting}, and {\tt ready}.
 
 
-Since a relationship links to its corresponding capability and
+Since a relationship links to both of its corresponding capability and
 requirement, module {\tt RELATIONSHIP} for its class protecting
 includes {\tt CAPABILITY} and {\tt REQUIREMENT} as follows:
 %% =======================================================================
@@ -7368,7 +7536,7 @@ affected when something is modified.
 
 Similarly as application frameworks of software development, our
 framework not only provides reusable entities to reduce the size of
-codes of proof but also guides users how to design the models and how
+codes of proof but also assists users how to design the models and how
 to systematically think and develop proofs, which brings high
 productivity by minimizing development efforts and high
 maintainability by consistent structure of models and proofs.
@@ -7388,12 +7556,16 @@ al.~\cite{EtcheversCBP11,SalaunBCPEG13,SalaunEPBC13} designed a system
 setup protocol and demonstrated to verify a liveness property of the
 protocol using their model checking method. Although their setup
 protocol is essentially the same as the behavior model of our TOSCA
-example in this paper, there are two main differences. Firstly, their
+example in this paper, there are three main differences.
+
+Firstly, their
 protocol is based on a specific implementation which challenges
 distributed management of cloud resources while current popular
 implementations, e.g. CloudFormation, use centralized management. On
 the other hand, our model is rather abstract without assuming
-distributed or centralized implementations. Secondly, they used model
+distributed or centralized implementations.
+
+Secondly, they used model
 checking while we use theorem proving. They checked about 150
 different models of system including from four to fifteen components
 in which from 1.4 thousand to 1.4 million transitions are generated
@@ -7404,7 +7576,12 @@ boundary cases. In our formalization, the specification itself is
 verified by interactive theorem proving in which the all boundary cases
 are necessary in consideration in a systematic way. It achieves
 structural and deep understanding that is required to develop trusted
-systems.
+systems. 
+
+Thirdly, they call a function to check the acyclicness of resource
+dependency whenever a transition occurs whereas our framework provides
+formalization, a template module, and lemmas to prove the invariant
+property of the acyclicness.
 
 %% ===============================================================
 \subsubsection{Dependency Management between Internal Resources}
