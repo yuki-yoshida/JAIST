@@ -16,7 +16,7 @@
 \author{Hiroyuki Yoshida}
 \school{Information Science}
 \adviser{Professor Kokichi Futatsugi}
-\date{December 03, 2016}
+\date{March\ \ 2017}
 %% <local definitions here>
 \newtheorem{lemma}{Lemma}
 
@@ -52,19 +52,20 @@
 \vspace{20pt}
 \addcontentsline{toc}{chapter}{Abstract}
 %\begin{abstract}
-An interactive theorem proving framework for verifying liveness
-properties of declarative cloud orchestration is proposed.
+An interactive theorem proving framework for verifying declarative
+cloud orchestration is proposed.
 
 Recent rapid progress of cloud computing accelerates the whole life
 cycle of system usage and requires much flexible automation of system
 operations. Automation of cloud system operations is called cloud
 orchestration and correctness of cloud orchestration becomes much
 crucial for many activities in the human society.  However,
-correctness of automated system operations cannot depend on testing-based
-quality control because tests of them are meaningful intrinsically
-when done on production environments not on testing environments.
-Formal approaches are expected to provide systematic ways to guarantee
-correctness of cloud orchestration.
+correctness of automated cloud system operations cannot depend on
+testing-based quality control because a cloud system is a kind of
+distributed systems and it is not possible to exhaustively test all of
+its behavior which may occur at various situations in the production
+environment. Formal approaches are expected to provide systematic
+ways to guarantee correctness of cloud orchestration.
 
 Formal approaches are mainly classified into two categories, model
 checking and theorem proving. As opposed to model checking, theorem
@@ -92,27 +93,32 @@ The framework has been applied to the verification of specifications
 of AWS CloudFormation and also of OASIS TOSCA, and is demonstrated to
 be effective for reducing generic routine work and making a
 verification engineer concentrate on the work specific to each
-individual system. The example of OASIS TOSCA shows that the framework
+individual system. The case study of OASIS TOSCA shows that the framework
 can be used to specify, represent, and verify the behavior models of
 TOSCA where the standard has not yet provided any ways to do so. It
 also shows a general way to manage dependencies of cloud resources
 which is a smarter one than that of the most popular tool,
 CloudFormation.
 
-The major contributions of this paper are that (1) it shows that cloud
-orchestration is a practical and suitable domain to apply interactive
-theorem proving and (2) it introduces the idea of frameworks from
-software development to proof development which results in high
-productivity and high maintainability of proofs.
+The major contributions of this paper are that (1) it introduces the
+idea of frameworks from software development to proof development
+which results in high productivity and high maintainability of proofs
+and (2) it shows that the framework can be effectively applied to a
+non-trivial problem, that is, to specify, represent, and verify the
+behavior models of the standard specification language of cloud
+orchestration.
+
 %\end{abstract}
-%% \keyword{cloud orchestration, OASIS TOSCA, AWS CloudFormation, system
-%% specification/verification, theorem proving, state machines, proof
-%% scores, CafeOBJ}
+
+\vspace{0.3cm} {\bf Key Words:\ } Cloud Orchestration, System
+Specification/Verification, Theorem Proving, Framework, Proof Scores,
+CafeOBJ
+
 \include{eack}
 
 \tableofcontents
 \listoffigures
-%\listoftables
+\listoftables
 \newpage
 \pagenumbering{arabic}
 \setcounter{page}{1}
@@ -170,16 +176,19 @@ possible to exhaustively test all of its behavior which may occur at
 various situations in the production environment. In practice, typical
 and problematic defects of automated system operations often occur at
 unusual situations, for example, when activation of some component is
-much delayed because of unexpected heavy accesses to file or database
-systems or when some component accidentally terminates and it returns
-no response. In order to test operations at unusual situations,
-Netflix, an American video on demand company, has been using a
-resiliency tool, named {\it Chaos Monkey} ~\cite{ChaosMonkey}, which
-intentionally and randomly terminates some components of their system
-in the production environment. Chaos is controlled to occur during
-business hours of weekdays so that operation engineers can solve the
-problems and learn from them when automated operations fail to deal
-with the situations.
+much delayed because of unexpected heavy accesses to file/database
+systems or when accidental termination of some component occurs and it
+returns no responses. In order to test operations at unusual
+situations, Netflix, an American video on demand company, has been
+using a resiliency tool, named {\it Chaos Monkey} ~\cite{ChaosMonkey},
+which intentionally and randomly terminates some components of their
+system in the production environment. Chaos is controlled to occur
+during business hours of weekdays so that operation engineers can
+solve the problems and learn from them when automated operations fail
+to deal with the situations. Reinhold, E.~\cite{Reinhold16}, an
+engineer of Uber, the most famous online transportation network
+company, reported that they are using a similar resiliency tools,
+named {\it uDestroy}, to unleash controlled chaos on their services.
 
 %% ===============================================================
 \section{Theorem Proving Framework for Cloud Orchestration}
@@ -197,24 +206,24 @@ However, it is difficult, as ever, to apply formal approaches to
 practical scale problems because they require distinctive knowledge
 and skills and there are not enough number of engineers who have
 acquired such knowledge and skills. In the computer company, the
-author is working for, there has been many trial projects applying
+author is working for, there have been many trial projects applying
 various formal approaches, several selected engineers were trained for
 each project, and most of the trials were reported as succeeded. But
 none of them was expanded to apply to practical projects after trained
 engineers dispersed.
 
-A shortage of competent engineers is a very common problem when a new
+The shortage of competent engineers is a very common problem when a new
 technology is applied to practical scale problems. For example, about
 twenty years ago we had to shift our software development methods from
 structured models to object oriented models. Many projects suffered
-from lack of object oriented architects and Java programmer and some
-of them lost several million dollars. However, object orientation
-becomes a matured technology nowadays and many large-scale
-applications are developed using object oriented architectures. It is
-not because the shortage of competent engineers is fully resolved.
-Instead, we successfully make use of high reusability of object
-oriented designs and programs especially as {\it application
-  frameworks}.
+from lack of competent object oriented architects and Java programmer,
+which is a major reason why some of them lost several million
+dollars. However, object orientation becomes a matured technology
+nowadays and many large-scale applications are developed using object
+oriented architectures. It is not because the shortage of competent
+engineers is fully resolved.  Instead, now we successfully make use of
+high reusability of object oriented designs and programs especially as
+{\it application frameworks}.
 
 For example, Ruby on Rails (RoR)~\cite{RoR} is one of the most popular
 application frameworks. RoR defines an MVC architecture of web
@@ -234,20 +243,21 @@ level of novice engineers and to enable a large number of engineers to
 efficiently develop a practical scale application with the consistent
 structure and behavior.
 
-This paper proposes a ``framework' of interactive proof development
+This paper proposes a ``framework'' of interactive proof development
 for a kind of liveness properties, {\it leads-to} property, of cloud
 orchestration. The most important property of an automated system
 operation, which we want to guarantee, is that the operation surely
 brings a cloud system to a desired state.  We say ``surely'' to mean
 that the system always reaches some final state from any initial
-states which is formalized as ($init~\mbstt{leads-to}~final$).  There
-are two major difficulties to verify the reachability.  One is to find
-sufficient conditions for the reachability. The framework assists
-proof developers how to construct them for their own problem.  Another
-difficulty is to manage acyclicness of resource dependency.  In a
-cloud system, dependency among resources should not become cyclic in
-order to reach a desired state. The framework provides how to
-formalize and prove the invariant property of the acyclicness.
+states, which is formalized as ($init~\mbstt{leads-to}~final$).  There
+are two major difficulties to verify the reachability of cloud
+orchestration.  One is to find sufficient conditions for the
+reachability. The framework assists proof developers how to construct
+the sufficient conditions for their own problem.  Another difficulty
+is to manage acyclicness of resource dependency.  In a cloud system,
+dependency among resources should not become cyclic in order to reach
+a desired state. The framework provides how to formalize and prove the
+invariant property of the acyclicness.
 
 Similarly to application frameworks in software development, the
 theorem proving framework provides a general formalization of cloud
@@ -264,18 +274,37 @@ efficiently develop a practical scale proofs of cloud orchestration
 with the consistent structure.
 
 %% ===============================================================
-\section{Domain Specific Verification using Formal Approaches}
+\section{Formal Verification of System Behavior}
 %% ===============================================================
-This section describes an overview of existing research for domain
-specific verification of system behavior using formal approaches.
+One major approach of formal verification of system behavior is {\it
+  model checking} which is based on exhaustive analysis of states of
+transition systems and can automatically find counter examples
+included in the specified models. However, the sizes of models are
+limited and thus absence of counter examples cannot be proved.
 
-Verification methods using formal approaches are mainly classified
-into two categories, {\it model checking} and {\it theorem
-  proving}. Model checking methods are based on exhaustive analysis of
-states of transition systems and can automatically find counter
-examples included in the specified models. However, the sizes of
-models are limited and thus absence of counter examples can not be
-proved.  On the other hand, theorem proving can verify models of
+Model checking has been used for verification of software behavior
+since 1990's.  For example, Magee, J., et al.~\cite{MageeKG99} used
+model checking to verify safety and liveness properties of software
+architecture. Cornejo, M. A., et al.~\cite{CornejoGMP01} specified an
+existing (and commonly used) dynamic reconfiguration protocol in LOTOS
+(Language Of Temporal Ordering Specification) and verified several
+temporal properties, such as ``every reconfiguration command is
+eventually followed by an acknowledgment'', using model checking
+techniques of the CADP tool set. Vassev, E., et al.~\cite{VassevHQ09}
+applied model checking to autonomic computing in the NASA Voyager
+mission. They show that liveness properties, such as ``a picture taken
+by the Voyager will eventually be result in sending a message to
+antennas on Earth'', specified by ASSL (Autonomic System Specification
+Language), can be verified. Song, J., et al.~\cite{song2010towards}
+used the SPIN model checker to verifiy two invariant properties of a
+self-configuration procedure for autonomous networks of cellular base
+stations.  Recently, Sala{\"u}n, G., et
+al.~\cite{EtcheversCBP11,SalaunBCPEG13,SalaunEPBC13} designed a system
+setup protocol in the cloud and demonstrated to verify a liveness
+property of the protocol using their model checking method.
+
+The framework proposed in this paper supports another approach, namely
+{\it interactive theorem proving}, which can verify models of
 arbitrary many number of states and so suitable for proving absence of
 counter examples. It requires thinking through meanings of the
 specified models, which is very important aspect of developing trusted
@@ -283,23 +312,28 @@ systems. However, when applying to practical problems, it requires
 many human efforts to develop proofs for splitting the cases,
 establishing lemmas, and proving them in the course of verification.
 
-Model checking has been used for verification of software behavior
-since 1990's.  For example, Magee, J., et al.~\cite{MageeKG99} used
-model checking to verify safety and liveness properties of software
-architecture. Recently, Sala{\"u}n, G., et
-al.~\cite{EtcheversCBP11,SalaunBCPEG13,SalaunEPBC13} designed a system
-setup protocol in the cloud and demonstrated to verify a liveness
-property of the protocol using their model checking method.
+There also exist several researches to apply the theorem proving
+approach to practical problems. Klein, G. et
+al.~\cite{KleinEHACDEEKNSTW09} also used the Isabelle/HOL theorem
+prover to verify functional correctness of OS Kernel. They wrote 4900
+lines of the abstract specification, 5700 lines of the Haskell
+prototype which is automatically converted to the executable
+specification, and 8700 lines of the C program which is converted to
+the implementation specification. They proved two step refinements
+(from abstract to executable and from executable to implementation
+level) using the forward simulation method and wrote about 200 kilo
+proof steps. Since they focused functional correctness, they do not
+ensure correctness of the abstract specification.
 
 The German Verisoft project~\cite{Verisoft} researches verification of
 a whole software stack from verified hardware to verified application
 programs. In the project, Alkassar, E., et
 al.~\cite{Alkassar:JAR-42-2-38} used the Isabelle/HOL theorem prover
 to verify functional correctness of their page-fault handler in which
-program properties are specified by the Hoare logic, transferred
-or mapped to several lower stack layers, and finally implemented
-by a hardware instruction set. They proved more than twelve thousands
-of lemmas and wrote more than 244 kilo proof steps. They found some
+program properties are specified by the Hoare logic, transferred or
+mapped to several lower stack layers, and finally implemented by a
+hardware instruction set. They proved more than twelve thousands of
+lemmas and wrote more than 244 kilo proof steps. They found some
 difficulty to keep a consistent style of proof development in such
 scale of problem which is described as follows:
 \vspace{-0.3cm}
@@ -312,25 +346,28 @@ prefer the ‘apply’ style, which often leads a large number of
 intermediate lemmas, others structure their proofs with Isar.''
 \end{quotation}
 
-Klein, G. et al.~\cite{KleinEHACDEEKNSTW09} also used the Isabelle/HOL
-theorem prover to verify functional correctness of OS Kernel. They
-wrote 4900 lines of the abstract specification, 5700 lines of the
-Haskell prototype which is automatically converted to the executable
-specification, and 8700 lines of the C program which is converted to
-the implementation specification. They proved two step refinements
-(from abstract to executable and from executable to implementation
-level) using the forward simulation method and wrote about 200 kilo
-proof steps. Since they focused functional correctness, they do not
-ensure correctness of the abstract specification.
+Silva, R., et al.~\cite{SilvaB09} proposed a generic instantiation
+approach to reuse proofs for Event-B. Using the composing and renaming
+plug-ins for the Rodin platform (a tool set for Event-B), they defined
+a way of instantiating generic models and defined sufficient proof
+obligations to ensure that the proofs in a generic development remain
+valid in an instantiated development. Tikhonova, U., et
+al.~\cite{TikhonovaMBAV13} applied this idea to verify LACE DSL
+programs for controlling lithography machines. Although a part of
+proofs for the general specification can be instantiated and reused,
+the generated specifications are too large and the provers of Rodin
+fail to discharge instantiated theorems. They say that they do not
+expect their average user to prove these theorems using interactive
+provers, as it requires knowledge of propositional calculus and
+understanding of proof strategies. Thus, they only checked structural
+properties using an animation plug-in of Rodin.
 
-Silva, R., et al.~\cite{SilvaB09} proposed reuse of Event-B proofs.
-Tikhonova, U., et al.~\cite{TikhonovaMBAV13} applied this idea to
-verify LACE DSL programs for controlling lithography machines.
-
-One of the major contributions of this paper is to introduce the idea
-of frameworks from software development to proof development. Compared
-to existing researches for domain specific verification, our framework
-has several unique features:
+The existing researches of applying theorem proving to practical scale
+problems commonly reported that it requires much human efforts and the
+shortage of competent proof engineer is a remained problem, which is
+the main concern of this paper.  One of the major contributions of
+this paper is to introduce the idea of frameworks from software
+development to proof development which has a unique set of features:
 \vspace{-0.3cm}
 \begin{itemize}
 \setlength{\parskip}{0cm}
@@ -345,7 +382,7 @@ has several unique features:
 \section{Standard Specification Language of Cloud Orchestration}
 %% ===============================================================
 The second major contribution of this paper is to show that the idea
-of theorem proving framework can be effectively used for a non-trivial
+of theorem proving framework can be effectively applied to a non-trivial
 problem, that is, to specify, represent, and verify the behavior
 models of the standard specification language of cloud orchestration
 where the standard has not yet provided any ways to do so.
@@ -927,8 +964,9 @@ be collapsed; and {\tt using} means they can be added and collapsed.
 
 One sort {\tt Set} is declared and it is also declared that
 {\tt Elt.X} is a sub-sort of {\tt Set}. This is why an element is also
-a singleton set that only consists of the element. Operators may be
-constructors and a constructor without arguments is a constant. The
+a singleton set that only consists of the element. An operator which
+is not defined by any equations is a {\it constructor} and a
+constructor without arguments is a {\it constant}. The
 operator {\tt empty} is a constant of {\tt Set} and the juxtaposition
 operator {\tt \_ \_} is a constructor of {\tt Set}, where an
 underscore is the place where an argument is put. It is also specified
@@ -943,7 +981,7 @@ defined which mean union($\cup$), membership($\in$),
 intersection($\cap$), difference($\backslash$), and inclusion($\subseteq$) of sets respectively.
 Note that ``\stt{pred~Op~:~Sort1~Sort2}'' is an abbreviation for ``\stt{op~Op~:~Sort1~Sort2~->~Bool}.''
 
-Parameterized modules can be instantiated with modules as actual
+Parameterized modules can be instantiated together with modules as actual
 parameters through views. Let us consider the following module
 as an actual parameter of {\tt Set}:
 %% =======================================================================
@@ -1069,7 +1107,7 @@ rules until no one can be applied.
 \end{verbatim}
 \normalsize
 %% =======================================================================
-Rule {\tt c2o} makes global state \stt{<~sv(1,closed)~sv(2,open)~>} transit
+Rule {\tt c2o} makes state \stt{<~sv(1,closed)~sv(2,open)~>} transit
 to \stt{<~sv(1,open)~sv(2,open)~>} then rule {\tt o2r} makes transit
 it to \stt{<~sv(1,ready)~sv(2,open)~>} and successively makes it
 transit to \stt{<~sv(1,open)~sv(2,open)~>}. On the other hand,
@@ -2468,7 +2506,7 @@ section describes two of them with example usages.
   Let {\tt S\_X} be a set of linking objects, {\tt S\_Z} a set of
   linked objects, {\tt St\_X} a set of local states of linking
   objects, {\tt St\_Z} a set of local states of linked objects, and
-  {\tt SX} a local state of linking object where {\tt SX} is not
+  let {\tt SX} be a local state of linking object where {\tt SX} is not
   included in {\tt St\_X}. Then, \stt{allObjInStates(S\_X,St)} implies
   \stt{ifXInStatesThenZInStates(S\_X,St\_X,S\_Z,St\_Z)}.
 \end{lemma}
@@ -3343,36 +3381,30 @@ continues to transit until it reaches a final state.
   then the following six conditions are sufficient for
   ($init~\mbstt{leads-to}~final$) to hold.
   \begin{eqnarray}
-  \label{exp:cond1}
   \forall S\in \mathit{St}:&&(init(S)\ra cont(S))\\
-  \label{exp:cond2}
   \forall (S,S')\in \mathit{Tr}:&&((inv(S)\land\neg final(S))
   \ra(cont(S')\lor final(S')))\\
-  \label{exp:cond3}
   \forall (S,S')\in \mathit{Tr}:&&((inv(S)\land\neg final(S))\ra(m(S)> m(S')))\\
-  \label{exp:cond4}
   \forall S\in \mathit{St}:&&((inv(S)\land cont(S)\land(m(S) = 0))\ra final(S))\\
-  \label{exp:cond5}
   \forall S\in \mathit{St}:&&(init(S)\ra inv(S))\\
-  \label{exp:cond6}
-  \forall (S,S')\ \mathit{Tr}:&&(inv(S)\ra inv(S'))
+  \forall (S,S')\in \mathit{Tr}:&&(inv(S)\ra inv(S'))
   \end{eqnarray}
 \end{lemma}
 Proof: Let $p$ in the ``sufficient conditions for leads-to'' lemma
 be $cont$, then $\forall (S,S')\in \mathit{Tr}:p(S)=true$ holds and
 $\forall S\in \mathit{St}:(p(s)\ra\exists S'\in \mathit{St}:(S,S')\in \mathit{Tr})$. $\Box$\\
 
-Condition~(\ref{exp:cond1}) means an initial state should be a
+Condition~(1) means an initial state should be a
 continuing state, i.e.\ it should start
-transitions. Condition~(\ref{exp:cond2}) means transitions continue
-until $final(S')$ holds. Condition~(\ref{exp:cond3}) implies that
+transitions. Condition~(2) means transitions continue
+until $final(S')$ holds. Condition~(3) implies that
 $m(S)$ keeps to decrease properly while $final(S)$ does not
 hold. Since $m(S)$ is a natural number, it should stop to decrease in
 finite steps and the state machine should get to state $S'$ such that
 $((cont(S')\ \lor\ final(S'))$ $\land\ (m(S') = 0))$.
-Condition~(\ref{exp:cond4}) then ensures $final(S')$ holds. Here, $m$ is
+Condition~(4) then ensures $final(S')$ holds. Here, $m$ is
 called a {\it state measuring function}. When
-condition~(\ref{exp:cond5}) and~(\ref{exp:cond6}) hold, each state
+condition~(5) and~(6) hold, each state
 predicate included in $inv$ is called an invariant.
 
 The rest of this chapter explains the verification procedure for six
@@ -3588,7 +3620,7 @@ of constants for the CloudFormation example case:
 \normalsize
 %% =======================================================================
 %% ===============================================================
-\section{Procedure: Proof of Condition~(\ref{exp:cond1})}
+\section{Procedure: Proof of Sufficient Condition~(1)}
 \label{sec:initcont}
 %% ===============================================================
 The verification procedure is basically a process to repeat three
@@ -3598,7 +3630,7 @@ collectively cover the current case, (3) try to reduce the split cases
 to true.\\
 
 \noindent{\bf Step 1-0:} Define a predicate to be proved. \\
-Predicate {\tt initcont} to represent condition~(\ref{exp:cond1}) can be defined as follows:
+Predicate {\tt initcont} to represent condition~(1) can be defined as follows:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -3610,7 +3642,7 @@ Predicate {\tt initcont} to represent condition~(\ref{exp:cond1}) can be defined
 %% =======================================================================
 
 \noindent{\bf Step 1-1:} Begin with the most general case. \\ In the
-most general case for proof of condition~(\ref{exp:cond1}), the global
+most general case for proof of condition~(1), the global
 state consists of arbitrary constants every of which represents an
 arbitrary set of objects of each class. For the CloudFormation example
 case, the most general case is as follows where {\tt sRS} and {\tt
@@ -3787,7 +3819,7 @@ contradiction and the goal of this case is proved.
 
 The following is the result of a ``\stt{show proof}'' command, which shows
 that goals of the all split cases are proved and thus
-condition~(\ref{exp:cond1}) is proved.
+condition~(1) is proved.
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -3810,17 +3842,17 @@ Figure~\ref{fig:procedure1} summarizes the procedure.
 \begin{figure}
 \centering
 \includegraphics[height=11cm,natwidth=720,natheight=405,clip,trim=100 55 190 40]{procedure1.png}
-\caption{Verification Procedure for Condition~(\ref{exp:cond1})}
+\caption{Verification Procedure for Condition~(1)}
 \label{fig:procedure1}
 \end{figure}
 
 %% ===============================================================
-\section{Procedure: Proof of Condition~(\ref{exp:cond2})}
+\section{Procedure: Proof of Sufficient Condition~(2)}
 \label{sec:contcont}
 %% ===============================================================
 \noindent{\bf Step 2-0:} Define a predicate to be proved. \\ Using the
 double negation idiom in Section~\ref{sec:searchpredicate}, predicate
-{\tt contcont} for condition~(\ref{exp:cond2}) can be defined as follows:
+{\tt contcont} for condition~(2) can be defined as follows:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -3842,7 +3874,7 @@ double negation idiom in Section~\ref{sec:searchpredicate}, predicate
 
 \noindent{\bf Step 2-1:} Begin with the cases each of which matches to
 LHS of each rule. \\
-Since condition~(\ref{exp:cond2}) checks every possible next state of
+Since condition~(2) checks every possible next state of
 a given state $S$, we only need to prove the cases each of which
 matches to each rule. For the CloudFormation example case, we can
 begin with two cases for two rules as follows, which are too general:
@@ -3863,7 +3895,7 @@ begin with two cases for two rules as follows, which are too general:
 \normalsize
 %% =======================================================================
 
-The rest of this section describes the procedure for condition~(\ref{exp:cond2})
+The rest of this section describes the procedure for condition~(2)
 using the case of rule {\tt R01} as an example. The case of rule {\tt R02} will
 be explained in Section~\ref{sec:initialcont}.\\
 
@@ -3959,8 +3991,8 @@ Again the Set Predicate Lemma can be used similarly as Step 1-4 as follows:
 \end{verbatim}
 \normalsize
 %% =======================================================================
-The goal of Case 1-2-1 is proved. Case 1-2-2 remains unproved and this is somewhat
-troublesome for \cafeobj system.
+The goal of Case 1-2-1 is proved. Case 1-2-2 remains unproved and this
+is somewhat troublesome for \cafeobj system.
 
 Remember that in Step 2-2 we already introduced an equation which
 claims that every property of the resource {\tt idRS} in the set of
@@ -4069,7 +4101,7 @@ The goal of this case is proved by the contradiction.
 
 The following is the result of a ``\stt{show proof}'' command, which shows
 that goals of the all split cases are proved and thus
-condition~(\ref{exp:cond2}) for rule {\tt R01} is proved:
+condition~(2) for rule {\tt R01} is proved:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -4092,23 +4124,23 @@ Figure~\ref{fig:procedure2} summarizes the procedure for each transition rule.
 \begin{figure}
 \centering
 \includegraphics[height=12cm,natwidth=720,natheight=405,clip,trim=60 0 180 0]{procedure2.png}
-\caption{Verification Procedure for Condition~(\ref{exp:cond2}) for each rule}
+\caption{Verification Procedure for Condition~(2) for each rule}
 \label{fig:procedure2}
 \end{figure}
 
 %% ===============================================================
-\section{Procedure: Proof of Condition~(\ref{exp:cond3})}
+\section{Procedure: Proof of Sufficient Condition~(3)}
 \label{sec:mesmes}
 %% ===============================================================
-Since the antecedent part of condition~(\ref{exp:cond3}) is equivalent
-to~(\ref{exp:cond2}), the proof procedure of~(\ref{exp:cond3}) is
-almost the same as of~(\ref{exp:cond2}). \\
+Since the antecedent part of condition~(3) is equivalent
+to~(2), the proof procedure of~(3) is
+almost the same as of~(2). \\
 
 \noindent{\bf Step 3-0:} Use natural number axioms. \\
 Since the standard sort {\tt Nat} of \cafeobj does not have enough
 knowledge to deduce natural number expressions, the framework provides
-several axioms to be used for proof of condition(\ref{exp:cond3}) and
-(\ref{exp:cond4}).  The following is one of those axioms to be used
+several axioms to be used for proof of condition~(3) and
+(4).  The following is one of those axioms to be used
 for the CloudFormation example:
 %% =======================================================================
 \small
@@ -4121,7 +4153,7 @@ for the CloudFormation example:
 
 \noindent{\bf Step 3-1:} Define a predicate to be proved.\\
 Using the double negation idiom in Section~\ref{sec:searchpredicate},
-predicate {\tt mesmes} for condition~(\ref{exp:cond3}) can be defined
+predicate {\tt mesmes} for condition~(3) can be defined
 as follows:
 %% =======================================================================
 \small
@@ -4151,7 +4183,7 @@ For the CloudFormation example case, we can begin with two cases for
 two rules. Since rule {\tt R01} is conditional, the general case
 should be split into two cases according to Step 3-3. Then, the goals
 of totally three cases can be proved and thus
-condition~(\ref{exp:cond3}) is proved as follows:
+condition~(3) is proved as follows:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -4179,7 +4211,7 @@ condition~(\ref{exp:cond3}) is proved as follows:
 %% =======================================================================
 
 %% ===============================================================
-\section{Procedure: Proof of Condition~(\ref{exp:cond4})}
+\section{Procedure: Proof of Sufficient Condition~(4)}
 \label{sec:mesfinal}
 %% ===============================================================
 \noindent{\bf Step 4-0:} Use natural number axioms. \\
@@ -4203,7 +4235,7 @@ Note that {\tt NzNat} is a subsort of {\tt Nat} which does not
 include {\tt 0}.\\
 
 \noindent{\bf Step 4-1:} Define a predicate to be proved. \\ Predicate
-         {\tt mesfinal} for condition~(\ref{exp:cond4}) can be defined as follows:
+         {\tt mesfinal} for condition~(4) can be defined as follows:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -4223,7 +4255,7 @@ cases where the condition of the rule does or does not hold.
 For the CloudFormation example case, we can begin with two cases for
 two rules. Since rule {\tt R01} is conditional, the general case
 should be split into two cases according to Step 4-3. Then, the goals
-of totally three cases can be proved and thus condition~(\ref{exp:cond4}) is proved
+of totally three cases can be proved and thus condition~(4) is proved
 as follows:
 %% ===============================================================
 \small
@@ -4252,7 +4284,7 @@ as follows:
 %% ===============================================================
 
 %% ===============================================================
-\section{Procedure: Proof of Condition~(\ref{exp:cond5}) \&~(\ref{exp:cond6})}
+\section{Procedure: Proof of Sufficient Condition~(5) \&~(6)}
 \label{sec:invariant}
 %% ===============================================================
 Since predicate $inv$ is a conjunction of typically many predicates, it is
@@ -4280,7 +4312,7 @@ provides many lemmas for predefined predicates, it is easy to
 prove the invariant property of such a predicate. \\
 
 \noindent{\bf Step 5-0:} Define a predicate to be proved. \\ Predicate
-         {\tt initinv} for condition~(\ref{exp:cond5}) can be defined
+         {\tt initinv} for condition~(5) can be defined
          as follows:
 %% =======================================================================
 \small
@@ -4300,7 +4332,7 @@ prove the invariant property of such a predicate. \\
 predicates. \\
 As described in Section~\ref{sec:linklemma}, proved lemma {\tt
   m2o-lemma07} can be instantiated and used for proof of
-condition~(\ref{exp:cond5}) as follows:
+condition~(5) as follows:
 %% ===============================================================
 \small
 \begin{verbatim}
@@ -4338,7 +4370,7 @@ general goal.\\
 
 \noindent{\bf Step 6-0:} Define a predicate to be proved. \\ Using the
 double negation idiom, predicate {\tt invinv} for
-condition~(\ref{exp:cond6}) can be defined as follows:
+condition~(6) can be defined as follows:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -4368,7 +4400,7 @@ predicates. \\ Rule {\tt R02} increases {\tt ready} properties which
 has intuitively no effect on \\ {\tt inv-ifRSStartedThenPRReady}. As
 explained in Section~\ref{sec:linklemma}, proved lemma {\tt
   m2o-lemma11} ensures it and can be used for proof of
-condition~(\ref{exp:cond6}) as follows:
+condition~(6) as follows:
 %% ===============================================================
 \small
 \begin{verbatim}
@@ -4405,7 +4437,7 @@ conditional, the general case should be split into two cases according
 to Step 6-3. The first case should be split into more two cases
 where the set of properties is or is not empty.
 Then, the goals of totally four cases can be proved and
-thus condition~(\ref{exp:cond6}) is proved as follows:
+thus condition~(6) is proved as follows:
 %% ===============================================================
 \small
 \begin{verbatim}
@@ -4442,7 +4474,7 @@ thus condition~(\ref{exp:cond6}) is proved as follows:
 %% ===============================================================
 We should prove the all wfs predicates as invariants, however, they are
 included in $init$ and so we only need to prove
-condition~(\ref{exp:cond6}) for each of them. Most of them check some
+condition~(6) for each of them. Most of them check some
 structural constraints of the cloud systems, which should usually keep
 to hold when some transition rule only changes a local state and
 does not change any links of some
@@ -4465,7 +4497,7 @@ Here we use {\tt wfs-allPRHaveRS} as an example to show the procedure.\\
 \noindent{\bf Step 6-1:} Instantiate proved lemmas for predefined
 predicates. \\ Since {\tt wfs-allPRHaveRS} uses the predefined
 predicate {\tt allZHaveX}, the proved lemma \\ {\tt m2o-lemma05} can be
-instantiated and used for proof of condition~(\ref{exp:cond6}) as
+instantiated and used for proof of condition~(6) as
 follows:
 %% ===============================================================
 \small
@@ -4520,11 +4552,11 @@ cases where the condition of the rule does or does not hold.
 %% ===============================================================
 We should prove the invariant property of $noCycle_C(S)$ in order to
 use the Cyclic Dependency Lemma, however, it is included in $init$ and
-thus we only need to prove condition~(\ref{exp:cond6}) for $noCycle_C$.
+thus we only need to prove condition~(6) for $noCycle_C$.
 The Depending Subset Lemma described in Section~\ref{sec:lemma}
 ensures that we should prove that $\forall (S,S') \in \mathit{Tr}, \forall X\in
 C:\mathit{DDS_C}(X,S')\subseteq \mathit{DDS_C}(X,S)$ instead of
-condition~(\ref{exp:cond6}).\\
+condition~(6).\\
 
 \noindent{\bf Step 6-0:} Define a predicate to be proved. 
 %% =======================================================================
@@ -4658,7 +4690,7 @@ consider cases where {\tt x} is or is not {\tt idRS} or {\tt idRRS}.
 \section{A Lemma for Using Cyclic Dependency Lemma}
 \label{sec:initialcont}
 %% ===============================================================
-Let us return to proof of condition~(\ref{exp:cond2}) for rule {\tt
+Let us return to proof of condition~(2) for rule {\tt
   R02}.\\
 
 \noindent{\bf Step 2-1:} Begin with the cases each of which matches to
@@ -4726,7 +4758,7 @@ Thereby, it is wise to define a lemma and use it in the similar cases.
 The lemma claims that if there is an {\tt initial} resource in a
 global state then there exists a transition rule applicable to the
 global state. It can be proved very similar to the proof of
-condition~\ref{exp:cond1} as follows.
+condition~1 as follows.
 
 \noindent{\bf Step 1-0:} Define a predicate to be proved.
 %% =======================================================================
@@ -4851,7 +4883,7 @@ Assuming that $inv$ holds, this lemma can be used as follows:
 \end{verbatim}
 \normalsize
 %% =======================================================================
-Then, the proof of the sufficient condition~(\ref{exp:cond2}) for rule
+Then, the proof of the sufficient condition~(2) for rule
 {\tt R02} becomes very simple as follow:
 %% =======================================================================
 \small
@@ -4896,7 +4928,7 @@ name means a template module.
 
 \begin{figure}
 \centering
-\includegraphics[height=10cm,natwidth=720,natheight=405,clip,trim=90 80 130 20]{modules.png}
+\includegraphics[height=9.5cm,natwidth=720,natheight=405,clip,trim=90 80 130 20]{modules.png}
 %%trim=left bottom right top
 \caption{Recommended Module Structure}
 \label{fig:modules}
@@ -4974,21 +5006,21 @@ The following list describes the role and content of each module:
   \item Prepare arbitrary constants to use in the verification.
   \end{enumerate}
 \item {\tt ProofInitCont}\\
-  Module for proving sufficient condition~(\ref{exp:cond1}).
+  Module for proving sufficient condition~(1).
   \begin{enumerate}
   \item Protecting import {\tt ProofBase}.
   \item Define predicate {\tt initcont}.
   \item Define problem specific lemmas if any.
   \end{enumerate}
 \item {\tt ProofContCont}\\
-  Module for proving sufficient condition~(\ref{exp:cond2}).
+  Module for proving sufficient condition~(2).
   \begin{enumerate}
   \item Protecting import {\tt ProofBase}.
   \item Define predicate {\tt contcont}.
   \item Define problem specific lemmas if any.
   \end{enumerate}
 \item {\tt ProofMeasure}\\
-  Module for proving sufficient condition~(\ref{exp:cond3}).
+  Module for proving sufficient condition~(3).
   \begin{enumerate}
   \item Protecting import {\tt ProofBase}.
   \item Define predicate {\tt mesmes}.
@@ -4996,7 +5028,7 @@ The following list describes the role and content of each module:
   \item Define problem specific lemmas if any.
   \end{enumerate}
 \item {\tt ProofMesFinal}\\
-  Module for proving sufficient condition~(\ref{exp:cond4}).
+  Module for proving sufficient condition~(4).
   \begin{enumerate}
   \item Protecting import {\tt ProofBase}.
   \item Define predicate {\tt mesfinal}.
@@ -5005,7 +5037,7 @@ The following list describes the role and content of each module:
   \end{enumerate}
 \item {\tt ProofInv}\\
   Module for common definitions for proving sufficient
-  condition~(\ref{exp:cond5}) and (\ref{exp:cond6}).
+  condition~(5) and (6).
   \begin{enumerate}
   \item Protecting import {\tt ProofBase}.
   \item Define predicates {\tt invK}, {\tt initinv}, and {\tt invinv}.
@@ -5019,6 +5051,124 @@ The following list describes the role and content of each module:
   \item Define lemmas if necessary.
   \end{enumerate}
 \end{itemize}
+
+%% ===============================================================
+\section{Considerations on Sound Proof Scores}
+\label{sec:soundProof}
+%% ===============================================================
+%% ===============================================================
+\subsection{Usage of Equivalent Operator \_ == \_}
+%% ===============================================================
+As described in Section~\ref{sec:searchpredicate}, $term1$ {\tt ==}
+$term2$ reduces to {\tt true} if both terms are reduced to be the same
+term and to {\tt false} otherwise. On the other hand, $term1$ {\tt =}
+$term2$ reduces to {\tt true} iff $term1$ {\tt ==} $term2$ reduces to
+{\tt true}. This means that there is a case where $term1$ {\tt ==}
+$term2$ reduces to {\tt false} and $term1$ {\tt =} $term2$ does not
+so. Thus the users should not carelessly use \_ == \_ operator because
+it may lead unintended results.
+
+The framework recommends to use \_ == \_ operator only in the
+following three cases:
+\begin{enumerate}
+\item As equal operator \_ = \_ for literals: \\
+  Three of sorts provided by the framework, such as ObjIDLt, ObjTypeLt
+  and ObjStateLt, are to represent literals. A literal is a constant
+  for which the framework predefines a special equality predicate such
+  that $\_ = \_$ is exactly the same as $\_ == \_ $ . Since a Boolean
+  term ``$ literal_1 = literal_2 $'' always reduces to false, the
+  users should not write such Boolean terms in their proof scores.
+\item In the double negation idiom: \\
+  As described in Section~\ref{sec:searchpredicate}, the double
+  negation idiom uses ``$\_ == true$'' to stop the search when
+  there is a next state where the specified condition cannot
+  reduce to either true or false.
+\item To keep the confluence property in the case splitting:\\ The
+  following set of three equations are not confluent because
+  \stt{p(s)} reduces to true when equation (2) is used but it also
+  reduces to \stt{p(s')} when equation (3) is firstly used:
+  \begin{verbatim}
+    pred p : SetOfObject
+    eq p(O:Object S:SetOfObject) = p(S) . -- (1)
+    ops s s' : -> SetOfObject
+    op o : -> Object
+    eq p(s) = true .                      -- (2)
+    eq s = (o s') .                       -- (3)
+  \end{verbatim}\vspace{-0.6cm}
+  As described in Section~\ref{sec:contcont}, this situation sometimes
+  occurs when being guided by the proof procedure of the
+  framework. For example, in the current case, \stt{p(s)} matches to
+  the condition part of a transition rule and the case should be split
+  into two more cases where set of object \stt{s}, is or not is
+  empty. While we may avoid this situation by changing the order of
+  the case splitting guided by the framework, it requires careful
+  considerations and results in difficult proof scores to understand
+  and maintain. Thus, we decided to recommend to write proof codes
+  which explicitly ensure the confluent property as follows:
+  \begin{verbatim}
+    :set(normalize-init,on)
+    :init ( ceq B1:Bool = true if not B2:Bool . ) by {
+      B1:Bool <- p(s) ;
+      B2:Bool <- p(s) == true ;
+    }
+    :set(normalize-init,off)
+  \end{verbatim}\vspace{-0.6cm}
+  When \cafeobj processes as \stt{p(s)} reduces to true, the \stt{:init}
+  command introduces the following meaningless equation:
+  \begin{verbatim}
+    ceq true = true if not true .
+  \end{verbatim}\vspace{-0.6cm}
+  Otherwise, when \stt{p(s)} reduces to \stt{p(s')}, it introduces the
+  following desired equation:
+  \begin{verbatim}
+    ceq p(s') = true if not false .
+  \end{verbatim}
+\end{enumerate}
+
+%% ===============================================================
+\subsection{Usage of Search Predicates}
+%% ===============================================================
+When the behavior model is not {\it coherent}, search predicates may
+not be able to search all possible transitions.  Coherence means that,
+given a global state term $S$, for any next state $S^R$ of $S$ such
+that some transition rule $R$ makes $S$ transit to $S^R$, if $S$
+reduces to $S'$ then there exists some rule $R'$ which makes $S'$
+transit to $S^{R'}$ such that both $S^R$ and $S^{R'}$ reduce to the
+same global state term $S^*$~\cite{Maude14}.  Otherwise, there may be
+two different next states of $S$ and a search predicate can search
+only one of them depending on whether transition rules or equations
+are used firstly.
+
+In general, it is difficult to keep behavior model coherent. However,
+if the users of the framework go along with the following rule, then
+search predicates can search next states of the given global state
+terms without depending on the order to use transition rules and
+equations:
+\begin{enumerate}
+\item A global state term included in the top goal of a proof should
+  be a ground constructor term, e.g., \stt{< sRS,sPR >}.
+\item When a current case is split and a constant in the current goal
+  is defined as a more detailed term, it should be a ground
+  constructor term, e.g., \stt{eq sRS = (res(trs',idRS,srs') sRS') .}
+  Moreover, any pair of equations added for the case splitting do not
+  have the same LHS.
+\item A global state term included in LHS or RHS of a transition rule
+  should be a constructor term, e.g., \stt{< (res(TRS,IDRS,started)
+    SetRS), SetPR >}.
+\end{enumerate}
+
+%% ===============================================================
+\subsection{Usage of the Double Negation Idiom}
+%% ===============================================================
+It should be noted that the double negation idiom always returns true
+when there is no next state. The typical pitfall is to give the idiom
+a global state term which does not match to any LHS and condition of
+transition rules. Since the idiom is used for the sufficient
+conditions (2) (3) and (6), the users of the framework should
+carefully check the goal of proofs in Step 2-1, 2-2, 3-2, 3-3, 6-2,
+and 6-3. A simple but effective way to check it is to remove the inner
+``\stt{not}'' in the double negation idiom and see that the goal does
+not reduce to true.
 
 %% ===============================================================
 \chapter{Applying the Framework to TOSCA Specifications}
@@ -5572,7 +5722,7 @@ states of linked objects, and $ty$ is a type of an object:
   setls)$.
 \item \stt{getZsOfTypeOfX} (as \stt{getCPsOfTypeOfND} and \stt{getRQsOfTypeOfND})\\
   Operator used as \stt{getZsOfTypeOfX($seto$,$ty$,$\mathit{lobj}$)} which
-  returns a subset $seto$ each of whose element object is of type $ty$
+  returns a subset $seto$ each of\\ whose element object is of type $ty$
   and links to $\mathit{lobj}$.
 \item \stt{getZsOfTypeOfXInStates}\\
   (as \stt{getCPsOfTypeOfNDInStates} and \stt{getRQsOfTypeOfNDInStates})\\
@@ -5872,7 +6022,7 @@ requirements, and $pool$ is a message pool\footnote{Note that here we
 \item \stt{ifConnectsToCPInStatesThenRQInStatesOrOpenMsg} (categorized as (1) (2))\\ 
   Predicate used as
   \stt{ifConnectsToCPInStatesThenRQInStatesOrOpenMsg($setCP$,$setlCP$,\\$setRQ$,$setlRQ$,$setRL$,$pool$)}
-  which holds iff every {\tt connectsTo} capability included in
+  which holds iff every {\tt connectsTo} capability in
   $setCP$ whose local sate is included in $setlCP$ has the
   corresponding requirement included in $setRQ$ whose local state is
   in $setlRQ$ or has the corresponding open message included in
@@ -5977,10 +6127,10 @@ detailed definitions of them in English:
     $available$ and changes the local state of the requirement from $unbound$
     to $ready$.
   \end{itemize}
-\item[] Invocation Rule of Operations DependsOn Relationship Type:
+\item[] Invocation Rule of Operations of DependsOn Relationship Type:
   \begin{itemize}
   \item $CAPOPEN$ operation can be invoked if the target node is
-    already created and changes the local state of its capability from
+    already created. It changes the local state of its capability from
     $closed$ to $open$.
   \item $CAPAVAILABLE$ operation can be invoked if the target node is
     $started$ and changes the local state of its capability from
@@ -6140,7 +6290,8 @@ represented by a transition rule of \cafeobj as follows:
 \label{sec:TOSCAverification}
 %% ===============================================================
 This section presents the verification of the liveness property of
-setup operations of the TOSCA models. As described in
+setup operations of the TOSCA models consisting of four node types,
+three relationship types, and twelve transition rules. As described in
 Chapter~\ref{chap:verification}, reachability of setup operations of
 cloud systems is formalized as ($init~\mbstt{leads-to}~final$) and
 there are six sufficient conditions for it.
@@ -6888,11 +7039,11 @@ $cont(S)$ holds for any reachable global state $S$ which include a
 {\tt created} node.
 
 %% ===============================================================
-\subsection{Proof of Condition~(\ref{exp:cond1})}
+\subsection{Proof of Sufficient Condition~(1)}
 \label{sec:TOSCAinitcont}
 %% ===============================================================
 \noindent{\bf Step 1-0:} Define a predicate to be proved. \\
-The proof of condition~(\ref{exp:cond1}) requires to use the
+The proof of condition~(1) requires to use the
 initial-cont lemma:
 %% =======================================================================
 \small
@@ -6966,14 +7117,14 @@ node.
 %% =======================================================================
 Case 2-1 is proved by the initial-cont lemma. In other cases,
 $init(S)$ does not hold for the global state $S$. Thus, sufficient
-condition~(\ref{exp:cond1}) is proved.
+condition~(1) is proved.
 
 %% ===============================================================
-\subsection{Proof of Condition~(\ref{exp:cond2})}
+\subsection{Proof of Sufficient Condition~(2)}
 \label{sec:TOSCAcontcont}
 %% ===============================================================
 \noindent{\bf Step 2-0:} Define a predicate to be proved. \\ 
-The proof of condition~(\ref{exp:cond2}) requires to use both of the
+The proof of condition~(2) requires to use both of the
 initial-cont lemma and the created-cont lemma:
 %% =======================================================================
 \small
@@ -7111,7 +7262,7 @@ The followings are cases for twelve transition rules:
 \normalsize
 %% =======================================================================
 
-The rest of this section describes the proof of condition~(\ref{exp:cond2})
+The rest of this section describes the proof of condition~(2)
 for rule {\tt R06} as an example.
 %% =======================================================================
 \small
@@ -7324,13 +7475,13 @@ condition of the current rule does or does not hold in the next state.
 The all cases are successfully proved.
 
 %% ===============================================================
-\subsection{Proof of Condition~(\ref{exp:cond3})}
+\subsection{Proof of Sufficient Condition~(3)}
 \label{sec:TOSCAmesmes}
 %% ===============================================================
 \noindent{\bf Step 3-0:} Use natural number axioms. \\
 The framework provides a module, {\tt NATAXIOM}, which defines several
 natural number axioms to be used for proof of
-condition(\ref{exp:cond3}) and (\ref{exp:cond4}).  Module {\tt
+condition~(3) and (4).  Module {\tt
   ProofMeasure} should protecting import {\tt NATAXIOM} as well as
 {\tt ProofBase}:
 %% =======================================================================
@@ -7366,7 +7517,7 @@ condition(\ref{exp:cond3}) and (\ref{exp:cond4}).  Module {\tt
 
 \noindent{\bf Step 3-2:} Begin with the cases each of which matches to
 LHS of each rule. \\ 
-Here we show the proof of condition~(\ref{exp:cond3}) for rule {\tt R06}
+Here we show the proof of condition~(3) for rule {\tt R06}
 as an example:
 %% =======================================================================
 \small
@@ -7394,10 +7545,10 @@ cases where the condition of the rule does or does not hold.
 \end{verbatim}
 \normalsize
 %% =======================================================================
-Condition~(\ref{exp:cond3}) for other rules can be similarly proved.
+Condition~(3) for other rules can be similarly proved.
 
 %% ===============================================================
-\subsection{Proof of Condition~(\ref{exp:cond4})}
+\subsection{Proof of Sufficient Condition~(4)}
 \label{sec:TOSCAmesfinal}
 %% ===============================================================
 \noindent{\bf Step 4-0:} Use natural number axioms. \\
@@ -7427,7 +7578,7 @@ well as {\tt ProofBase}:
 
 \noindent{\bf Step 4-2:} Begin with the cases each of which matches to
 LHS of each rule. \\ 
-Here we show the proof of condition~(\ref{exp:cond3}) for rule {\tt R06}
+Here we show the proof of condition~(3) for rule {\tt R06}
 as an example:
 %% =======================================================================
 \small
@@ -7455,15 +7606,66 @@ cases where the condition of the rule does or does not hold.
 \end{verbatim}
 \normalsize
 %% ===============================================================
-Condition~(\ref{exp:cond4}) for other rules can be similarly proved.
+Condition~(4) for other rules can be similarly proved.
 
 %% ===============================================================
 \section{Evaluation}
 \label{sec:evaluation}
 %% ===============================================================
+Table~\ref{table:goalscases} shows the number of proved goals and
+split cases to verify the liveness property of setup operations of the
+TOSCA models consisting of four node types, three relationship types,
+and twelve transition rules. Condition (1) requires only one goal and
+6 cases whereas (2) (3) and (4) require 12 goals each of which
+is for each of 12 transition rules. Condition (5) also requires 12
+goals for each of 12 invariants and (6) requires 144 goals for
+each combination of 12 invariants and 12 rules. We need 25
+problem specific lemmas each of which requires one goal.
+The verification consists of totally 216 goals which
+are split into 948 cases.
+
+\begin{table}[hbtp]
+  \caption{Number of goals and cases}
+  \label{table:goalscases}
+  \centering
+  \begin{tabular}{lrlr}
+    \hline
+      targets & goals  & (1 goal for each of ?) & cases \\
+    \hline \hline
+    Condition (1)  & 1  & (condition) & 6 \\
+    Condition (2)  & 12 & (12 rules) & 115  \\
+    Condition (3)  & 12 & (12 rules) & 30 \\
+    Condition (4)  & 12 & (12 rules) & 30 \\
+    Condition (5)  & 12 & (12 invariants) & 18  \\
+    Condition (6)  & 144 & (12 rules $\times$ 12 invariants) & 443  \\
+    Lemmas  & 25 & (25 lemmas) & 306  \\
+    \hline    \hline
+    Total  & 218  & & 948 \\
+    \hline
+  \end{tabular}
+\end{table}
+
 %% ===============================================================
 \subsubsection{Rate of Reuse}
 %% ===============================================================
+Table~\ref{table:reuse} shows the reuse rate of entities provided
+by the framework.
+
+\begin{table}[hbtp]
+  \caption{Reuse rate of entities provided by the framework}
+  \label{table:reuse}
+  \centering
+  \begin{tabular}{lrrrr}
+    \hline
+      entities & total  & reused & defined & reuse rate \\
+    \hline \hline
+    Sorts  & 37  & 37 & 0 & 100\% \\
+    Operators  & 218 & 142 & 76 & 65\%  \\
+    Lemmas  & 38 & 13 & 25 & 34\% \\
+    \hline
+  \end{tabular}
+\end{table}
+
 We need 37 sorts to represent the TOSCA structure models and all of
 them can be just instantiated and renamed from predefined sorts
 provided by the framework.
@@ -7499,23 +7701,46 @@ Section~\ref{sec:TOSCAstructRep}, there are three kinds of them:
   should be hosted on exactly one VM node.
 \end{itemize}
 
+The proofs of the TOSCA example need 38
+lemmas, 13 of which are already proved by the framework in a general
+level of abstraction. Reminding 25 lemmas are required to prove
+condition~(5) and (6) for invariants about
+three kinds of problem specific operators described above.
+
 %% ===============================================================
 \subsubsection{Size of Codes}
 %% ===============================================================
+Table~\ref{table:LOC} shows the number of lines of codes we write to
+very the leads-to property. The ``potential'' column shows the
+potential number of lines if we write proofs not using the framework.
+
+\begin{table}[hbtp]
+  \caption{Lines of Codes}
+  \label{table:LOC}
+  \centering
+  \begin{tabular}{llrrr}
+    \hline
+       & & written  & potential & reduce rate \\
+    \hline \hline
+    \multicolumn{2}{l}{Model} & 598 & 1784 & 66\% \\
+    & Structure  & 527 & 1713 & 69\%  \\
+    & Behavior  & 71 & 71 & 0\% \\
+    \hline
+    \multicolumn{2}{l}{Proofs} & 3991 & 4516 & 12\% \\
+    \hline
+  \end{tabular}
+\end{table}
+
 The representation of the TOSCA model in \cafeobj consists of about
 600 lines of codes not including comment lines. About 530 lines of codes
 represent the structure model and 70 lines represent twelve rules. We
-estimate that the size of the structure model representation is 40\%
+estimate that the size of the structure model representation is 30\%
 compared to when we would code it without using the framework, whereas
 the size of the behavior model (transition rules) is the same.
 
 The size of codes for proofs is essentially the same as when not using
-the framework because reusable codes for proofs are proved lemmas
-provided by the framework. The proofs of the TOSCA example need 36
-lemmas, 13 of which are already proved by the framework in a general
-level of abstraction. Reminding 23 lemmas are required to prove
-condition~(\ref{exp:cond5}) and (\ref{exp:cond6}) for invariants about
-three kinds of problem specific operators described above.
+the framework because reusable codes for proofs are 13 proved lemmas
+provided by the framework. 
 
 %% ===============================================================
 \subsubsection{Consistent Structure of Proof}
@@ -7549,6 +7774,37 @@ maintainability by consistent structure of models and proofs.
 \section{Related Work}
 %% ===============================================================
 %% ===============================================================
+\subsubsection{Reuse of Abstract Proofs}
+%% ===============================================================
+There are very few existing researches on reuse of proofs. Silva, R.,
+et al.~\cite{SilvaB09} proposed a generic instantiation approach to
+reuse proofs for Event-B. Using the functionality to compose machines
+(Shared Event Composition plug-in) and rename elements (Refactory
+plug-in) of the Rodin platform, they defined a way of instantiating
+generic models and defined sufficient proof obligations to ensure that
+the proofs in a generic development remain valid in an instantiated
+development. Tikhonova, U., et al.~\cite{TikhonovaMBAV13} applied this
+idea to verify LACE DSL programs for controlling lithography
+machines. They implemented transformation from LACE programs to
+Event-B specifications which are composed using instantiated machines
+from a general specification.  Although a part of proofs for the
+general specification can be instantiated and reused, the generated
+specifications are too large and the provers of Rodin fail to
+discharge instantiated theorems. They say that they do not expect
+their average user to prove these theorems using interactive provers,
+as it requires knowledge of propositional calculus and understanding
+of proof strategies. Thus, they only checked structural properties
+using an animation plug-in, ProB, of Rodin.
+
+However reusing abstract entities by renaming and composing is a
+similar approach to our framework, Silva, R., et al. did not provide
+any actually reusable entities whereas out framework provides general
+templates, libraries, lemmas, and a procedure reusable in a specific
+domain. Tikhonova, U., et al. applied the idea to the domain of the
+lithography machine control, however, they did not reuse generally
+proved properties to prove the instantiated specifications.
+
+%% ===============================================================
 \subsubsection{Formal Approach for Cloud Orchestration}
 %% ===============================================================
 Sala{\"u}n, G., et
@@ -7556,29 +7812,32 @@ al.~\cite{EtcheversCBP11,SalaunBCPEG13,SalaunEPBC13} designed a system
 setup protocol and demonstrated to verify a liveness property of the
 protocol using their model checking method. Although their setup
 protocol is essentially the same as the behavior model of our TOSCA
-example in this paper, there are three main differences.
+example in this paper, there are four main differences.
 
-Firstly, their
-protocol is based on a specific implementation which challenges
-distributed management of cloud resources while current popular
-implementations, e.g. CloudFormation, use centralized management. On
-the other hand, our model is rather abstract without assuming
-distributed or centralized implementations.
+Firstly, they proved one specific protocol whereas this paper proposes
+a general way to specify, represent, and verify behavior of cloud
+orchestration and also shows that it can be effectively applied to a
+model of standard specification language as a non-trivial case study.
 
-Secondly, they used model
-checking while we use theorem proving. They checked about 150
-different models of system including from four to fifteen components
-in which from 1.4 thousand to 1.4 million transitions are generated
-and checked. They found a bug of their specification because checked
-models fortunately included error cases. The model checking method can
-verify correctness of checked models and so they should include the all
-boundary cases. In our formalization, the specification itself is
-verified by interactive theorem proving in which the all boundary cases
-are necessary in consideration in a systematic way. It achieves
-structural and deep understanding that is required to develop trusted
-systems. 
+Secondly, their protocol is based on a specific implementation which
+challenges distributed management of cloud resources while current
+popular implementations, e.g. CloudFormation, use centralized
+management. On the other hand, our model is rather abstract without
+assuming distributed or centralized implementations.
 
-Thirdly, they call a function to check the acyclicness of resource
+Thirdly, they used model checking while we use theorem proving. They
+checked about 150 different models of system including from four to
+fifteen components in which from 1.4 thousand to 1.4 million
+transitions are generated and checked. They found a bug of their
+specification because checked models fortunately included error
+cases. The model checking method can verify correctness of checked
+models and so they should include the all boundary cases. In our
+formalization, the specification itself is verified by interactive
+theorem proving in which the all boundary cases are necessary in
+consideration in a systematic way. It achieves structural and deep
+understanding that is required to develop trusted systems.
+
+Finally, they called a function to check the acyclicness of resource
 dependency whenever a transition occurs whereas our framework provides
 formalization, a template module, and lemmas to prove the invariant
 property of the acyclicness.
@@ -7702,11 +7961,13 @@ represent, and verify the behavior models of the standard
 specification language, OASIS TOSCA, of cloud orchestration where the
 standard has not yet provided any ways to do so.
 
-The major contributions of this paper are that (1) it shows that cloud
-orchestration is a practical and suitable domain to apply interactive
-theorem proving and (2) it introduces the idea of frameworks from
-software development to proof development which results in high
-productivity and high maintainability of proofs.
+The major contributions of this paper are that (1) it introduces the
+idea of frameworks from software development to proof development
+which results in high productivity and high maintainability of proofs
+and (2) it shows that the framework can be effectively applied to a
+non-trivial problem, that is, to specify, represent, and verify the
+behavior models of the standard specification language of cloud
+orchestration.
 
 The all \cafeobj codes of the framework and example proof scores in this paper
 can be downloaded at \url{https://github.com/yuki-yoshida/JAIST}.
