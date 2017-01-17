@@ -296,12 +296,12 @@ mission. They show that liveness properties, such as ``a picture taken
 by the Voyager will eventually be result in sending a message to
 antennas on Earth'', specified by ASSL (Autonomic System Specification
 Language), can be verified. Song, J., et al.~\cite{song2010towards}
-used the SPIN model checker to verifiy two invariant properties of a
+used the SPIN model checker to verify two invariant properties of a
 self-configuration procedure for autonomous networks of cellular base
-stations.  Recently, Sala{\"u}n, G., et
-al.~\cite{EtcheversCBP11,SalaunBCPEG13,SalaunEPBC13} designed a system
-setup protocol in the cloud and demonstrated to verify a liveness
-property of the protocol using their model checking method.
+stations.  Recently, Sala{\"u}n, G., et al.~\cite{EtcheversCBP11,
+  SalaunBCPEG13, SalaunEPBC13} designed a system setup protocol in the
+cloud and demonstrated to verify a liveness property of the protocol
+using their model checking method.
 
 The framework proposed in this paper supports another approach, namely
 {\it interactive theorem proving}, which can verify models of
@@ -314,7 +314,7 @@ establishing lemmas, and proving them in the course of verification.
 
 There also exist several researches to apply the theorem proving
 approach to practical problems. Klein, G. et
-al.~\cite{KleinEHACDEEKNSTW09} also used the Isabelle/HOL theorem
+al.~\cite{KleinEHACDEEKNSTW09} used the Isabelle/HOL theorem
 prover to verify functional correctness of OS Kernel. They wrote 4900
 lines of the abstract specification, 5700 lines of the Haskell
 prototype which is automatically converted to the executable
@@ -333,7 +333,7 @@ to verify functional correctness of their page-fault handler in which
 program properties are specified by the Hoare logic, transferred or
 mapped to several lower stack layers, and finally implemented by a
 hardware instruction set. They proved more than twelve thousands of
-lemmas and wrote more than 244 kilo proof steps. They found some
+lemmas and wrote more than 244-kilo proof steps. They found some
 difficulty to keep a consistent style of proof development in such
 scale of problem which is described as follows:
 \vspace{-0.3cm}
@@ -346,36 +346,67 @@ prefer the ‘apply’ style, which often leads a large number of
 intermediate lemmas, others structure their proofs with Isar.''
 \end{quotation}
 
-Silva, R., et al.~\cite{SilvaB09} proposed a generic instantiation
-approach to reuse proofs for Event-B. Using the composing and renaming
-plug-ins for the Rodin platform (a tool set for Event-B), they defined
-a way of instantiating generic models and defined sufficient proof
-obligations to ensure that the proofs in a generic development remain
-valid in an instantiated development. Tikhonova, U., et
-al.~\cite{TikhonovaMBAV13} applied this idea to verify LACE DSL
-programs for controlling lithography machines. Although a part of
-proofs for the general specification can be instantiated and reused,
-the generated specifications are too large and the provers of Rodin
-fail to discharge instantiated theorems. They say that they do not
+None of the existing researches described above did not consider reuse
+of proofs which our framework provides for its users.  As far as we
+know, reuse of proofs is discussed only in Event-B community as the
+generic instantiation approach proposed by Abrial, J. and Hallerstede,
+S.~\cite{AbrialH07}. The idea of the generic instantiation is that it
+is sufficient to prove instantiated axioms in order to reuse proofs of
+a generic machine and its refined machines. 
+
+Silva, R. and Butler, M. J.~\cite{SilvaB09} proposed to use theorem
+proving to ensure the sufficient condition. Using the renaming and
+composing plug-ins for the Rodin platform (a tool set for Event-B),
+they defined a way of instantiating generic machines and generating
+the sufficient condition as a theorem of the concrete machine whose
+proof obligation will be ensured by Rodin's theorem prover.
+Tikhonova, U., et al.~\cite{TikhonovaMBAV13} applied this idea to
+verify LACE DSL programs for controlling lithography
+machines. However, the generated theorems are too large for the
+automatic provers of Rodin to discharge. They say that they do not
 expect their average user to prove these theorems using interactive
 provers, as it requires knowledge of propositional calculus and
-understanding of proof strategies. Thus, they only checked structural
-properties using an animation plug-in of Rodin.
+understanding of proof strategies. Instead of theorem proving, they
+employed evaluation of structural properties predicates in the
+animation plug-in of Rodin.
 
 The existing researches of applying theorem proving to practical scale
 problems commonly reported that it requires much human efforts and the
 shortage of competent proof engineer is a remained problem, which is
-the main concern of this paper.  One of the major contributions of
-this paper is to introduce the idea of frameworks from software
-development to proof development which has a unique set of features:
+the main concern of this paper.
+
+One of the major contributions of this paper is to introduce the idea
+of frameworks from software development to proof development, which has
+a unique set of features as follows:
 \vspace{-0.3cm}
 \begin{itemize}
 \setlength{\parskip}{0cm}
 \setlength{\itemsep}{0cm}
-\item our framework supports verification of leads-to property as well as invariant property,
-\item uses interactive theorem proving to prove absence of counter examples,
-\item provides abstract reusable entities and abstract proved lemmas for high productivity, and
-\item provides a procedure to develop consistent proofs for high maintainability.
+\item The framework supports verification of leads-to properties as
+  well as invariant properties of practical scale problems using
+  interactive theorem proving.
+\item It provides a general way to formalize specifications in a
+  specific domain, i.e. cloud orchestration.
+\item It provides abstract entities and proved lemmas to be reused to
+  specify and verify concrete problems with high productivity.
+\item It also provides a procedure to guide novice proof engineers
+  which results in consistent proofs with high maintainability.
+\end{itemize}
+Although the above features of ​​this paper are, in principle, not
+dependent on the theorem proving system to be implemented, the
+following functionalities of CafeOBJ, described in
+Chapter~\ref{chap:pre}, contribute to realizing the effective
+framework.
+\begin{itemize}
+\item {\bf Transition search predicates} enable to prove the
+  reachability of state transition systems together with equations in
+  a unified manner of predicate logic.
+\item {\bf Template modules} enable to define general entities and to
+  reuse them by instantiating and renaming which brings high
+  productivity.
+\item {\bf Constructor-based inductive theorem prover} enables to
+  easily follow the provided procedure and develop consistent
+  structure of models and proofs which brings high maintainability.
 \end{itemize}
 
 %% ===============================================================
@@ -1136,7 +1167,7 @@ definitions.
   rule $R=[l,r,c]\in Rule$ and some ground substitution $\sigma$ such
   that $S=l\sigma$, $S'=r\sigma$, and $c\sigma$ reduces to $true$. We
   also say $R$ \ul{can be applied to} $S$ and say $S'$ is a \ul{next
-    state} of $S$.
+    state} of $S$\!.
 \end{definition}
 \begin{definition}[state machine]
   Let $Rule$ be a set of transition rules, then a \ul{state machine}
@@ -1169,7 +1200,7 @@ definitions.
 \begin{definition}[invariant]
   Let $(\mathit{St},\mathit{Tr},In)$ be a state machine, then a global state predicate
   $p$ is an \ul{invariant} iff $p(S)=true$ holds for any reachable
-  global state $S$.
+  global state $S$\!.
 \end{definition}
 
 %% ===============================================================
@@ -1229,13 +1260,13 @@ code fragment\footnote{Since the final part of the {\tt reduce} sentence,
 \end{verbatim}
 \normalsize
 %% =======================================================================
-The reduction returns true in which \cafeobj finds any
-next states of the given global state such that at least one {\tt open} service is
+The reduction returns true in which \cafeobj finds any next states of
+the given global state such that at least one {\tt open} service is
 appearing. In this case, transition rule {\tt c2o} makes such next
-state.  Note that when the conditional search predicate tries a transition
-rule, it binds the rule's condition to Boolean variable {\tt CC} placed at {\tt i\!f} clause. The {\tt suchThat}
-clause uses {\tt CC} to check \stt{anyOpen(SVS)} only when the rule is
-applied.
+state.  Note that when the conditional search predicate tries a
+transition rule, it binds the rule's condition to Boolean variable
+{\tt CC} placed at {\tt i\!f} clause. The {\tt suchThat} clause uses
+{\tt CC} to check \stt{anyOpen(SVS)} only when the rule is applied.
 
 On the other hand, when we want to check some condition holds in the all
 possible next states, we need some trick. The following code fragment
@@ -2759,8 +2790,8 @@ $C$.
 
 \begin{notation}[$st(X,S)$]
 Let $S$ be a global state of a cloud system, and let $X$ be an object in
-$S$, then \ul{$st(X,S)$} is the local state of $X$ in the context of
-$S$.
+$S$\!, then \ul{$st(X,S)$} is the local state of $X$ in the context of
+$S$\!.
 \end{notation}
 
 \begin{definition}[can make an object transit]
@@ -2769,10 +2800,10 @@ a global state, and $X$ an object of $C$. We say \ul{$R$ can
   make $X$ transit in $S$} iff there exists a ground substitution
 $\sigma$ such that $S = l\sigma$, $c\sigma$ reduces to true, and
 $st(X,l\sigma) \ne st(X,r\sigma)$. We also say \ul{$R$ can make $X$
-  transit from $st(X,l\sigma)$ to $st(X,r\sigma)$ in $S$}.  Let $s$
+  transit from $st(X,l\sigma)$ to $st(X,r\sigma)$ in $S$}\!.  Let $s$
 and $s'$ be local states of $C$, then we say \ul{$R$ can make an object
   of $C$ transit form $s$ to $s'$} iff there exists a global state $S$
-such that $R$ can make an object of $C$ transit form $s$ to $s'$ in $S$.
+such that $R$ can make an object of $C$ transit form $s$ to $s'$ in $S$\!.
 \end{definition}
 
 \begin{definition}[pre-transit local states]
@@ -2790,12 +2821,12 @@ of more than one classes transit.
 
 \begin{notation}($S[X/s]$)\
 Let $S$ be a global state, $C$ a class of objects, $X$ an object
-of $C$ in $S$, and $s$ a local state of $C$, then
+of $C$ in $S$\!, and $s$ a local state of $C$, then
 \ul{$S[X/s]$} is the global state such that:
 \begin{itemize}
 \item $S[X/s]$ consists of the identical objects (i.e.\ identifiers and
-  types are the same) as $S$,
-\item each link of objects in $S[X/s]$ is the same as $S$, and
+  types are the same) as $S$\!,
+\item each link of objects in $S[X/s]$ is the same as $S$\!, and
 \item $st(X,S[X/s])=s$ and $\forall X'\ne X:st(X',S[X/s])=st(X',S)$.
 \end{itemize}
 This notation can specify more than one objects such that
@@ -2828,15 +2859,15 @@ $\mathit{S_0}[\Sigma_0]$ is the following global state:
 %% =======================================================================
 
 \begin{definition}[depends on]
-Let $S$ be a global state, $X$ and $X'$ objects in $S$, and $R$
-a transition rule where $R$ cannot make $X$ transit in $S$.  We say
+Let $S$ be a global state, $X$ and $X'$ objects in $S$\!, and $R$
+a transition rule where $R$ cannot make $X$ transit in $S$\!.  We say
 \ul{$X$ depends on $X'$ in $S$ w.r.t.\ $R$}, denoted \ul{$\mathit{dep}_R(X,
   X',S)$}, iff there exists a set $\Sigma$ of pairs of an object and a
 local state such that $\Sigma$ includes a pair whose first element is
 $X'$, $R$ can make $X$ transit in $S[\Sigma]$, and $\Sigma$ is
 minimal.  Here we say ``minimal'' which means that there exists no
 subset $\Sigma'$ of $\Sigma$ such that $R$ can make $X$ transit in
-$S[\Sigma']$. We also say \ul{$X$ depends on $X'$ in $S$}, denoted
+$S[\Sigma']$. We also say \ul{$X$ depends on $X'$ in $S$}\!, denoted
 \ul{$\mathit{dep}(X, X',S)$}, when there exists some transition rule $R$ such
 that $\mathit{dep}_R(X,X',S)$.
 \end{definition}
@@ -2854,7 +2885,7 @@ $\mathit{S_0}[\Sigma_{R02}]$ and thus {\tt myEIP::InsID} depends on {\tt
 
 \begin{definition}[depending set]
 Let $X$ be an object, $R$ a transition rule, and $S$ a global
-state, then the \ul{depending set of $X$ in $S$}, denoted
+state, then the \ul{depending set of $X$ in $S$}\!, denoted
 \ul{$DS(X,S)$}, is recursively defined as (1) if $X$ depends on some
 other object $X'$ in $S$ then $X'$ is included in
 $DS(X,S)$, i.e.\ $\forall X': (\mathit{dep}(X,X',S) \ra X'\in DS(X,S))$, and
@@ -2865,11 +2896,11 @@ X',X'': (X'\in DS(X,S) \land \mathit{dep}(X',X'',S) \ra X''\in DS(X,S))$.
 
 \begin{definition}[no cyclic dependency]
 Let $C$ be a class, $X$ an object of $C$, and $S$ a global
-state. We say \ul{$X$ is in no cyclic dependency in $S$}, denoted
+state. We say \ul{$X$ is in no cyclic dependency in $S$}\!, denoted
 \ul{$noCycle(X,S)$}, iff $X$ itself is not included in $DS(X,S)$. We
-also say \ul{there is no cyclic dependency of $C$ in $S$}, denoted
+also say \ul{there is no cyclic dependency of $C$ in $S$}\!, denoted
 \ul{$noCycle_C(S)$}, iff the all objects of $C$ in $S$ are in no cyclic
-dependency in $S$.
+dependency in $S$\!.
 \end{definition}
 For example, $DS(\mbstt{myEIP},\mathit{S_0}) =
 \{~\mbstt{myEIP::InsID},\mbstt{myInstance}~\}$ because {\tt myEIP}
@@ -2899,7 +2930,7 @@ st(O,S)\in prels(R,C)~\}$. $C^R$ is not empty because it includes $X$.
 If every object $O$ in $C^R$ has at least one object $O' \in C^R\cap
 DS(O,S)$ then there should be some object $O$ in $C^R$ such that $O
 \in DS(O,S)$ because $DS$ is transitive and $C^R$ is finite. However,
-it means there is cyclic dependency of $C$ in $S$. $\Box$\\
+it means there is cyclic dependency of $C$ in $S$\!. $\Box$\\
 
 \noindent
 For example, let $\mathit{S_0}$ be a global state shown above, then there is no
@@ -2923,13 +2954,13 @@ is a modified version of the formalization focusing on one class.
 \begin{definition}[depending set of the same class as]
 Let $C$ be a class , $X$ an object of $C$, $R$ a transition
 rule, and $S$ a global state, then the \ul{depending set of the same
-class as $X$ in $S$}, denoted \ul{$\mathit{DS_C}(X,S)$}, is defined
+class as $X$ in $S$}\!, denoted \ul{$\mathit{DS_C}(X,S)$}, is defined
 as $\mathit{DS_C}(X,S)=\{~X'\in C\mid X'\in DS(X,S)~\}$
 \end{definition}
 \begin{lemma}
 Let $C$ be a class, $X$ an object of $C$, and $S$ a global
 state. If $X$ itself is not included in $\mathit{DS_C}(X,S)$, then $X$ is in no
-cyclic dependency of $C$ in $S$.
+cyclic dependency of $C$ in $S$\!.
 \end{lemma}
 \begin{corollary}
 Let $S$ be a global state, $R$ a transition rule, and $C$ a
@@ -2942,7 +2973,7 @@ $prels(R,C)$; typically $\mathit{DS_C}(O,S)$ is empty.
 \end{corollary}
 \begin{definition}[dependency chain]
 Let $X_1, X_2, \dots,X_n$ be objects, and $S$ a global state, then the
-\ul{dependency chain} in $S$, denoted \ul{$dc([X_1, X_2,\dots,
+\ul{dependency chain} in $S$\!, denoted \ul{$dc([X_1, X_2,\dots,
     X_n],S)$}, is defined as $\forall i \in \{1 \dots n-1\} : \mathit{dep}(X_i,
 X_{i+1},S)$.
 \end{definition}
@@ -2953,7 +2984,7 @@ in $\mathit{S_0}$, $dc([\mbstt{myEIP,myEIP::InsID,myInstance}],\mathit{S_0})$.
 \begin{definition}[directly depending set of the same class as]
 Let $C$ be a class of objects, $X$ an object of $C$, and $S$ a
 global state. The \ul{directly depending set of the same class as $X$
-  in $S$}, denoted \ul{$\mathit{DDS_C}(X,S)$}, is defined as $\{~X'\mid\exists
+  in $S$}\!, denoted \ul{$\mathit{DDS_C}(X,S)$}, is defined as $\{~X'\mid\exists
 dc([X,X_1,\dots,X_n,X'],S)\land X' \in C\land\forall i\in [1 \dots
   n]:X_i \not\in C~\}$. We also say \ul{$X$ directly depends on $X'$
   in $S$} when $X'\in \mathit{DDS_c}(X,S)$.
@@ -2979,7 +3010,7 @@ $prels(R,C)$; typically $\mathit{DDS_C}(O,S)$ is empty.
 %% ===============================================================
 Using the formalization of cyclic dependency explained above, the
 framework provides a predicate, \stt{noCycle($S$)}, which checks there
-is no cyclic dependency in the given global state $S$. Predicate {\tt
+is no cyclic dependency in the given global state $S$\!. Predicate {\tt
   noCycle} is defined by a template module, {\tt CYCLEPRED} and a
 parameter module, {\tt PRMCYCLE}:
 %% =======================================================================
@@ -3103,7 +3134,7 @@ module {\tt CYCLEPRED} can be instantiated as follows:
 In order to use the Cyclic Dependency Lemma, the user of the framework
 should prove the invariant property of $noCycle_C$, especially should
 prove that $noCycle_c(S) \ra noCycle_C(S')$ for any global state $S$
-and any possible next state $S'$ of $S$. Although such proof is
+and any possible next state $S'$ of $S$\!. Although such proof is
 specific to each problem, there are several common techniques and the
 framework provides several proved lemmas for them.
 
@@ -3121,21 +3152,21 @@ smaller than in the previous global states.
 
 \begin{lemma}[Depending Subset Lemma]
 Let $S$ and $S'$ be global states, then if $DS(X,S')$ $\subseteq DS(X,S)$ for all
-objects $X$ in $S$, then $noCycle(S) \ra noCycle(S')$.
+objects $X$ in $S$\!, then $noCycle(S) \ra noCycle(S')$.
 \end{lemma}
-Proof: $noCycle(S)$ means that $X\not\in DS(X,S)$ for any $X$ in $S$,
+Proof: $noCycle(S)$ means that $X\not\in DS(X,S)$ for any $X$ in $S$\!,
 which implies that $X\not\in DS(X,S')$ because $DS(X,S')\subseteq
 DS(X,S)$.  $\Box$
 
 \begin{corollary}
 Let $C$ be a class of objects and let $S$ and $S'$ be global states.  If
-$\mathit{DS_C}(X,S')\subseteq \mathit{DS_C}(X,S)$ for all objects $X$ of $C$ in $S$,
+$\mathit{DS_C}(X,S')\subseteq \mathit{DS_C}(X,S)$ for all objects $X$ of $C$ in $S$\!,
 then $noCycle_C(S) \ra noCycle_C(S')$.
 \end{corollary}
 
 \begin{corollary}
 Let $C$ be a class of objects and let $S$ and $S'$ be global states.  If
-$\mathit{DDS_C}(X,S')\subseteq \mathit{DDS_C}(X,S)$ for all objects $X$ of $C$ in $S$,
+$\mathit{DDS_C}(X,S')\subseteq \mathit{DDS_C}(X,S)$ for all objects $X$ of $C$ in $S$\!,
 then $noCycle_C(S) \ra noCycle_C(S')$.
 \end{corollary}
 
@@ -3217,14 +3248,14 @@ complicated controls of dependencies of objects, it is typically easier
 to check the constraints than to use $noCycle$ defined above.
 
 \begin{notation}[$rel(X,X',S)$]
-  Let $S$ be a global state, and let $X$ and $X'$ be objects in $S$.  When
+  Let $S$ be a global state, and let $X$ and $X'$ be objects in $S$\!.  When
   there is some relationship $r$ between $X$ and $X'$, we denote it
   as \ul{$r(X,X',S)$}. Note that ``$X$ depends on $X'$ in $S$'' is one
   of such relationships.
 \end{notation}
 
 \begin{definition}[directly relating set]
-Let $S$ be a global state, $X$ an object in $S$, and $r$ a
+Let $S$ be a global state, $X$ an object in $S$\!, and $r$ a
 relationship of objects. Then, the \ul{directly relating set of $X$ in
   $S$ w.r.t.\ $r$}, denoted \ul{$\mathit{DRS_r}(X,S)$}, is defined as
 $\mathit{DRS_r}(X,S)=\{~X'\mid r(X,X',S)~\}$.
@@ -3250,7 +3281,7 @@ included in $\mathit{RS_r}(X,S)$.
 \label{lemma:simplerel}
 Let $C$ is a class, $X$ an object of $C$, $S$ a global state,
 and $r$ a relationship of objects. If $\mathit{DDS_c}(X,S)$ is a subset of
-$\mathit{DRS_R}(X,S)$ for all $X$ in $S$, then $noCycle_r(X,S)$ implies
+$\mathit{DRS_R}(X,S)$ for all $X$ in $S$\!, then $noCycle_r(X,S)$ implies
 $noCycle_c(X,S)$ for all $X$, i.e.:
 \[\forall X:\mathit{DDS_c}(X,S)\subseteq \mathit{DRS_r}(X,S) \ra \forall X: (noCycle_r(X,S) \ra
 noCycle_C(X,S))\]
@@ -3599,9 +3630,10 @@ the next section.\\
 
 \noindent{\bf Step 0-6:} Prepare arbitrary constants. \\
 Proof scores for the sufficient conditions requires many arbitrary constants.
-In order to make the proof score be easy to understand, those constants
+We say such constants as {\it proof constants}.
+In order to make the proof score be easy to understand, proof constants
 are consistently named and defined. The following shows the definitions
-of constants for the CloudFormation example case:
+of proof constants for the CloudFormation example case:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -3643,10 +3675,10 @@ Predicate {\tt initcont} to represent condition~(1) can be defined as follows:
 
 \noindent{\bf Step 1-1:} Begin with the most general case. \\ In the
 most general case for proof of condition~(1), the global
-state consists of arbitrary constants every of which represents an
+state consists of proof constants every of which represents an
 arbitrary set of objects of each class. For the CloudFormation example
 case, the most general case is as follows where {\tt sRS} and {\tt
-  sPR} are arbitrary constants for a set of resources and properties
+  sPR} are proof constants for a set of resources and properties
 respectively:
 %% =======================================================================
 \small
@@ -3674,7 +3706,7 @@ the current rule. \\ Since LHS of rule {\tt R01} requires the global
 state to have at least one {\tt initial} resource, the current case is split
 into three more cases, i.e.\ no resource, at least one {\tt initial}
 or {\tt started} resource. In the following proof score, {\tt trs},
-{\tt idRS}, and {\tt sRS'} are arbitrary constants for a type of the
+{\tt idRS}, and {\tt sRS'} are proof constants for a type of the
 resource, an identifier of the resource, and a set of resources
 respectively.
 %% =======================================================================
@@ -3712,7 +3744,7 @@ Since the condition of rule {\tt R01} requires the all properties of the
 more cases; the all properties are or are not {\tt ready}. As explained in
 Section~\ref{sec:lemma}, the Set Predicate Lemma ensures that these cases are
 represented as follows where {\tt tpr}, {\tt idPR}, {\tt idRRS}, and
-{\tt sPR'} are arbitrary constants for a type of the property, an
+{\tt sPR'} are proof constants for a type of the property, an
 identifier of the property, an identifier of a resource referred by
 the property, and a set of properties respectively:
 %% =======================================================================
@@ -3875,7 +3907,7 @@ double negation idiom in Section~\ref{sec:searchpredicate}, predicate
 \noindent{\bf Step 2-1:} Begin with the cases each of which matches to
 LHS of each rule. \\
 Since condition~(2) checks every possible next state of
-a given state $S$, we only need to prove the cases each of which
+a given state $S$\!, we only need to prove the cases each of which
 matches to each rule. For the CloudFormation example case, we can
 begin with two cases for two rules as follows, which are too general:
 %% =======================================================================
@@ -3931,7 +3963,7 @@ In Case 1, rule {\tt R01} makes an {\tt initial} resource transit to
 resources included the set {\tt sRS} of resources are already {\tt
   started}. Otherwise there is at least one other {\tt initial}
 resource.  Using the Set Predicate Lemma, we can split the case as follows where
-{\tt trs'}, {\tt idRS'}, and {\tt sRS'} are arbitrary constants for a
+{\tt trs'}, {\tt idRS'}, and {\tt sRS'} are proof constants for a
 type of the resource, an identifier of the resource, and a set of
 resources respectively:
 %% =======================================================================
@@ -4353,7 +4385,7 @@ condition~(5) as follows:
 
 \noindent{\bf Step 5-2:} Begin with the most general case. \\
 The most general case is as follows where {\tt sRS} and {\tt
-  sPR} are arbitrary constants for a set of resources and properties
+  sPR} are proof constants for a set of resources and properties
 respectively:
 %% ===============================================================
 \small
@@ -5003,7 +5035,7 @@ The following list describes the role and content of each module:
   \item Define predicate {\tt inv} such that it reduces to false when
     one of invariants reduces to false.
   \item Define problem specific lemmas if any.
-  \item Prepare arbitrary constants to use in the verification.
+  \item Prepare proof constants.
   \end{enumerate}
 \item {\tt ProofInitCont}\\
   Module for proving sufficient condition~(1).
@@ -5068,7 +5100,7 @@ $term2$ reduces to {\tt false} and $term1$ {\tt =} $term2$ does not
 so. Thus the users should not carelessly use \_ == \_ operator because
 it may lead unintended results.
 
-The framework recommends to use \_ == \_ operator only in the
+The framework recommends using \_ == \_ operator only in the
 following three cases:
 \begin{enumerate}
 \item As equal operator \_ = \_ for literals: \\
@@ -5103,7 +5135,7 @@ following three cases:
   empty. While we may avoid this situation by changing the order of
   the case splitting guided by the framework, it requires careful
   considerations and results in difficult proof scores to understand
-  and maintain. Thus, we decided to recommend to write proof codes
+  and maintain. Thus, we decided to recommend writing proof codes
   which explicitly ensure the confluent property as follows:
   \begin{verbatim}
     :set(normalize-init,on)
@@ -5130,7 +5162,7 @@ following three cases:
 %% ===============================================================
 When the behavior model is not {\it coherent}, search predicates may
 not be able to search all possible transitions.  Coherence means that,
-given a global state term $S$, for any next state $S^R$ of $S$ such
+given a global state term $S$\!, for any next state $S^R$ of $S$ such
 that some transition rule $R$ makes $S$ transit to $S^R$, if $S$
 reduces to $S'$ then there exists some rule $R'$ which makes $S'$
 transit to $S^{R'}$ such that both $S^R$ and $S^{R'}$ reduce to the
@@ -5140,22 +5172,85 @@ only one of them depending on whether transition rules or equations
 are used firstly.
 
 In general, it is difficult to keep behavior model coherent. However,
-if the users of the framework go along with the following rule, then
+if the users of the framework go along with the following rules, then
 search predicates can search next states of the given global state
 terms without depending on the order to use transition rules and
 equations:
 \begin{enumerate}
 \item A global state term included in the top goal of a proof should
-  be a ground constructor term, e.g., \stt{< sRS,sPR >}.
-\item When a current case is split and a constant in the current goal
-  is defined as a more detailed term, it should be a ground
-  constructor term, e.g., \stt{eq sRS = (res(trs',idRS,srs') sRS') .}
-  Moreover, any pair of equations added for the case splitting do not
-  have the same LHS.
+  be a ground constructor term which consists of the constructors defined
+  in the structure model and fresh proof constants, e.g., \stt{< sRS,sPR >}.
+\item When a current case is split and an equation is introduced whose
+  LHS is a proof constant in the current goal, RHS of the equation
+  should be a ground constructor term which consists of the
+  constructors defined in the structure model and fresh proof
+  constants, e.g., \stt{eq sRS = (res(trs',idRS,srs') sRS') .}
+  Moreover, any pair of equations in a proof case does not define the
+  same proof constant.
 \item A global state term included in LHS or RHS of a transition rule
   should be a constructor term, e.g., \stt{< (res(TRS,IDRS,started)
     SetRS), SetPR >}.
 \end{enumerate}
+Let the goal and proof constants in a proof case and transition rules
+in the model follow the above rules. We say a term consisting of the
+constructors defined in the structure model and proof constants as
+{\it a ground semi-constructor term}.  We also say a ground term {\it
+  has a canonical form} iff it reduces to a single term regardless of
+the order in which the equations are applied.
+\begin{lemma}
+\label{def:allcano}
+  Let $c$ be a constructor whose arity is $n$ and let ground terms
+  $g_i, 1\le i\le n$ have canonical forms. Then, ground term
+  $c(g_1,\dots,g_n)$ has a canonical form.
+\end{lemma}
+\begin{lemma}
+  A ground semi-constructor term in a proof case has a canonical form.
+\end{lemma}
+Proof: Let $a, b$ be proof constants in the proof case and let $a > b$
+mean that there is an equation whose LHS is $a$ and RHS includes $b$
+in the proof case, then $>$ is a partial order of proof constants
+assuming that they follow the above rules. This lemma can be proved
+using the mathematical induction about the partial order.
+\vspace{-0.3cm}
+\begin{description}
+\setlength{\parskip}{0cm}
+\setlength{\itemsep}{0cm}
+\item {\bf Base case:} When the ground semi-constructor term does not
+  include any defined proof constants, it is a ground constructor term
+  and it always reduces to itself.
+\item {\bf Induction case:} Let $a$ be a defined proof constant and
+  let us assume that any ground semi-constructor term, including proof
+  constants all of which are less than $a$, has a canonical form. Let
+  $T$ be a ground semi-constructor term whose included proof constants
+  are less than $a$ or $a$ itself. Any subterm of $T$ except $a$ has a
+  canonical form because of the induction hypothesis. The equation
+  which defines $a$ rewrites term $a$ to its RHS which has a canonical
+  form because of the induction hypothesis. The
+  lemma~\ref{def:allcano} guarantees that a term consisting of a
+  constructor which has $a$ as its argument has a canonical form.
+  Thus, all subterms of $T$ have canonical forms and $T$ itself does so.
+  $\Box$
+\end{description}
+\begin{lemma}
+  Let global state term $S$ be a ground semi-constructor term and $R$ a
+  transition rule which makes $S$ transit to next state $S^R$. If $S$
+  reduces to $S'$ then $R$ also makes $S'$ transit to $S'^R$ such
+  that both $S^R$ and $S'^R$ reduce to the same global state term
+  $S^*$.
+\end{lemma}
+Proof: Let LHS of $R$ be $C_L(V_1,\dots,V_n)$ where $C_L$ is a context
+with $n$ holes and $V_i, 1\le i\le n$, are variables placed in the
+holes.  Similarly, let RHS of $R$ be $C_R(V_1,\dots,V_n)$ although
+context $C_R$ may have less than $n$ holes in which case several
+$V_i$'s are omitted. When $R$ makes $S$ transit to $S^R$, each
+variable $V_i$ matches to some subterm $t_i$ of $S$\!,
+i.e. $S=C_L(t_1,\dots,t_n)$, thus $S^R=C_R(t_1,\dots,t_n)$. Let $t_i$
+reduce to $t^*_i$, then $S'=C_L(t^*_1,\dots,t^*_n)$ because it is the
+canonical form of $S$\!.  Similarly $S^R$ has a canonical form
+$S^*=C_R(t^*_1,\dots,t^*_n)$.  On the other hand, LHS
+$C_L(V_1,\dots,V_n)$ matches to $S'=C_L(t^*_1,\dots,t^*_n)$ where each
+$V_i$ matches to $t^*_i$ and thus $R$ makes $S'$ transit to
+$S^*$. $\Box$
 
 %% ===============================================================
 \subsection{Usage of the Double Negation Idiom}
@@ -5165,10 +5260,10 @@ when there is no next state. The typical pitfall is to give the idiom
 a global state term which does not match to any LHS and condition of
 transition rules. Since the idiom is used for the sufficient
 conditions (2) (3) and (6), the users of the framework should
-carefully check the goal of proofs in Step 2-1, 2-2, 3-2, 3-3, 6-2,
-and 6-3. A simple but effective way to check it is to remove the inner
-``\stt{not}'' in the double negation idiom and see that the goal does
-not reduce to true.
+carefully check the goal of proofs especially in Step 2-1, 2-2, 3-2,
+3-3, 6-2, and 6-3. A simple but effective way to check the pitfall is
+to remove the inner ``\stt{not}'' in the double negation idiom and see
+that the goal does not reduce to true.
 
 %% ===============================================================
 \chapter{Applying the Framework to TOSCA Specifications}
@@ -6531,7 +6626,7 @@ following two conditional equations:
 \normalsize
 %% =======================================================================
 
-\noindent{\bf Step 0-6:} Prepare arbitrary constants.
+\noindent{\bf Step 0-6:} Prepare proof constants.
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -7116,7 +7211,7 @@ node.
 \normalsize
 %% =======================================================================
 Case 2-1 is proved by the initial-cont lemma. In other cases,
-$init(S)$ does not hold for the global state $S$. Thus, sufficient
+$init(S)$ does not hold for the global state $S$\!. Thus, sufficient
 condition~(1) is proved.
 
 %% ===============================================================
@@ -7671,7 +7766,7 @@ them can be just instantiated and renamed from predefined sorts
 provided by the framework.
 
 We also need totally 218 predicates/operators not including
-definitions of arbitrary constants used in proofs. 104 of them can be
+definitions of proof constants. 104 of them can be
 just instantiated and renamed form predefined operators. 11
 predicates, such as {\tt initcont}, {\tt contcont}, and so on, are the
 same as in proofs of the CloudFormation example and so can be copied
@@ -7745,16 +7840,16 @@ provided by the framework.
 %% ===============================================================
 \subsubsection{Consistent Structure of Proof}
 %% ===============================================================
-However the framework does not remarkably reduce the size of codes,
-time and efforts to develop them is radically reduced. Of course, it
-is mainly because this is our second experience of the same problem,
+In addition to promoting reuse of abstract entities and lemmas, time
+and efforts to develop proofs is radically reduced. Of course, it is
+mainly because this is our second experience of the same problem,
 whereas the previous proof scores did not have any unified policies of
 splitting and so were very difficult to understand even for us. The
 framework makes the new proof scores become much clear, especially
 those of conditions (2)(3)(6) which should be proved for each of
 twelve trans rules.
 
-The recommended module structure also help to make proof scores easier
+The recommended module structure also helps to make proof scores easier
 to understand.  We can instantly find the place where something is
 defined and can instantly imagine which parts of the proof may be
 affected when something is modified.
@@ -7776,43 +7871,58 @@ maintainability by consistent structure of models and proofs.
 %% ===============================================================
 \subsubsection{Reuse of Abstract Proofs}
 %% ===============================================================
-There are very few existing researches on reuse of proofs. Silva, R.,
-et al.~\cite{SilvaB09} proposed a generic instantiation approach to
-reuse proofs for Event-B. Using the functionality to compose machines
-(Shared Event Composition plug-in) and rename elements (Refactory
-plug-in) of the Rodin platform, they defined a way of instantiating
-generic models and defined sufficient proof obligations to ensure that
-the proofs in a generic development remain valid in an instantiated
-development. Tikhonova, U., et al.~\cite{TikhonovaMBAV13} applied this
-idea to verify LACE DSL programs for controlling lithography
-machines. They implemented transformation from LACE programs to
-Event-B specifications which are composed using instantiated machines
-from a general specification.  Although a part of proofs for the
-general specification can be instantiated and reused, the generated
-specifications are too large and the provers of Rodin fail to
-discharge instantiated theorems. They say that they do not expect
-their average user to prove these theorems using interactive provers,
-as it requires knowledge of propositional calculus and understanding
-of proof strategies. Thus, they only checked structural properties
-using an animation plug-in, ProB, of Rodin.
+There are very few existing researches on reuse of proofs.  Abrial,
+J. and Hallerstede, S.~\cite{AbrialH07} proposed the generic
+instantiation approach for reuse of Event-B development.  The idea of
+the generic instantiation is that it is sufficient to prove
+instantiated axioms in order to reuse proofs of a generic machine and
+its refined machines. In more detail, let $M$ and $C$ be a generic
+machine and a context respectively and let $s$, $c$, and $P(s,c)$ be
+sets, constants, and axioms defined by $C$.  Similarly, let $N$ and
+$D$ be a concrete machine and a context and let $t$, $d$, and $Q(t,d)$
+be sets, constants, and axioms defined by $D$. Suppose that $N$ and
+$D$ use instantiated $M$ where $s$ and $c$ are renamed as $S(t,d)$ and
+$C(t,d)$. Then, proving $Q(t,d) \ra P(S(t,d),C(t,d))$ is sufficient in
+order to reuse invariants and theorems of $M$ and its refined machines
+without reprove them.
 
-However reusing abstract entities by renaming and composing is a
-similar approach to our framework, Silva, R., et al. did not provide
-any actually reusable entities whereas out framework provides general
-templates, libraries, lemmas, and a procedure reusable in a specific
-domain. Tikhonova, U., et al. applied the idea to the domain of the
-lithography machine control, however, they did not reuse generally
-proved properties to prove the instantiated specifications.
+Silva, R.  and Butler, M. J.~\cite{SilvaB09} proposed to use theorem
+proving to ensure the sufficient condition. Using the functionality to
+rename elements (Refactory plug-in) and compose machines (Shared Event
+Composition plug-in) of the Rodin platform, they defined a way of
+instantiating generic machines and generating the sufficient condition
+as a theorem of the concrete machine whose proof obligation will be
+ensured by Rodin's theorem prover.
+
+Tikhonova, U., et al.~\cite{TikhonovaMBAV13} applied this idea to
+verify LACE DSL programs for controlling lithography machines. They
+implemented transformation from LACE programs to Event-B
+specifications which are composed by instantiated machines from
+general ones, however, the generated theorems are too large for the
+automatic provers of Rodin to discharge. They say that they do not
+expect their average user to prove these theorems using interactive
+provers, as it requires knowledge of propositional calculus and
+understanding of proof strategies. Instead of theorem proving, they
+employed evaluation of structural properties predicates in the
+animation plug-in of Rodin.
+
+Although reusing abstract entities by renaming and composing is a
+similar approach to our framework, Silva, R. and Butler, M. J. did not
+provide any actually reusable entities whereas out framework provides
+general templates, libraries, lemmas, and a procedure reusable in a
+specific domain. Tikhonova, U., et al. applied the idea to the domain
+of the lithography machine control, however, they did not reuse
+generally proved properties to prove the instantiated specifications.
 
 %% ===============================================================
 \subsubsection{Formal Approach for Cloud Orchestration}
 %% ===============================================================
-Sala{\"u}n, G., et
-al.~\cite{EtcheversCBP11,SalaunBCPEG13,SalaunEPBC13} designed a system
-setup protocol and demonstrated to verify a liveness property of the
-protocol using their model checking method. Although their setup
-protocol is essentially the same as the behavior model of our TOSCA
-example in this paper, there are four main differences.
+Sala{\"u}n, G., et al.~\cite{EtcheversCBP11, SalaunBCPEG13,
+  SalaunEPBC13} designed a system setup protocol and demonstrated to
+verify a liveness property of the protocol using their model checking
+method. Although their setup protocol is essentially the same as the
+behavior model of our TOSCA example in this paper, there are four main
+differences.
 
 Firstly, they proved one specific protocol whereas this paper proposes
 a general way to specify, represent, and verify behavior of cloud
@@ -7909,7 +8019,7 @@ currently focus on them. However, TOSCA is designed to be used for any
 types of system operations such as scale-out and scale-in. One of the
 main difficulties to specify scaling operations is that they
 dynamically change the structure of cloud systems, for which our
-framework should be enforced from two points of view. Firstly, some
+framework should be extended from two points of view. Firstly, some
 additional guidance is required to design state measuring functions,
 especially for the case of scale-out where the number of resources in
 the system will increase. Secondly, while the user of our framework is
@@ -7921,6 +8031,20 @@ types of objects and to allow transition rules to produce dependency
 only in the descending order. Two techniques to prove the invariant
 property of $noCycle$ described in Section~\ref{sec:cyclelemma} will
 be also effective for the solution.
+
+Although the framework focuses on leads-to properties, which is one of
+the main contribution of this paper, safety properties are of another
+category of important properties that automated system operations
+should have. The framework also supports to verify invariant properties
+which may represent various safety properties of cloud orchestration,
+however, the proof procedure of the framework should be extended to
+guide verification of typical safety properties of this domain.
+
+Finally, the case study shows the high reuse rate of the abstract
+entities and proved lemmas provided by the framework, however, its
+high productivity and maintainability is based on the subjective
+evaluation of the author. An objective bench marking by novice
+proof engineers is necessary.
 
 %% ===============================================================
 \section{Conclusion}
