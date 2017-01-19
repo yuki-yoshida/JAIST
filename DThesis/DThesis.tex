@@ -150,20 +150,21 @@ The most popular cloud orchestration tool is {\it
 Amazon Web Services (AWS) and a compatible open source tool is being
 developed as {\it OpenStack Heat}~\cite{Heat}. CloudFormation can
 manage resources provided by IaaS platform of AWS, such as VMs (EC2),
-block storages (EBS), load balancers (ELB), and so on. However,
-CloudFormation does not directly manage resources inside VMs and
-instead it allows to specify any types of scripts for initially
-setting up VMs, such as installing Httpd package, creating
-configuration files, copying contents, and activating an Httpd
-component. Shell command scripts were commonly used for this layer of
-management and recently several open source tools become popular such
-as {\it Puppet}~\cite{Puppet}, {\it Chef}~\cite{Chef}, and {\it
-  Ansible}~\cite{Ansible}. Currently operation engineers have to learn
-and use these several kinds of tools in actual situations, which
-results in much elaboration to guarantee correctness of automated
-operations. In an actual commercial experience of the author, more
-than 50\% of troubles are caused by defects in those dependency
-definitions and scripts.
+block storages (EBS), load balancers (ELB), and so on. CloudFormation
+automatically sets up these resources according to declaratively
+defined dependencies of resources. However, CloudFormation does not
+directly manage resources inside VMs and instead it allows to specify
+any types of scripts for initially setting up VMs, such as installing
+Httpd package, creating configuration files, copying contents, and
+activating an Httpd component. Shell command scripts were commonly
+used for this layer of management and recently several open source
+tools become popular such as {\it Puppet}~\cite{Puppet}, {\it
+  Chef}~\cite{Chef}, and {\it Ansible}~\cite{Ansible}. Currently
+operation engineers have to learn and use these several kinds of tools
+in actual situations, which results in much elaboration to guarantee
+correctness of automated operations. In an actual commercial
+experience of the author, more than 50\% of troubles are caused by
+defects in those dependency definitions and scripts.
 
 Correctness of cloud orchestration is much more crucial than that of
 the former systems because cloud systems serve to much more people in
@@ -216,8 +217,8 @@ The shortage of competent engineers is a very common problem when a new
 technology is applied to practical scale problems. For example, about
 twenty years ago we had to shift our software development methods from
 structured models to object oriented models. Many projects suffered
-from lack of competent object oriented architects and Java programmer,
-which is a major reason why some of them lost several million
+from lack of competent object oriented architects and Java programmers,
+which is a major reason why some of the projects lost several million
 dollars. However, object orientation becomes a matured technology
 nowadays and many large-scale applications are developed using object
 oriented architectures. It is not because the shortage of competent
@@ -271,7 +272,7 @@ developers to systematically think and develop proofs of leads-to
 properties.  The theorem proving framework is expected to raise the
 skill level of proof developers and to enable a number of engineers to
 efficiently develop a practical scale proofs of cloud orchestration
-with the consistent structure.
+with a consistent structure.
 
 %% ===============================================================
 \section{Formal Verification of System Behavior}
@@ -321,8 +322,8 @@ prototype which is automatically converted to the executable
 specification, and 8700 lines of the C program which is converted to
 the implementation specification. They proved two step refinements
 (from abstract to executable and from executable to implementation
-level) using the forward simulation method and wrote about 200 kilo
-proof steps. Since they focused functional correctness, they do not
+level) using the forward simulation method and wrote about 200-kilo
+proof steps. Since they focused functional correctness, they did not
 ensure correctness of the abstract specification.
 
 The German Verisoft project~\cite{Verisoft} researches verification of
@@ -335,7 +336,7 @@ mapped to several lower stack layers, and finally implemented by a
 hardware instruction set. They proved more than twelve thousands of
 lemmas and wrote more than 244-kilo proof steps. They found some
 difficulty to keep a consistent style of proof development in such
-scale of problem which is described as follows:
+scale of problem, which they described as follows:
 \vspace{-0.3cm}
 \begin{quotation}
 ``The theories were developed by various people from different sites
@@ -355,20 +356,20 @@ is sufficient to prove instantiated axioms in order to reuse proofs of
 a generic machine and its refined machines. 
 
 Silva, R. and Butler, M. J.~\cite{SilvaB09} proposed to use theorem
-proving to ensure the sufficient condition. Using the renaming and
-composing plug-ins for the Rodin platform (a tool set for Event-B),
-they defined a way of instantiating generic machines and generating
-the sufficient condition as a theorem of the concrete machine whose
-proof obligation will be ensured by Rodin's theorem prover.
-Tikhonova, U., et al.~\cite{TikhonovaMBAV13} applied this idea to
-verify LACE DSL programs for controlling lithography
-machines. However, the generated theorems are too large for the
-automatic provers of Rodin to discharge. They say that they do not
-expect their average user to prove these theorems using interactive
-provers, as it requires knowledge of propositional calculus and
-understanding of proof strategies. Instead of theorem proving, they
-employed evaluation of structural properties predicates in the
-animation plug-in of Rodin.
+proving to ensure the sufficient condition of the generic
+instantiation. Using the renaming and composing plug-ins for the Rodin
+platform (a tool set for Event-B), they defined a way of instantiating
+generic machines and generating the sufficient condition as a theorem
+of the concrete machine whose proof obligation will be ensured by
+Rodin's theorem prover.  Tikhonova, U., et al.~\cite{TikhonovaMBAV13}
+applied this idea to verify LACE DSL programs of controlling
+lithography machines. However, the generated theorems are too large
+for the automatic provers of Rodin to discharge. They say that they do
+not expect their average user to prove these theorems using
+interactive provers, as it requires knowledge of propositional
+calculus and understanding of proof strategies. Instead of theorem
+proving, they employed evaluation of structural properties predicates
+in the animation plug-in of Rodin.
 
 The existing researches of applying theorem proving to practical scale
 problems commonly reported that it requires much human efforts and the
@@ -404,8 +405,8 @@ framework.
 \item {\bf Template modules} enable to define general entities and to
   reuse them by instantiating and renaming which brings high
   productivity.
-\item {\bf Constructor-based inductive theorem prover} enables to
-  easily follow the provided procedure and develop consistent
+\item {\bf Constructor-based inductive theorem prover} enables users
+  to easily follow the provided procedure and develop consistent
   structure of models and proofs which brings high maintainability.
 \end{itemize}
 
