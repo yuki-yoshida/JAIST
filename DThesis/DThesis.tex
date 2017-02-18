@@ -74,7 +74,7 @@ suitable for proving absence of counter examples. However, when
 applying to practical problems it requires many human efforts to
 develop proofs.
 
-This thesis proposes a framework of interactive proof development for a
+This dissertation proposes a framework of interactive proof development for a
 kind of liveness properties, leads-to property, of cloud
 orchestration. We say ``framework'' to mean something like an
 application framework of software development which brings high
@@ -100,7 +100,7 @@ also shows a general way to manage dependencies of cloud resources
 which is a smarter one than that of the most popular tool,
 CloudFormation.
 
-The major contributions of this thesis are that (1) it introduces the
+The major contributions of this dissertation are that (1) it introduces the
 idea of frameworks from software development to proof development
 which results in high productivity and high maintainability of proofs
 and (2) it shows that the framework can be effectively applied to a
@@ -244,7 +244,7 @@ level of novice engineers and to enable a large number of engineers to
 efficiently develop a practical scale application with the consistent
 structure and behavior.
 
-This thesis proposes a ``framework'' of interactive proof development
+This dissertation proposes a ``framework'' of interactive proof development
 for a kind of liveness properties, {\it leads-to} property, of cloud
 orchestration. The most important property of an automated system
 operation, which we want to guarantee, is that the operation surely
@@ -304,7 +304,7 @@ stations.  Recently, Sala{\"u}n, G., et al.~\cite{EtcheversCBP11,
 cloud and demonstrated to verify a liveness property of the protocol
 using their model checking method.
 
-The framework proposed in this thesis supports another approach, namely
+The framework proposed in this dissertation supports another approach, namely
 {\it interactive theorem proving}, which can verify models of
 arbitrary many number of states and so suitable for proving absence of
 counter examples. It requires thinking through meanings of the
@@ -374,9 +374,9 @@ in the animation plug-in of Rodin.
 The existing researches of applying theorem proving to practical scale
 problems commonly reported that it requires much human efforts and the
 shortage of competent proof engineer is a remained problem, which is
-the main concern of this thesis.
+the main concern of this dissertation.
 
-One of the major contributions of this thesis is to introduce the idea
+One of the major contributions of this dissertation is to introduce the idea
 of frameworks from software development to proof development, which has
 a unique set of features as follows:
 \vspace{-0.3cm}
@@ -393,7 +393,7 @@ a unique set of features as follows:
 \item It also provides a procedure to guide novice proof engineers
   which results in consistent proofs with high maintainability.
 \end{itemize}
-Although the above features of ​​this thesis are, in principle, not
+Although the above features of ​​this dissertation are, in principle, not
 dependent on the theorem proving system to be implemented, the
 following functionalities of CafeOBJ, described in
 Chapter~\ref{chap:pre}, contribute to realizing the effective
@@ -413,7 +413,7 @@ framework.
 %% ===============================================================
 \section{Standard Specification Language of Cloud Orchestration}
 %% ===============================================================
-The second major contribution of this thesis is to show that the idea
+The second major contribution of this dissertation is to show that the idea
 of theorem proving framework can be effectively applied to a non-trivial
 problem, that is, to specify, represent, and verify the behavior
 models of the standard specification language of cloud orchestration
@@ -431,7 +431,7 @@ TOSCA assumes two main engineering roles, namely a type architect and
 an application architect. In a typical scenario, type architects
 define and provide several types of resources and an application
 architect uses them to define a topology of a cloud system. The type
-architect also defines {\it operations}\footnote{In this thesis, we say
+architect also defines {\it operations}\footnote{In this dissertation, we say
   {\it a type operation} as an operation of a type whereas TOSCA calls
   it {\it a lifecycle operation}.} of resource types, such as
 creating, starting, stopping, or deleting resources. A system
@@ -455,7 +455,7 @@ framework to define behavior of TOSCA types and to verify that a
 specified topology can correctly automate to set up the cloud system.
 
 \vspace{0.3cm}
-The rest of this thesis is organized as
+The rest of this dissertation is organized as
 follows. Chapter~\ref{chap:cloudorch} introduces several cloud
 orchestration tools. Chapter~\ref{chap:pre} introduces functionalities
 of \cafeobj language in which we represent formal specifications of
@@ -473,6 +473,8 @@ and future issues.
 \chapter{Cloud Orchestration Tools}
 \label{chap:cloudorch}
 %% ===============================================================
+
+%% Introduction of Cloud Computing
 
 %% ===============================================================
 \section{AWS CloudFormation}
@@ -787,7 +789,7 @@ template consists of a {\it topology template} and optionally a set of
 {\it plans}. A topology template defines the resource structure of a
 cloud system. Note that a topology template can be parameterized to
 give actual environment parameters such as IP addresses, which is the
-reason why named as ``template'' and in this thesis we simply say ``a
+reason why named as ``template'' and in this dissertation we simply say ``a
 topology'' for the sake of brevity. A plan is an imperative definition
 of a system operation of the cloud system, such as a setup plan,
 written by a standard process modeling language, such as BPMN~\cite{BPMN}.
@@ -858,7 +860,7 @@ has a {\it type}, such as {\tt VirtualMachine}, {\tt HostedOn}, and so
 on. Types are main functionalities of TOSCA that enable reusability of
 topology descriptions.
 
-TOSCA assumes two main engineering roles, namely a type architect and
+TOSCA assumes two main technical roles, namely a type architect and
 an application architect. In a typical scenario, type architects
 define and provide several types of those elements and an application
 architect uses them to define a topology of a cloud system. The type
@@ -876,7 +878,7 @@ topology. Naturally, the declarative manner is a main target of OASIS
 TOSCA because it promotes more abstract and reusable descriptions of
 topologies.
 
-In this thesis, {\it behavior of topologies} means when
+In this dissertation, {\it behavior of topologies} means when
 and which type operations should be invoked in automation. It is
 important to notice that behavior of a topology is decided by
 types of included nodes and relationships. We also say
@@ -1050,7 +1052,7 @@ as {\tt SV-SET} as follows:
 \normalsize
 %% =======================================================================
 What follows {\tt SERVICE}, namely \stt{\{sort Elt -> Service\}}, is
-the {\it view} used here saying that {\tt Elt} is replaced with
+a {\it view} used here saying that {\tt Elt} is replaced with
 {\tt Service} in the instantiation of {\tt SET} with
 {\tt SERVICE}. What follows {\tt *} is renaming. {\tt Set} and
 {\tt empty} are renamed as {\tt SvSet} and {\tt empSvSet},
@@ -1190,7 +1192,7 @@ definitions.
   such that $S\alpha=(S,\mathit{S_0},\mathit{S_1},\dots,\mathit{S_n})$.  \ul{$\alpha S$} is the
   transition sequence such that $\alpha S=(\mathit{S_0},\mathit{S_1},\dots,\mathit{S_n},S)$.  Let
   $\alpha=(\mathit{S_0},\mathit{S_1},\dots,\mathit{S_n})$ and
-  $\alpha=(\mathit{S_{n+1}},\mathit{S_{n+2}},\dots,\mathit{S_{n+m}})$ be transition sequences,
+  $\beta=(\mathit{S_{n+1}},\mathit{S_{n+2}},\dots,\mathit{S_{n+m}})$ be transition sequences,
   then \ul{$\alpha\beta$} is the transition sequence such that
   $\alpha\beta=(\mathit{S_0},\mathit{S_1},\dots,\mathit{S_n},\mathit{S_{n+1}},\mathit{S_{n+2}},\dots,\mathit{S_{n+m}})$.
 \end{notation}
@@ -1241,7 +1243,7 @@ states of the given global state, such as
   instead of {\tt 1}, \cafeobj finds all of the global states reachable from the
   given global state with at most three state transitions. If {\tt *} is used
   instead of {\tt +}, \cafeobj also includes the given global state as a
-  search target.  Only \stt{=(*,1)=>+} is used in this thesis.}.  The
+  search target.  Only \stt{=(*,1)=>+} is used in this dissertation.}.  The
 first reduction returns true because both transition rules are
 applicable.  The second one also returns true but only rule {\tt c2o}
 is applicable. The third one returns false.
@@ -1469,10 +1471,10 @@ the previous section collectively cover all of the cases.
 
 In order to assist to develop proof scores which are more systematic
 and easier to understand, \cafeobj provides CITP method consisting of
-several special commands. The following is the list of part of CITP
+several special commands. The following is a list of part of CITP
 commands\footnote{As its name suggests, CITP has capability to
   automatically produce inductive goals based on constructors, however
-  we use it only for management of proof trees in this thesis.}:
+  we use it only for management of proof trees in this dissertation.}:
 \begin{itemize}
 \item \stt{:goal \{ eq $term$ = true . \}}\\ Define the goal to be
   proved and let it be the current case. Multiple goal equations
@@ -1645,7 +1647,7 @@ correctness of an automated operation of a cloud system, we need to
 model the structure of the target cloud system and the behavior of the
 operation. We say ``model'' which means abstractly and formally
 specifying the structure and behavior. A specified model is represented
-by a formal specification language, namely \cafeobj in this thesis.
+by a formal specification language, namely \cafeobj in this dissertation.
 
 %% ===============================================================
 \section{Structure Models and Representations}
@@ -1705,7 +1707,7 @@ module that defines a sort of its objects, a constructor of the sort,
 a set of literals of types, and a set of literals of local states.  An
 object is represented as a ground constructor term of the sort.
 
-For the example show in Fig.~\ref{fig:AWSExample}, three objects may
+For the example shown in Fig.~\ref{fig:AWSExample}, three objects may
 be represented as the following ground terms:
 %% =======================================================================
 \small
@@ -1721,7 +1723,7 @@ representation of objects, typically the constructor name represents
 the class of the object ({\tt res}, {\tt prop}), the first argument is
 its type ({\tt ec2Instance}, {\tt ec2Eip}, {\tt instanceId}), the
 second is its identifier ({\tt myInstance}, {\tt myEIP},
-{\tt myEIP::InsID})\footnote{In this thesis, we often use an identifier
+{\tt myEIP::InsID})\footnote{In this dissertation, we often use an identifier
   to designate an object which has the identifier for the sake of
   brevity.}, and the third is its local state. The fourth argument of the
 property object represents a link to its parent, {\tt myEIP}, and the
@@ -1739,14 +1741,14 @@ system as a state transition system in which a set of {\it transition rules} of
 states specifies the behavior. We say a {\it global state} as a state
 of the state machine in order to avoid the confusion with local states
 of objects. A global state is a finite set of objects each of which is
-included of some class. A transition rule makes a global state transit
+included in some class. A transition rule makes a global state transit
 to another global state where local states or links of some objects
 are changed.
 
 In the case of a template of CloudFormation, a global state consists
 of finite number of resources and their properties. CloudFormation
 tries to start all of the resources according to the dependency specified by
-the template. In this thesis, we use a very simple behavior model of
+the template. In this dissertation, we use a very simple behavior model of
 CloudFormation as an example; a local state of a resource is firstly
 {\it initial} and becomes {\it started} but a dependent resource can
 be {\it started} after all of the resources it depends become {\it started}.
@@ -1941,7 +1943,7 @@ operators/predicates of objects, which generally and minimally defines
 what an object is in a class. The template can be instantiated and
 imported in a module for each class of objects, where the imported
 sorts and operators can be used just by renaming appropriately. For
-the example show in Fig.~\ref{fig:AWSExample}, following module
+the example shown in Fig.~\ref{fig:AWSExample}, following module
 {\tt RESOURCE} describes specifications of the resource class for
 CloudFormation\footnote{{\tt OBJECTBASE} is a template with no
   parameter and is used to instantiate a new module and to rename
@@ -1993,7 +1995,7 @@ CloudFormation\footnote{{\tt OBJECTBASE} is a template with no
 \end{verbatim}
 \normalsize
 %% =======================================================================
-The following is the list of nine sorts predefined by
+The following is a list of nine sorts predefined by
 template module {\tt OBJECTBASE}:
 \begin{itemize}
 \item \stt{Object} (renamed as \stt{Resource} in this case)\\
@@ -2018,7 +2020,7 @@ template module {\tt OBJECTBASE}:
   Sort for sets of local states of objects.
 \end{itemize}
 
-The following is the list of part of operators predefined by
+The following is a list of part of operators predefined by
 template module {\tt OBJECTBASE} whereas argument $\mathit{obj}$ is an object,
 $id$ is an identifier of an object, $seto$ is a set of objects, and
 $setls$ is a set of local states of objects:
@@ -2071,13 +2073,13 @@ local state of the resource. It also defines two local state literals,
 In addition, the module should implement three selector operators,
 {\tt type}, {\tt id}, and {\tt state}, each of which takes a resource
 as an argument and returns the type, the identifier, and the local
-state of the resource respectively since {\tt OBJECTBASE} uses them to
+state of the resource respectively and {\tt OBJECTBASE} uses them to
 implement the predefined general operators\footnote{{\tt OBJECTBASE}
   declares and uses these operators and so {\tt RESOURCE} only should
   define them by equations.}.
 
 Similarly, following module {\tt PROPERTY} specifies the property class 
-for the example show in Fig.~\ref{fig:AWSExample}.
+for the example shown in Fig.~\ref{fig:AWSExample}.
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -2248,7 +2250,7 @@ correspondence of the names:
 \end{verbatim}
 \normalsize
 %% =======================================================================
-The following is the list of eleven sorts assumed by
+The following is a list of eleven sorts assumed by
 module {\tt OBJLINKMANY2ONE}:
 \begin{itemize}
 \item \stt{Object} (actually named as \stt{Property} in this case)\\
@@ -2275,7 +2277,7 @@ module {\tt OBJLINKMANY2ONE}:
   Sort for sets of local states of linked objects.
 \end{itemize}
 
-The following is the list of five operators assumed by
+The following is a list of five operators assumed by
 module {\tt OBJLINKMANY2ONE} whereas argument $\mathit{obj}$ is a linking
 object, $lid$ is an identifier of a linked object, $setlo$ is a set of
 linked objects, and $setlls$ is a set of local states of linked
@@ -2306,7 +2308,7 @@ selector {\tt link} is specified differently, {\tt parent} and {\tt
 
 Many operators/predicates between linking (Z) and linked (X) objects
 are provided. In this case, each of them is twice renamed differently.
-The following is the list of part of operators predefined by template
+The following is a list of part of operators predefined by template
 module {\tt OBJLINKMANY2ONE} whereas argument $\mathit{obj}$ is a linking
 object, $seto$ is a set of linking objects, $setls$ is a set of local
 states of linking objects, $\mathit{lobj}$ is a linked object, $lid$ is an
@@ -2386,7 +2388,8 @@ Section~\ref{sec:TOSCAstructRep}.
 %% ===============================================================
 In the course of verification, a lot of lemmas about predefined
 predicates are commonly required.  The framework provides many 
-typical lemmas which are already proved as general as the templates
+typical lemmas which are already proved in a general
+level of abstraction
 and can be used for any instantiated predicates without individual
 proofs. Most of proved lemmas provided together with proof scores
 written in \cafeobj.
@@ -3382,7 +3385,7 @@ latter as {\it strong-leads-to}. The set of conditions proposed by
 Lemma~\ref{def:sufcond} is sufficient to both meanings of leads-to
 because the properly decreasing natural number function, $m$, ensures
 that transition sequences never become infinite while keeping $q$ not
-to hold. In the rest of this thesis, we mean ($p~\mbstt{leads-to}~q$)
+to hold. In the rest of this dissertation, we mean ($p~\mbstt{leads-to}~q$)
 as ($p~\mbstt{strong-leads-to}~q$).
 
 Let the automation of a setup operation be modeled as a state machine
@@ -3494,7 +3497,7 @@ be represented by \cafeobj as follows:
 \end{verbatim}
 \normalsize
 %% =======================================================================
-Among conditions composing $init(S)$, one without referring any local
+Among conditions composing $init(S)$, one referring to no local
 states of objects is called a {\it wfs (well-formed state)} and we
 usually gather them and define predicate {\tt wfs} as a conjunction of
 them. The reason why we need several wfs predicates
@@ -3693,7 +3696,7 @@ respectively:
 This case is too general to judge whether the condition does or does
 not hold. Thereby, no reduction occurs.\\
 
-\noindent{\bf Step 1-2:} Think which rule is applied to the global
+\noindent{\bf Step 1-2:} Consider which rule is applied to the global
 state in the current case. The rule is referred to as the {\it current
 rule}.\\
 One of the main benefits of interactive proof development is that
@@ -3818,7 +3821,7 @@ resource {\tt idRS} is {\tt initial}, the Cyclic Dependency Lemma
 ensures there exists some {\tt initial} resource {\tt RS} such that no
 resource in \stt{DDSC(RS,S)} is {\tt initial}. Recalling that we chose
 {\tt idRS} as an arbitrary {\tt initial} resource in Step 1-3, we can
-assume that itself is such {\tt RS} and can claim that there is a
+assume that resource {\tt idRS} itself is such {\tt RS} and can claim that there is a
 contradiction when its $\mathit{DDS_C}$ includes any {\tt initial} resource
 using a {\tt :init} command as follows:
 %% =======================================================================
@@ -4046,7 +4049,7 @@ What is more important is to keep proof scores independent from the
 reduction strategy of \cafeobj system. To do so, we have to write the
 proof score such as it does nothing when
 \stt{allPROfRSInStates(sPR,idRS,ready)} reduces to true but otherwise
-it claims that the term reduces to true, which is the work of the {\tt
+it claims that the term reduces to true, which is the meaning of the {\tt
   :init} command above.
 
 The command \stt{:set(normalize-init,on)} means that substituted
@@ -4173,7 +4176,7 @@ almost the same as of~(2). \\
 
 \noindent{\bf Step 3-0:} Use natural number axioms. \\
 Since the standard sort {\tt Nat} of \cafeobj does not have enough
-knowledge to deduce natural number expressions, the framework provides
+information to deduce natural number expressions, the framework provides
 several axioms to be used for proof of condition~(3) and
 (4).  The following is one of those axioms to be used
 for the CloudFormation example:
@@ -4322,7 +4325,7 @@ as follows:
 \section{Procedure: Proof of Sufficient Condition~(5) \&~(6)}
 \label{sec:invariant}
 %% ===============================================================
-Since predicate $inv$ is a conjunction of typically many predicates, it is
+Since predicate $inv$ typically is a conjunction of many predicates, it is
 better to prove each of them separately. Suppose $inv(S) =
 inv_1(S)\land inv_2(S)\land\dots\land inv_n(S)$, then we can
 separately prove the invariant property of each $inv_k(S)$ since the
@@ -4471,7 +4474,7 @@ We can begin with two cases for two rules. Since rule {\tt R01} is
 conditional, the general case should be split into two cases according
 to Step 6-3. The first case should be split into more two cases
 where the set of properties is or is not empty.
-Then, the goals of totally four cases can be proved and
+Then, the goals of all four cases can be proved and
 thus condition~(6) is proved as follows:
 %% ===============================================================
 \small
@@ -4511,7 +4514,7 @@ We should prove all of the wfs predicates as invariants, however, they are
 included in $init$ and so we only need to prove
 condition~(6) for each of them. Most of them check some
 structural constraints of the cloud systems, which should usually keep
-to hold when some transition rule only changes a local state and
+to hold when some transition rule changes a local state only and
 does not change any links of some
 object. When a wfs predicate is defined using predefined predicates, it
 is easy to prove the invariant property of the wfs because the framework
@@ -4588,7 +4591,7 @@ cases where the condition of the rule does or does not hold.
 We should prove the invariant property of $noCycle_C(S)$ in order to
 use the Cyclic Dependency Lemma, however, it is included in $init$ and
 thus we only need to prove condition~(6) for $noCycle_C$.
-The Depending Subset Lemma described in Section~\ref{sec:lemma}
+The Depending Subset Lemma in Section~\ref{sec:lemma}
 ensures that we should prove that $\forall (S,S') \in \mathit{Tr}, \forall X\in
 C:\mathit{DDS_C}(X,S')\subseteq \mathit{DDS_C}(X,S)$ instead of
 condition~(6).\\
@@ -4792,7 +4795,7 @@ to repeat almost the same proof totally three times.
 Thereby, it is wise to define a lemma and use it in the similar cases.
 The lemma claims that if there is an {\tt initial} resource in a
 global state then there exists a transition rule applicable to the
-global state. It can be proved very similar to the proof of
+global state. It can be proved similar to the proof of
 condition~1 as follows.
 
 \noindent{\bf Step 1-0:} Define a predicate to be proved.
@@ -4822,7 +4825,7 @@ condition~1 as follows.
 \end{verbatim}
 \normalsize
 %% =======================================================================
-\noindent{\bf Step 1-2:} Think which rule is applied to the global
+\noindent{\bf Step 1-2:} Consider which rule is applied to the global
 state in the current case. The rule is referred to as the {\it current
 rule}.\\
 The applicable transition may be {\tt R01} because the global state
@@ -4865,7 +4868,7 @@ exist.
 \end{verbatim}
 \normalsize
 %% =======================================================================
-\noindent{\bf Step 1-2:} Think which rule is applied to the 
+\noindent{\bf Step 1-2:} Consider which rule is applied to the 
 global state in the current case. \\
 In this case, the transition rule to be applied may be {\tt R02} because the
 global state includes a property.\\
@@ -5137,7 +5140,7 @@ following three cases:
   into two more cases where set of object \stt{s}, is or not is
   empty. While we may avoid this situation by changing the order of
   the case splitting guided by the framework, it requires careful
-  considerations and results in difficult proof scores to understand
+  considerations and results in proof scores difficult to understand
   and maintain. Thus, we decided to recommend writing proof codes
   which explicitly ensure the confluent property as follows:
   \begin{verbatim}
@@ -5303,14 +5306,14 @@ messages, which abstracts implementations of messaging.
 There are several domain specific constraints of the structure:
 \begin{enumerate}
 \item A node should be hosted on at most one other node.
-\item A relationship should not be between a capability and a
+\item A relationship should not relate a capability and a
   requirement of the same node.
-\item A local relationship should be between a capability and a
+\item A local relationship should relate a capability and a
   requirement of the nodes hosted on the same virtual machine.
-\item A remote relationship should be between a capability and a
+\item A remote relationship should relate a capability and a
   requirement of the nodes hosted on the different virtual machines.
 \item We assume that types of capabilities and requirements are
-  the same as relationships that link them in this thesis for the sake
+  the same as relationships that link them in this dissertation for the sake
   of simplicity.
 \end{enumerate}
 
@@ -5647,7 +5650,7 @@ Sort {\tt RLType} is declared as a subsort of {\tt CPType} and {\tt RQType}
 which means types of relationships can be used as types of capabilities
 and requirements.
 The types of relationships are {\tt hostedOn}, {\tt dependsOn}, and
-{\tt connectsTo}.  Among them,\\ {\tt hostedOn} and {\tt dependsOn} are
+{\tt connectsTo}.  Among them, {\tt hostedOn} and {\tt dependsOn} are
 {\tt isLocal}.  Note that {\tt cap} and {\tt req} are selectors for
 links to the corresponding capability and requirement respectively of
 the relationship.
@@ -5815,7 +5818,7 @@ their corresponding capabilities and requirements are one-to-one.
 In addition to the predefined predicates/operators explained in
 Section~\ref{sec:linkpred}, module {\tt LINKS} uses {\tt
   OBJLINKMANY2ONE} to instantiate several operators concerning object
-types. The following is the list of them whereas argument $seto$ is a
+types. The following is a list of such operators whereas argument $seto$ is a
 set of linking objects, $setls$ is a set of local states of linking
 objects, $\mathit{lobj}$ is a linked object, $lid$ is an identifier of a linked
 object, $setlo$ is a set of linked objects, $setlls$ is a set of local
@@ -5863,7 +5866,7 @@ m  is $ty$ and whose local sate is included in $setlls$ is linked by
 \end{itemize}
 
 Module {\tt LINKS} also uses {\tt OBJLINKONE2ONE} to instantiate many
-predicates/operators. The following is the list of them whereas argument
+predicates/operators. The following is a list of such operators whereas argument
 $\mathit{obj}$ is a linking object, $seto$ is a set of linking objects, $setls$
 is a set of local states of linking objects, $\mathit{lobj}$ is a linked
 object, $lid$ is an identifier of a linked object, $setlo$ is a set of
@@ -6010,7 +6013,7 @@ capabilities and requirements connected by relationships, and (3) to
 represent other problem specific constraints. All of these operators can
 be easily implemented by combining predefined operators.
 
-The following is the list of them whereas argument $setCP$ is a set of
+The following is a list of such operators whereas argument $setCP$ is a set of
 capabilities, $setRQ$ is a set of requirements, $setRL$ is a set of
 relationships, $node$ is a node, $cap$ is a capability, $req$ is a
 requirement, $rel$ is a relationship, $setlCP$ is a set of local
@@ -6195,7 +6198,7 @@ relationship is ``local'' in the same VM, while a ConnectsTo is
 ``remote'' to a different VM and should use some messages to notice
 the states of its capability to its requirement. We assume that a
 state of a relationship is a pair of the states of its capability and
-requirement in this thesis for the sake of simplicity. Thereby, an
+requirement in this dissertation for the sake of simplicity. Thereby, an
 operation of a relationship type changes the state of its capability
 or requirement.
 
@@ -6215,7 +6218,7 @@ operation or a message sending.
 There are twelve invocation rules; two of them are for node
 operations, two are for operations of HostedOn relationship, four are
 for DependsOn, and four are for ConnectsTo. The followings are
-detailed definitions of them in English:
+their detailed definitions explained in natural language:
 \begin{description}
 \item[]Initial States: Every node is initially in a local state named
   as $initial$, every capability of the node is $closed$, and every
@@ -6718,7 +6721,7 @@ because {\tt S} is a reachable global state.
 \end{verbatim}
 \normalsize
 %% =======================================================================
-\noindent{\bf Step 1-2:} Think which rule is applied to the 
+\noindent{\bf Step 1-2:} Consider which rule is applied to the 
 global state in the current case. \\
 The applicable rule may be {\tt R01} because the global state includes
 an {\tt initial} node.\\
@@ -6749,7 +6752,7 @@ the condition of the current rule does or does not hold.
 %% =======================================================================
 Only Case 2 remains unproved and it then becomes the current case.\\
 
-\noindent{\bf Step 1-2:} Think which rule is applied to the 
+\noindent{\bf Step 1-2:} Consider which rule is applied to the 
 global state in the current case. \\
 The applicable rule may be {\tt R04} because the global state in Case
 2 includes an {\tt unbound hostedOn} requirement.\\
@@ -6812,7 +6815,7 @@ the current rule.
 %% =======================================================================
 Only Case 2-2-2-2-1 remains unproved.\\
 
-\noindent{\bf Step 1-2:} Think which rule is applied to the 
+\noindent{\bf Step 1-2:} Consider which rule is applied to the 
 global state in the current case. \\
 The applicable rule may be {\tt R03} because the global state in Case
 2-2-2-2-1 includes an {\tt unbound hostedOn} requirement.\\
@@ -6920,7 +6923,7 @@ state {\tt S}.
 \end{verbatim}
 \normalsize
 %% =======================================================================
-\noindent{\bf Step 1-2:} Think which rule is applied to the 
+\noindent{\bf Step 1-2:} Consider which rule is applied to the 
 global state in the current case. \\
 The applicable rule may be {\tt R02} because the global state includes
 a {\tt created} node.\\
@@ -6951,7 +6954,7 @@ the condition of the current rule does or does not hold.
 %% =======================================================================
 Both Case 2 and 3 remain unproved. Let Case 2 be the current state.\\
 
-\noindent{\bf Step 1-2:} Think which rule is applied to the 
+\noindent{\bf Step 1-2:} Consider which rule is applied to the 
 global state in the current case. \\
 The applicable rule may be {\tt R04}, {\tt R07}, or {\tt R11} because
 the global state in Case 2 includes an {\tt unbound} requirement and
@@ -7040,7 +7043,7 @@ the current rule.
 Case 2-2-2-2-2-2 and 2-2-2-2-2-2 are proved because {\tt R07} is
 applicable.  Thus, only Case 2-2-2-2-2-1 remains unproved.\\
 
-\noindent{\bf Step 1-2:} Think which rule is applied to the 
+\noindent{\bf Step 1-2:} Consider which rule is applied to the 
 global state in the current case. \\
 The applicable rule may be {\tt R05} because the global state in Case
 2-2-2-2-2-1 includes an {\tt closed dependsOn} capability.\\
@@ -7192,7 +7195,7 @@ initial-cont lemma:
 \normalsize
 %% =======================================================================
 
-\noindent{\bf Step 1-2:} Think which rule is applied to the 
+\noindent{\bf Step 1-2:} Consider which rule is applied to the 
 global state in the current case. \\
 The first rule is {\tt R01}. \\
 
@@ -7429,7 +7432,7 @@ the created-cont lemma respectively.\\
 predicate $final$ does or does not hold in the next state.\\
 We know that $final$ never holds in the next state of this case.\\
 
-\noindent{\bf Step 2-4:} Think which rule can be applied to the next
+\noindent{\bf Step 2-4:} Consider which rule can be applied to the next
 state. \\
 Since the next state in Case 2-3 includes an {\tt available} {\tt
   dependsOn} capability with identifier {\tt idCP}, rule {\tt R08} can
@@ -7531,7 +7534,7 @@ to be {\tt dependsOn} and the local state of it to be {\tt waiting}.
 %% =======================================================================
 Only Case 2-3-2-2-2-2-1 remains unproved.\\
 
-\noindent{\bf Step 2-4:} Think which rule can be applied to the next
+\noindent{\bf Step 2-4:} Consider which rule can be applied to the next
 state. \\
 Since the next state in Case 2-3-2-2-2-2-1 includes an {\tt unbound} {\tt
   dependsOn} requirement with identifier {\tt idRQ}, rule {\tt R07} can
@@ -7795,7 +7798,7 @@ links. The framework requires users to define 8 operators, i.e.\ {\tt
   init}, {\tt final}, {\tt wfs}, {\tt inv}, {\tt m}, {\tt invK}, {\tt
   getAllNDInState}, and {\tt DDSC}.
 
-Remaining 30 operators are fully original ones of this problem,
+Remaining 30 operators are truly problem specific,
 however almost all of them can be easily defined combining predefined
 operators and can be written in only several code lines. As described in
 Section~\ref{sec:TOSCAstructRep}, there are three kinds of them:
@@ -7925,7 +7928,7 @@ animation plug-in of Rodin.
 
 Although reusing abstract entities by renaming and composing is a
 similar approach to our framework, Silva, R. and Butler, M. J. did not
-provide any actually reusable entities whereas out framework provides
+provide any actually reusable entities whereas our framework provides
 general templates, libraries, lemmas, and a procedure reusable in a
 specific domain. Tikhonova, U., et al. applied the idea to the domain
 of the lithography machine control, however, they did not reuse
@@ -7938,10 +7941,10 @@ Sala{\"u}n, G., et al.~\cite{EtcheversCBP11, SalaunBCPEG13,
   SalaunEPBC13} designed a system setup protocol and demonstrated to
 verify a liveness property of the protocol using their model checking
 method. Although their setup protocol is essentially the same as the
-behavior model of our TOSCA example in this thesis, there are four main
+behavior model of our TOSCA example in this dissertation, there are four main
 differences.
 
-Firstly, they proved one specific protocol whereas this thesis proposes
+Firstly, they proved one specific protocol whereas this dissertation proposes
 a general way to specify, represent, and verify behavior of cloud
 orchestration and also shows that it can be effectively applied to a
 model of standard specification language as a non-trivial case study.
@@ -8027,10 +8030,10 @@ roll back also fails. On the other hand, the current version of TOSCA
 does not manage operation failures and it focuses on declaratively
 defining expected configurations of cloud systems. A possible
 future extension of TOSCA may be to define alternative configurations
-in failure cases, which we think we can easily extend our
-formalization to handle.
+in failure cases, which our
+formalization can be extended to handle.
 
-In this thesis, we explain our framework using examples of system setup
+In this dissertation, we explain our framework using examples of system setup
 operations of cloud systems because cloud orchestration tools
 currently focus on them. However, TOSCA is designed to be used for any
 types of system operations such as scale-out and scale-in. One of the
@@ -8050,7 +8053,7 @@ property of $noCycle$ described in Section~\ref{sec:cyclelemma} will
 be also effective for the solution.
 
 Although the framework focuses on leads-to properties, which is one of
-the main contribution of this thesis, safety properties are of another
+the main contribution of this dissertation, safety properties are of another
 category of important properties that automated system operations
 should have. The framework also supports to verify invariant properties
 which may represent various safety properties of cloud orchestration,
@@ -8102,7 +8105,7 @@ represent, and verify the behavior models of the standard
 specification language, OASIS TOSCA, of cloud orchestration where the
 standard has not yet provided any ways to do so.
 
-The major contributions of this thesis are that (1) it introduces the
+The major contributions of this dissertation are that (1) it introduces the
 idea of frameworks from software development to proof development
 which results in high productivity and high maintainability of proofs
 and (2) it shows that the framework can be effectively applied to a
@@ -8110,7 +8113,7 @@ non-trivial problem, that is, to specify, represent, and verify the
 behavior models of the standard specification language of cloud
 orchestration.
 
-All of the \cafeobj codes of the framework and example proof scores in this thesis
+All of the \cafeobj codes of the framework and example proof scores in this dissertation
 can be downloaded at \url{https://github.com/yuki-yoshida/JAIST}.
 
 \appendix
