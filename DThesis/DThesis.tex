@@ -271,7 +271,7 @@ predicates, and lemmas. Using them, the verification procedure assists
 developers to systematically think and develop proofs of leads-to
 properties.  The theorem proving framework is expected to raise the
 skill level of proof developers and to enable a number of engineers to
-efficiently develop a practical scale proofs of cloud orchestration
+efficiently develop practical scale proofs of cloud orchestration
 with a consistent structure.
 
 %% ===============================================================
@@ -470,11 +470,34 @@ specifications.  Chapter~\ref{chap:conclusion} explains related work
 and future issues.
 
 %% ===============================================================
-\chapter{Cloud Orchestration Tools}
+\chapter{Cloud Orchestration}
 \label{chap:cloudorch}
 %% ===============================================================
+Cloud computing is a model for providing computational resources that
+allows on-demand accesses via the internet to shared pools of
+configurable resources such as networks, computers, storage,
+middleware, development tools, applications, etc.
 
-%% Introduction of Cloud Computing
+Cloud computing services are classified into three categories by the
+type of computing resources to provide. IaaS (Infrastructure as a
+Service) is one of the service categories which mainly provides
+hardware facilities via the internet. Such as servers, storages, and
+networks are typically provided and called as virtual machines(VMs),
+virtual storages, and virtual networks. PaaS (Platform as a Service)
+is another category which mainly provides middleware (software
+components for constructing applications) via the internet, such as
+application servers, databases, and messaging queues, and so on. SaaS
+(Software as a Service) is the last category in which applications are
+provided via the internet.
+
+Recent rapid progress of cloud computing accelerates the whole life
+cycle of system usage and requires much flexible automation of system
+operations, such as set-up, scale-out, scale-in, or shutdown of cloud
+systems. Automation of cloud system operations is called {\it resource
+  orchestration}, or {\it cloud orchestration} and there are many
+cloud orchestration tools used in practical situations. This chapter
+introduces several popular cloud orchestration tools and describes
+differences of their ways to specify automated system operations.
 
 %% ===============================================================
 \section{AWS CloudFormation}
@@ -1638,8 +1661,72 @@ which is also split into three case (for example, {\tt 1-1},
 all of the cases are successfully proved.
 
 %% ===============================================================
-\chapter{Models and Representations of Cloud Orchestration}
+%% \chapter{Models and Representations of Cloud Orchestration}
+\chapter{Theorem Proving Framework}
 \label{chap:model}
+%% ===============================================================
+The theorem proving framework proposed by this dissertation aims to
+facilitate interactive proof development by allowing proof developers
+to devote their time to thinking through meaning of their own
+specifications and specific reasons why the specifications have some
+desired properties rather than reinventing how to construct proof
+scores or proving many specific versions of some common lemmas,
+thereby reducing overall development time. By doing so, the framework
+is expected to raise the skill level of novice proof developers and to
+enable a number of engineers to efficiently develop the proof score
+for a practical scale problem.
+
+The framework supports developers using mainly two means to reuse
+proof developments. Firstly, it provides a procedure how to develop
+proof scores to verify leads-to properties as well as invariant
+properties of cloud orchestration specifications. For every such
+property, there are several proof goals all of which should reduce to
+true. A proof score for each property consists of proof case trees
+each of which corresponds to one of the proof goal. The root of a
+proof case tree represents the most general case of the proof
+goal. When the goal does not reduce to true in the root case, it
+should be split into more concrete sub-cases which collectively cover
+the root case. Such case splitting should be continued until all the
+leaf cases reduce to true and then the proof goal is verified. The proof
+development procedure provided by the framework prescribes what kind
+of set of proof goals should be sufficient to verify invariant and
+leads-to properties of specifications and guides how to split cases to
+develop proof case trees. Proof developers can easily follow this
+procedure to make the specific proof goals for their own
+specifications and to proceed case splitting until all the goals
+reduce to true.
+ 
+Secondly, the framework provides many reusable lemmas that are
+commonly used in the course of verification for invariant and leads-to
+properties of cloud orchestration specifications. The provided lemmas
+are already proved in a general level of abstraction and can be reused
+simply by renaming included general terms to some specific ones
+without reproving.
+
+The reason why the framework can provide such a proof development
+procedure and reusable lemmas for the specific problem domain, cloud
+orchestration in our case, is because it makes specific specifications
+adopt a general structure and behavior model for the domain and its
+representation.  Proof developers can describe such specifications
+only by instantiating logical templates provided by the framework and
+adding small specific part of codes.
+
+The reusable entities provided by the framework are four kinds of logic
+templates, a lot of general predicates/operators included in the templates,
+and a lot of lemmas about such predicates/operators which are proved in the general
+level of abstraction. The framework also provides general sufficient
+conditions to verify invariant and leads-to properties of cloud orchestration
+specifications and provides a procedure to develop proof trees whose goals
+are the sufficient conditions.
+
+The rest of this chapter describes the general structure and behavior model and
+its representation. The reusable entities provided by the framework will
+be described in Chapter~\ref{chap:reusable} and the proof development procedure
+will be described in Chapter~\ref{chap:verification}.
+
+%% ===============================================================
+\section{Structure Models and Representations}
+\label{sec:structuremodel}
 %% ===============================================================
 Cloud Orchestration is automation of operations such as set-up,
 scale-out, scale-in, or shutdown of cloud systems. In order to verify
@@ -1649,10 +1736,6 @@ operation. We say ``model'' which means abstractly and formally
 specifying the structure and behavior. A specified model is represented
 by a formal specification language, namely \cafeobj in this dissertation.
 
-%% ===============================================================
-\section{Structure Models and Representations}
-\label{sec:structuremodel}
-%% ===============================================================
 CloudFormation models a structure of a cloud system simply as a set
 of {\it resources} on IaaS platform of AWS. The model is called a {\it
   template} which is represented by JSON as illustrated in
