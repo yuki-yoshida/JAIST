@@ -4,7 +4,7 @@ mod! SET(X :: TRIV) {
   [Elt.X < Set]
 
   op empty : -> Set {constr}
-  op _ _ : Set Set -> Set {constr assoc comm}
+  op _ _ : Set Set -> Set {constr assoc comm id: empty}
 
   --
   op _U_ : Set Set -> Set

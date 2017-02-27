@@ -8,10 +8,11 @@ This package includes following files:
 
 - README.md: This file.
 
+- lib/Template.cafe: Template modules of objects.
 - lib/SET.cafe: Utility module defining general sets.
 - lib/BAG.cafe: Utility module defining general bags.
 - lib/PNAT.cafe: Utility module defining Peano Style natural numbers.
-- lib/Template.cafe: Template modules of objects.
+- lib/NatAxiom.cafe: Utility module defining general axioms for natural numbers.
 - lib/Lemmas.cafe: Proof scores for general lemmas.
 
 - AWS/Domain.cafe: Specification of an AWS CloudFormation Template.
@@ -24,7 +25,6 @@ This package includes following files:
 - AWS/Proof-measure.cafe: Proof scores for condition (3) and (4).
 - AWS/Proof-inv.cafe: Proof scores for condition (5) and (6).
 - AWS/all.cafe: Execute all proof scores.
-
 
 - TOSCA/Domain.cafe: Specification of an OASIS TOSCA Topology.
 - TOSCA/Simulate.cafe: Example execution of the OASIS TOSCA Topology.

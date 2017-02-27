@@ -5,7 +5,6 @@ in Proof-initcont.cafe
 in Proof-contcont.cafe      -- Reload everytime!
 in Proof-contcont-R01.cafe
 in Proof-contcont-R02.cafe
-in Proof-cyclelemma.cafe
 in Proof-measure.cafe
 in Proof-inv.cafe
---> Totally 19 goals should be proved.
+--> Totally 18 goals should be proved.
