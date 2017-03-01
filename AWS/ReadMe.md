@@ -6,11 +6,11 @@
 
 ### ctf Command
  - :ctf {eq LHS = RHS .}
- - Split the current case into two cases adding "eq~$LHS$~=~$RHS$~." to one case and "eq~($LHS$~=~$RHS$)~=~false~." to another.
+ - Split the current case into two cases adding "eq LHS = RHS ." to one case and "eq (LHS = RHS) = false ." to another.
 
 ### csp Command
  - :csp {eq LHS1 = RHS1 . eq LHS2 = RHS2 . ...}
- - Split the current case into several cases that are "eq LHS1 = RHS1 .", "eq LHS2 = RHS2 .", and so on.
+ - Split the current case into several cases adding "eq LHS1 = RHS1 .", "eq LHS2 = RHS2 .", and so on.
 
 ### init Command
  - :init [LABEL] by { SUBSTITUTION }
