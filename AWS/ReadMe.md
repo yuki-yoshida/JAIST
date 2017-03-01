@@ -1,32 +1,33 @@
-# AWS CloudFormationのleads-to特性の検証サンプル
-## CITP(Constructor-based Inductive Theorem Prover)について
-### goalコマンド
+# Verification Sample for a leads-to property of AWS CloudFormation
+## Memo of CITP(Constructor-based Inductive Theorem Prover)
+### goal Command
  - :goal {eq EXPRESSION = true .}
- - 証明すべきゴールを設定する。
+ - Define the goal to be proved and let it be the current case. 
 
-### ctfコマンド
+### ctf Command
  - :ctf {eq LHS = RHS .}
- - 「eq LHS = RHS .」と「eq (LHS = RHS) = false .」にケース分けする。
+ - Split the current case into two cases adding "eq~$LHS$~=~$RHS$~." to one case and "eq~($LHS$~=~$RHS$)~=~false~." to another.
 
-### cspコマンド
+### csp Command
  - :csp {eq LHS1 = RHS1 . eq LHS2 = RHS2 . ...}
- - 「eq LHS1 = RHS1 .」「 eq LHS2 = RHS2 .」...にケース分けする。
+ - Split the current case into several cases that are "eq LHS1 = RHS1 .", "eq LHS2 = RHS2 .", and so on.
 
-### initコマンド
- - :init [LABEL] by { 変数置換 }
- - LABELを名前とする未実行(nonexec)lemmaを、変数置換して導入する。
- - 他の方法で証明済のlemmaを、ケース分けしないで導入する方法。
+### init Command
+ - :init [LABEL] by { SUBSTITUTION }
+ - Introduce a nonexec lemma whose name is LABEL after executing SUBSTITUTION.
+ - A lemma which is already proved can be introduced without case splitting.
 
-### applyコマンド
+### apply Command
  - :apply (rd)
- - 現在選択中のケースでゴールをreduceする。証明できたら次のケースを選択する。
+ - Try to reduce the goal in the current case.
+ - When succeeding to reduce, select the next case as current.
 
-### show proofコマンド
+### show proof Command
  - show proof
- - その時点までの証明木を表示する。証明済のケースには*が示される。
+ - Show the proof tree. * is displayed for each proved case.
 
-## CITPテクニック
-### テクニック (1)
+## Several CITP Techniques
+### Technique (1)
  - CITPではgoalを途中で変更できないので、「AならばB」の形式のLemmaを導入する場合は、eq (A implies B) = true.を定義するが、以下のいずれかの方がこれと等価で効率が良い。
    1. ceq B = true if A .　　　
    2. ceq A = false if not B .
