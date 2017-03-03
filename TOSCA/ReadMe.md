@@ -65,7 +65,7 @@
  - CDL適用可能な状態に対して、スコーレム関数を適用して対象nodeを導入し、initコマンドでCycleR02を導入し、矛盾を導く。
  - 「created nodeが存在すれば適用可能なルールが存在する、つまりcont(S)が成り立つ」ことはcondition (1)と(2)の多くのルールの証明で度々必要になるので、Created Cont Lemmaとして事前に証明しておく(Proof-cyclelemma.cafe)。証明内容については後述。
 
-## Condtion (1): init(S) implies cont(S) の証明譜 (Proof-initcont.cafe)
+## Condition (1): init(S) implies cont(S) の証明譜 (Proof-initcont.cafe)
 ### ステップ 1-0: 証明すべき述語を定義
  - initcont = init implies cont
  - Initial Cont Lemmaを導入し、initial nodeがあればcont(S)はtrueになることを表明しておく。
@@ -83,7 +83,7 @@
  - Case 2-2: created nodeが少なくとも一つある => 証明可能 (init(S)がfalse)
  - Case 2-3: started nodeが少なくとも一つある => 証明可能 (init(S)がfalse)
 
-## Condtion (2): inv(S) and not final(S) implies cont(SS) or final(SS) の証明譜 (Proof-contcont.cafe)
+## Condition (2): inv(S) and not final(S) implies cont(SS) or final(SS) の証明譜 (Proof-contcont.cafe)
 ### ステップ 2-0: 証明すべき述語を定義
  - ccont = inv and not final implies cont' or final'
  - 次状態が存在する状態に関する条件なので、前件にcont(S)が不要であることに注意。
@@ -91,7 +91,7 @@
  - Initial Cont Lemmaを導入し、initial nodeがあればcont(S)はtrueになることを表明しておく。
  - Created Cont Lemmaを導入し、created nodeがあればcont(S)はtrueになることを表明しておく。
 
-## R01に対するCondtion (2)の証明譜 (Proof-contcont-R01.cafe)
+## R01に対するCondition (2)の証明譜 (Proof-contcont-R01.cafe)
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R01のLHSは１つ以上のinitial nodeが必要なので、tnd, idND, sND, sCP, sRQ, sRL,mpを任意定数として< (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >が最も一般的な状態。
 
@@ -100,7 +100,7 @@
  - Case 1: initial nodeのhostedOn requirementがすべてready => 証明可能 (Created Cont Lemmaによりcont(S')がtrue)
  - Case 2: initial nodeのhostedOn requirementがすべてready、ではない => 証明可能 (次状態が無い)
 
-## R02に対するCondtion (2)の証明譜 (Proof-contcont-R02.cafe)
+## R02に対するCondition (2)の証明譜 (Proof-contcont-R02.cafe)
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R02のLHSは１つ以上のcreated nodeが必要なので、tnd, idND, sND, sCP, sRQ, sRL,mpを任意定数として< (node(tnd,idND,created) sND), sCP, sRQ, sRL, mp >が最も一般的な状態。
 
@@ -115,7 +115,7 @@
  - Case 1-2: 残りのnodeの少なくとも一つがinitial => 証明可能 (Initial Cont Lemmaによりcont(S')がtrue)
  - Case 1-3: 残りのnodeの少なくとも一つがcreated => 証明可能 (Created Cont Lemmaによりcont(S')がtrue)
 
-## R03に対するCondtion (2)の証明譜 (Proof-contcont-R03.cafe)
+## R03に対するCondition (2)の証明譜 (Proof-contcont-R03.cafe)
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R03のLHSは１つ以上のclosedなhostedOn capabilityが必要なので、< sND, (cap(hostedOn,idCP,closed,idND) sCP), sRQ, sRL, mp >が最も一般的な状態。
 
@@ -148,7 +148,7 @@
    - Case 1-2-2: 対応するrelationshipがdependsOn => 証明可能 (wfs-allRLHaveSameTypeCPRQ(S)がfalse)
    - Case 1-2-3: 対応するrelationshipがconnectsTo => 証明可能 (wfs-allRLHaveSameTypeCPRQ(S)がfalse)
 
-## R04に対するCondtion (2)の証明譜 (Proof-contcont-R04.cafe)
+## R04に対するCondition (2)の証明譜 (Proof-contcont-R04.cafe)
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R04のLHSはavailable capability、それに対応するrelationshipと、されにそれに対応するunbound requirementが必要なので、< sND, (cap(hostedOn,idCP,available,idND) sCP), (req(hostedOn,idRQ,unbound,idND') sRQ), (rel(hostedOn,idRL,idCP,idRQ) sRL), mp >が最も一般的な状態。
 
@@ -169,7 +169,7 @@
    - Case 2-2: 対応するnodeがcreated => 証明可能 (inv-ifNDCreatedThenHostedOnRQReady(S)がfalse)
    - Case 2-2: 対応するnodeがstarted => 証明可能 (inv-ifNDStartedThenRQReady(S)がfalse)
 
-## R05に対するCondtion (2)の証明譜 (Proof-contcont-R05.cafe)
+## R05に対するCondition (2)の証明譜 (Proof-contcont-R05.cafe)
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R05のLHSは１つ以上のclosedなdependsOn capabilityが必要なので、< sND, (cap(dependsOn,idCP,closed,idND) sCP), sRQ, sRL, mp >が最も一般的な状態。
 
@@ -184,7 +184,7 @@
  - Case 2-2: capabilityに対応するnodeがcreated => 証明可能 (Created Cont Lemmaによりcont(S')がtrue)
  - Case 2-3: capabilityに対応するnodeがstarted => 証明可能 (R06が適用可能なのでcont(S')がtrue)
 
-## R06に対するCondtion (2)の証明譜 (Proof-contcont-R06.cafe)
+## R06に対するCondition (2)の証明譜 (Proof-contcont-R06.cafe)
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R06のLHSは１つ以上のopenなdependsOn capabilityが必要なので、< sND, (cap(dependsOn,idCP,open,idND) sCP), sRQ, sRL, mp >が最も一般的な状態。
 
@@ -233,7 +233,7 @@
  - Case 2-3-2-3-2-3-1-2-2: unbound requiremetのnodeがcreated => 証明可能 (R07が適用可能なのでcont(S')がtrue)
  - Case 2-3-2-3-2-3-1-2-3: unbound requiremetのnodeがstarted => 証明可能 (inv-ifCPOpenThenRQUnboundWaiting(S)がfalse)
 
-## R07に対するCondtion (2)の証明譜 (Proof-contcont-R07.cafe)
+## R07に対するCondition (2)の証明譜 (Proof-contcont-R07.cafe)
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R07のLHSはunbound requirementに対応するrelationshipと、さらにそれに対応するcapabilityが必要なので、< sND, (cap(dependsOn,idCP,scp,idND) sCP), (req(dependsOn,idRQ,unbound,idND') sRQ), (rel(dependsOn,idRL,idCP,idRQ) sRL), mp >が最も一般的な状態。
 
@@ -248,7 +248,7 @@
  - Case 2-2: requirementに対応するnodeがcreated => 証明可能 (Created Cont Lemmaによりcont(S')がtrue)
  - Case 2-3: requirementに対応するnodeがstarted => 証明可能 (次状態が無い)
 
-## R08に対するCondtion (2)の証明譜 (Proof-contcont-R08.cafe)
+## R08に対するCondition (2)の証明譜 (Proof-contcont-R08.cafe)
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R08のLHSはwaiting requirementに対応するrelationshipと、さらにそれに対応するavailable capabilityが必要なので、< sND, (cap(dependsOn,idCP,available,idND) sCP), (req(dependsOn,idRQ,waiting,idND') sRQ), (rel(dependsOn,idRL,idCP,idRQ) sRL), mp >が最も一般的な状態。
 
@@ -272,7 +272,7 @@
  - Case 2-2: requirementに対応するnodeがcreated => 証明可能 (R02が適用可能なのでcont(S')がtrue)
  - Case 2-3: requirementに対応するnodeがstarted => 証明可能 (inv-ifNDStartedThenRQReady(S)がfalse)
 
-## R09に対するCondtion (2)の証明譜 (Proof-contcont-R09.cafe)
+## R09に対するCondition (2)の証明譜 (Proof-contcont-R09.cafe)
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R09のLHSは１つ以上のclosedなconnectsTo capabilityが必要なので、< sND, (cap(connectsTo,idCP,closed,idND) sCP), sRQ, sRL, mp >が最も一般的な状態。
 
@@ -287,7 +287,7 @@
  - Case 2-2: capabilityに対応するnodeがcreated => 証明可能 (Created Cont Lemmaによりcont(S')がtrue)
  - Case 2-3: capabilityに対応するnodeがstarted => 証明可能 (R10が適用可能なのでcont(S')がtrue)
 
-## R10に対するCondtion (2)の証明譜 (Proof-contcont-R10.cafe)
+## R10に対するCondition (2)の証明譜 (Proof-contcont-R10.cafe)
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R10のLHSは１つ以上のopenなconnectsTo capabilityが必要なので、< sND, (cap(connectsTo,idCP,open,idND) sCP), sRQ, sRL, mp >が最も一般的な状態。
 
@@ -336,7 +336,7 @@
  - Case 2-3-2-3-2-3-1-2-2: unbound requiremetのnodeがcreated => 証明可能 (Created Cont Lemmaによりconst(S')がtrue)
  - Case 2-3-2-3-2-3-1-2-3: unbound requiremetのnodeがstarted => 証明可能 (inv-ifNDStartedThenRQReady(S)がfalse)
 
-## R11に対するCondtion (2)の証明譜 (Proof-contcont-R11.cafe)
+## R11に対するCondition (2)の証明譜 (Proof-contcont-R11.cafe)
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R11のLHSはunbound requirementに対応するrelationshipと、対応するopen messageが必要なので、< sND, sCP, (req(connectsTo,idRQ,unbound,idND') sRQ), (rel(connectsTo,idRL,idCP,idRQ) sRL), (opMsg(idCP) mp) >が最も一般的な状態。
 
@@ -351,7 +351,7 @@
  - Case 2-2: requirementに対応するnodeがcreated => 証明可能 (Created Cont Lemmaによりcont(S')がtrue)
  - Case 2-3: requirementに対応するnodeがstarted => 証明可能 (次状態が無い)
 
-## R12に対するCondtion (2)の証明譜 (Proof-contcont-R12.cafe)
+## R12に対するCondition (2)の証明譜 (Proof-contcont-R12.cafe)
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R12のLHSはwaiting requirementに対応するrelationshipと、さらにそれに対応するavailable capabilityが必要なので、< sND, (cap(dependsOn,idCP,available,idND) sCP), (req(dependsOn,idRQ,waiting,idND') sRQ), (rel(dependsOn,idRL,idCP,idRQ) sRL), mp >が最も一般的な状態。
 
@@ -375,14 +375,14 @@
  - Case 2-2: requirementに対応するnodeがcreated => 証明可能 (R02が適用可能なのでcont(S')がtrue)
  - Case 2-3: requirementに対応するnodeがstarted => 証明可能 (inv-ifNDStartedThenRQReady(S)がfalse)
 
-## Condtion (3): inv(S) and not final(S) implies m(S) > m(SS) の証明譜 (Proof-measure.cafe)
+## Condition (3): inv(S) and not final(S) implies m(S) > m(SS) の証明譜 (Proof-measure.cafe)
 ### ステップ 3-0: 証明すべき述語を定義
  - mmes = inv and not final implies m > m'
  - 次状態が存在する状態に関する条件なので、前件にcont(S)が不要であることに注意。
  - mesmesを二重否定イディオムを使って定義する。
  - 自然数に対するAxiomとして N < N+1, N < N+2, N < N+3, N < N+4, を定義しておく。
 
-## R01に対するCondtion (3)の証明譜
+## R01に対するCondition (3)の証明譜
 ### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R01のLHSを任意定数tnd, idND, sND, sCP, sRQ, sRL, mpで表現する。
 
@@ -391,7 +391,7 @@
  - Case 1: initial nodeのhostedOn requirementがすべてready => 証明可能 (m(S) > m(SS)が成り立つ)
  - Case 2: initial nodeのhostedOn requirementがすべてready、ではない => 証明可能 (次状態が無い)
 
-## R02に対するCondtion (3)の証明譜
+## R02に対するCondition (3)の証明譜
 ### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R02のLHSを任意定数tnd, idND, sND, sCP, sRQ, sRL, mpで表現する。
 
@@ -400,7 +400,7 @@
  - Case 1: created nodeのrequirementがすべてready => 証明可能 (m(S) > m(SS)が成り立つ)
  - Case 2: created nodeのrequirementがすべてready、ではない => 証明可能 (次状態が無い)
 
-## R03に対するCondtion (3)の証明譜
+## R03に対するCondition (3)の証明譜
 ### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R03のLHSを任意定数sND, idCP, idND, sCP, sRQ, sRL, mpで表現する。
 
@@ -409,7 +409,7 @@
  - Case 1: closedなhostedOn capabilityに対するnodeがisCreated => 証明可能 (m(S) > m(SS)が成り立つ)
  - Case 2: closedなhostedOn capabilityに対するnodeがisCreated、ではない => 証明可能 (次状態が無い)
 
-## R04に対するCondtion (3)の証明譜
+## R04に対するCondition (3)の証明譜
 ### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R04のLHSを任意定数sND, idCP, idND, sCP, idRQ, idND', sRQ, idRL, sRL, mpで表現する。
 
@@ -417,7 +417,7 @@
  - R04は無条件ルールなので、ケース分けは不要。
  - Case 1: R04のLHSにマッチする最も一般的なケース => 証明可能 (m(S) > m(SS)が成り立つ)
 
-## R05に対するCondtion (3)の証明譜
+## R05に対するCondition (3)の証明譜
 ### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R05のLHSを任意定数sND, idCP, idND, sCP, sRQ, sRL, mpで表現する。
 
@@ -426,7 +426,7 @@
  - Case 1: closedなdependsOn capabilityに対するnodeがisCreated => 証明可能 (m(S) > m(SS)が成り立つ)
  - Case 2: closedなdependsOn capabilityに対するnodeがisCreated、ではない => 証明可能 (次状態が無い)
 
-## R06に対するCondtion (3)の証明譜
+## R06に対するCondition (3)の証明譜
 ### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R06のLHSを任意定数sND, idCP, idND, sCP, sRQ, sRL, mpで表現する。
 
@@ -435,7 +435,7 @@
  - Case 1: openなdependsOn capabilityに対するnodeがstarted => 証明可能 (m(S) > m(SS)が成り立つ)
  - Case 2: openなdependsOn capabilityに対するnodeがstarted、ではない => 証明可能 (次状態が無い)
 
-## R07に対するCondtion (3)の証明譜
+## R07に対するCondition (3)の証明譜
 ### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R07のLHSを任意定数sND, idCP, idND, sCP, idRQ, idND', sRQ, idRL, sRL, mpで表現する。
 
@@ -444,7 +444,7 @@
  - Case 1: requiementに対するnodeがcreated、かつcapabilityがisActivated => 証明可能 (m(S) > m(SS)が成り立つ)
  - Case 2: requiementに対するnodeがcreated、かつcapabilityがisActivated、ではない => 証明可能 (次状態が無い)
 
-## R08に対するCondtion (3)の証明譜
+## R08に対するCondition (3)の証明譜
 ### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R08のLHSを任意定数sND, idCP, idND, sCP, idRQ, idND', sRQ, idRL, sRL, mpで表現する。
 
@@ -452,7 +452,7 @@
  - R08は無条件ルールなので、ケース分けは不要。
  - Case 1: R08のLHSにマッチする最も一般的なケース => 証明可能 (m(S) > m(SS)が成り立つ)
 
-## R09に対するCondtion (3)の証明譜
+## R09に対するCondition (3)の証明譜
 ### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R09のLHSを任意定数sND, idCP, idND, sCP, sRQ, sRL, mpで表現する。
 
@@ -461,7 +461,7 @@
  - Case 1: closedなconnectsTo capabilityに対するnodeがisCreated => 証明可能 (m(S) > m(SS)が成り立つ)
  - Case 2: closedなconnectsTo capabilityに対するnodeがisCreated、ではない => 証明可能 (次状態が無い)
 
-## R10に対するCondtion (3)の証明譜
+## R10に対するCondition (3)の証明譜
 ### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R10のLHSを任意定数sND, idCP, idND, sCP, sRQ, sRL, mpで表現する。
 
@@ -470,7 +470,7 @@
  - Case 1: openなconnectsTo capabilityに対するnodeがstarted => 証明可能 (m(S) > m(SS)が成り立つ)
  - Case 2: openなconnectsTo capabilityに対するnodeがstarted、ではない => 証明可能 (次状態が無い)
 
-## R11に対するCondtion (3)の証明譜
+## R11に対するCondition (3)の証明譜
 ### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R11のLHSを任意定数sND, sCP, idRQ, idND, sRQ, idRL, idCP, sRL, mpで表現する。
 
@@ -479,7 +479,7 @@
  - Case 1: requiementに対するnodeがcreated => 証明可能 (m(S) > m(SS)が成り立つ)
  - Case 2: requiementに対するnodeがcreated、ではない => 証明可能 (次状態が無い)
 
-## R12に対するCondtion (3)の証明譜
+## R12に対するCondition (3)の証明譜
 ### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R12のLHSを任意定数sND, sCP, idRQ, idND, sRQ, idRL, idCP, sRL, mpで表現する。
 
@@ -487,7 +487,7 @@
  - R12は無条件ルールなので、ケース分けは不要。
  - Case 1: R12のLHSにマッチする最も一般的なケース => 証明可能 (m(S) > m(SS)が成り立つ)
 
-## Condtion (4): inv(S) and (cont(S) or final(S)) and m(S) = 0 implies final(S) の証明譜 (Proof-measure.cafe)
+## Condition (4): inv(S) and (cont(S) or final(S)) and m(S) = 0 implies final(S) の証明譜 (Proof-measure.cafe)
 ### ステップ 4-0: 証明すべき述語を定義
  - mesfinal = inv and (cont or final) and m = 0 implies final .
 
@@ -497,7 +497,7 @@
 ### ステップ 4-2: 自然数に対するAxiomを定義
  - 「N1 + N2 = 0」と「N1 = 0 かつ N2 = 2」が等価である。
 
-## Condtion (5)(6): init(S) implies inv(S) . inv(S) implies inv(SS) .の証明譜 (Proof-inv.cafe)
+## Condition (5)(6): init(S) implies inv(S) . inv(S) implies inv(SS) .の証明譜 (Proof-inv.cafe)
  - 各invariantはinv-AAA、各wfsはwfs-BBBという述語として定義しておく。
  - (5)(6)はinvariant毎に一つずつ証明するが、証明するinvariantをinvS(S)とする。
  - Condition (5)のゴールは、initinv = init implies invS .
