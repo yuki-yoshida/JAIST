@@ -40,16 +40,19 @@
  
 ### Technique (2)
  - When a case including an equation `eq pred(sPR) = true .` where sPR is a proof constant of sort SetOfProperty is split into several cases, some of its descendant may include another equation such as `eq sPR = (aPR sPR') .` where aPR is a proof constant of sort Property and sPR' is of sort SetOfProperty. Then, pred(sPR) reduces to true when it is evaluated from outermost whereas it may not reduce to true when evaluated from innermost. The following idiom can be used to avoid depending on the evaluation strategy of the prover.
+
    ```
    :set(normalize-init,on)
    :init ( ceq B1 = true if not B2 . ) by { B1 <- pred(sPR) ; B2 <- pred(sPR) == true ; }
    :set(normalize-init,off)
    ```
+
  - `:set(normalize-init,on)` specifies that the substituted terms be normalized (reduced) before substitution. Then, if pred(sPR) reduces to true, both of B1 and B2 reduce to true and so the introduced equation is `ceq true = true if not true .` which has no meaning. Whereas, if pred(sPR) reduces to B1' which is not true, B2 reduces to false and so the introduced equation is `ceq B1' = true if not false .` which makes B1 reduce to true. As the result, B1 reduces to true anyway.
 
 ## Preparation of Proof (Domain.cafe)
 ### Step 0-1: Define init(S) and final(S).
  - Among conditions explicitly composing init(S), one referring to no local states of objects and being expected to be an invariant is called a wfs (well-formed state) and they are usually gathered and defined as predicate wfs(S) as a conjunction of them.
+
    ```
    eq wfs(S)
       = wfs-atLeastOneRS(S) and
@@ -67,6 +70,7 @@
 ## Preparation of Proof (Proof.cafe)
 ### Step 0-2: Define cont(S).
  - Since cont(S) means that state S has at least one next state, it can be specified as follows using the unconditional search predicate.
+
    ```
    eq cont(S) = (S =(*,1)=>+ SS) .
    ```
@@ -77,6 +81,7 @@
 ### Step 0-4: Define inv(S).
  - Each of wfs's and invariants is recommended to define as inv-AAA(S) or wfs-BBB(S).
  - Predicate inv(S) can be defined as follows using CITP Technique (1) ii.
+
    ```
    eq inv(S) = false if not inv-AAA(S) .
    eq inv(S) = false if not wfs-BBB(S) .
