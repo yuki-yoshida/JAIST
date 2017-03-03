@@ -49,12 +49,12 @@
 
  - `:set(normalize-init,on)` specifies that the substituted terms be normalized (reduced) before substitution. Then, if pred(sPR) reduces to true, both of B1 and B2 reduce to true and so the introduced equation is `ceq true = true if not true .` which has no meaning. Whereas, if pred(sPR) reduces to B1' which is not true, B2 reduces to false and so the introduced equation is `ceq B1' = true if not false .` which makes B1 reduce to true. As the result, B1 reduces to true anyway.
 
-## Preparation of Proof
+## Preparation of Proof (Domain.cafe)
 ### Step 0-1: Define `init(S)` and `final(S)`.
  - Among conditions explicitly composing init(S), one referring to no local states of objects and being expected to be an invariant is called a wfs (well-formed state).
  - Define `wfs(S)` as a conjunction of all wfs's.
 
-  ```Domain.cafe
+  ```
   eq wfs(S)
      = wfs-atLeastOneRS(S) and
        wfs-uniqRS(S) and wfs-uniqPR(S) and 
@@ -68,10 +68,11 @@
      = allRSInStates(SetRS,started) .
   ```
 
+## Preparation of Proof (Proof.cafe)
 ### Step 0-2: Define `cont(S)`.
  - Define `cont(S)` as follows using the unconditional search predicate.
 
-  ```Proof.cafe
+  ```
   eq cont(S) = (S =(*,1)=>+ SS) .
   ```
 
@@ -95,44 +96,78 @@
   ```
 
 ### Step 0-5: Prepare for using the Cyclic Dependency Lemma.
- - Prepare a nonexec lemma which means that `DDS` of a specified initial resource never includs other initial resources.
+ - Prepare a nonexec lemma which means that `DDS` of a specified initial resource never includes other initial resources.
 
   ```
   ceq [Cycle :nonexec]: 
      true = false if someRSInStates(DDSC(res(T, IDRS, initial),S),initial) .
   ```
 
-## Condtion (1): init(S) implies cont(S) の証明譜 (Proof-initcont.cafe)
-### ステップ 1-0: 証明すべき述語を定義
- - initcont = init implies cont
+### Step 0-6: Prepare arbitrary constants.
 
-### ステップ 1-1: 最も一般的なケースから開始
- - 任意定数sRS(リソースの集合)、sPR(プロパティの集合)により、最も一般的な状態は< sRS, sPR >。
+  ```
+  ops idRS idRS' idRS1 : -> RSIDLt
+  ops idRRS idRRS' idRRS1 : -> RSIDLt
+  ops idPR idPR' idPR1 : -> PRIDLt
+  ops sRS sRS' sRS'' sRS''' : -> SetOfResource
+  ops sPR sPR' sPR'' sPR''' : -> SetOfProperty
+  ops trs trs' trs'' trs''' : -> RSType
+  ops tpr tpr' tpr'' tpr''' : -> PRType
+  ops srs srs' srs'' srs''' : -> RSState
+  ops spr spr' spr'' spr''' : -> PRState
+  op stRS : -> SetOfRSState
+  op stPR : -> SetOfPRState
+  op x : -> Resource
+  ```
 
-### ステップ 1-2: 初期状態で最初に適用されるルールを考察
- - 最初のルールはR01。
+## Proof of Condtion (1): `init(S) implies cont(S)` (Proof-initcont.cafe)
+### Step 1-0: Define a predicate to be proved.
 
-### ステップ 1-3: 最初のルールのLHSにマッチするケースを含むようにケース分け
- - R01のLHSは１つ以上のinitialリソースが必要なので、cspコマンドで以下の３つにケース分けする。
- - Case 1: リソースが一つもない => 証明可能 (init(S)がfalse)
- - Case 2-1: initialリソースが少なくとも一つある
- - Case 2-2: startedリソースが少なくとも一つある => 証明可能 (init(S)がfalse)
+  ```
+  eq initcont(S) = init(S) implies cont(S) .
+  ```
 
-### ステップ 1-4: 最初のルールの条件節が成り立つ/成り立たないでケース分け
- - R01の条件節は「initialリソースのプロパティがすべてready」なので以下の２つにケース分けする。
- - Case 2-1-1: initialリソースのプロパティがすべてready => 証明可能 (R01が適用可能)
- - Case 2-1-2: initialリソースのプロパティのうちnotreadyなものが少なくとも一つある
+### Step 1-1: Begin with the most general case. 
+ - Let `sRS` be a proof constant of sort `SetOfResource` and `sPR` a proof constant of sort `SetOfProperty`.
+ - The most general state can be represented as `< sRS, sPR >`.
 
-### ステップ 1-5: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
- - notreadyプロパティのreferリンクが未定なので、以下の３つにケース分けする
- - Case 2-1-2-1: referリンクの参照先が存在しない => 証明可能 (wfs-allPRHaveRRS(S)がfalse)
- - Case 2-1-2-2-1: referリンクの参照先リソースが存在してinitial
- - Case 2-1-2-2-2: referリンクの参照先リソースが存在してstarted => 証明可能 (init(S)がfalse)
+  ```
+  :goal {eq initcont(< sRS, sPR >) = true .}
+  ```
 
-### ステップ 1-6: 循環する状況になったらCyclic Dependency Lemmaを適用
- - ここでCase 2-1には、任意に選択したinitialリソースがあるので、これをCDL適用対象と考えて良い (新規に導入不要)。
- - 用意しておいたCycle未実行lemmaを、このinitialリソースを対象として導入する。
- - このリソースのDDSに、referリンクの参照先リソースが含まれるので、矛盾が生じ、証明が完了する。
+### Step 1-2: Think which rule is applied to the initial state in an unproved case. 
+ - The first rule is R01.
+
+### Step 1-3: Split the general case into cases which collectively cover the general case and one of which matches to LHS of the first rule.
+ - Since LHS of R01 requires at least one initial resources, the root case should be split into following three cases:
+  - Case 1: When there is no resource => the goal holds because `init(S)` reduces to false.
+  - Case 2-1: When at least one initial resource.
+  - Case 2-2: When at least one started resource => the goal holds because `init(S)` reduces to false.
+
+### Step 1-4: Split the first rule case into cases where the condition of the rule does or does not hold.
+ - Since the conditional clause of R01 requires that all properties of the initial resource are ready, the current case should be split into following two cases:
+  - Case 2-1-1: All properties of the initial resource are ready => the goal holds because R01 is applicable and so `cont(S)` reduces to true.
+  - Case 2-1-2: At least one property of the initial resource is notready.
+
+### Step 1-5: When there is a dangling link, split the case into cases where the linked object does or does not exist.
+ - Since the notready property has a dangling `refer` link, the current case should be split into following three cases:
+  - Case 2-1-2-1: When the resource referred by the property does not exist => the goal holds because `wfs-allPRHaveRRS(S)` reduces to false and so `inv(S)` reduces to false.
+  - Case 2-1-2-2-1: When the resource idRRS referred by the property is initial:
+  - Case 2-1-2-2-1: When the resource idRRS referred by the property is started => the goal holds because `init(S)` reduces to false.
+
+### Step 1-6: When falling in a cyclic situation, use the Cyclic Dependency Lemma.
+ - Since resource idRS is an arbitrary initial resource introduced in Case 2-1, the CDL assures that DDS of the rerource does not include any other initial resources.
+ - Introduce the prepared nonexec lemma specifying resource idRS.
+
+  ```
+  :init [Cycle] by {
+    T:RSType <- trs;
+    IDRS:RSID <- idRS;
+    S:State <- < sRS, sPR >;
+  }
+  ```
+
+ - The goal holds because DDS of idRS includes an initial resource, idRRS, referred by the `refer` link.
 
 ## Condtion (2): inv(S) and not final(S) implies cont(SS) or final(SS) の証明譜 (Proof-contcont.cafe)
 ### ステップ 2-0: 証明すべき述語を定義
