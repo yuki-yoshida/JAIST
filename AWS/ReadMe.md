@@ -1,58 +1,88 @@
 # Verification Sample for a leads-to property of AWS CloudFormation
 ## Memo of CITP(Constructor-based Inductive Theorem Prover)
 ### goal Command
- - :goal {eq EXPRESSION = true .}
+ `:goal {eq EXPRESSION = true .}`
  - Define the goal to be proved and let it be the current case. 
 
 ### ctf Command
- - :ctf {eq LHS = RHS .}
+ `:ctf {eq LHS = RHS .}`
  - Split the current case into two cases adding "eq LHS = RHS ." to one case and "eq (LHS = RHS) = false ." to another.
 
 ### csp Command
- - :csp {eq LHS1 = RHS1 . eq LHS2 = RHS2 . ...}
+ `:csp {eq LHS1 = RHS1 . eq LHS2 = RHS2 . ...}`
  - Split the current case into several cases adding "eq LHS1 = RHS1 .", "eq LHS2 = RHS2 .", and so on.
 
 ### init Command
- - :init [LABEL] by { SUBSTITUTION }
- - Introduce a nonexec lemma whose name is LABEL after executing SUBSTITUTION.
- - A lemma which is already proved can be introduced without case splitting.
+ `:init [LABEL] by { SUBSTITUTION }`
+ - Introduce a nonexec LABELed lemma proven by other proof scores. SUBSTITUTION specifies
+   how to unify the lemma to the current case. 
 
 ### apply Command
- - :apply (rd)
+ `:apply (rd)`
  - Try to reduce the goal in the current case.
  - When succeeding to reduce, select the next case as current.
 
 ### show proof Command
- - show proof
- - Show the proof tree. * is displayed for each proved case.
+ `show proof`
+ - Summarize the proof tree consisting of split cases. Proven cases are shown by ``*'' marks.
 
 ## Several CITP Techniques
 ### Technique (1)
- - CITPではgoalを途中で変更できないので、「AならばB」の形式のLemmaを導入する場合は、eq (A implies B) = true.を定義するが、以下のいずれかの方がこれと等価で効率が良い。
-   1. ceq B = true if A .　　　
-   2. ceq A = false if not B .
-   3. eq (A and B) = A .
+ - Typically a lemma has a form `A implies B`. When using such lemmas to prove a GOAL, we may define the proof goal as `:goal { eq (A1 implies B1) and (A2 implies B2) and ... implies GOAL . }`. This style is not only complicated but also very expensive to execute. Instead, we can introduce each of such lemmas as an equation in one of the following styles.
+   1. `ceq B = true if A .`
+   2. `ceq A = false if not B .`
+   3. `eq (A and B) = A .`
 
- - i.はLemmaを後件に利用する場合に適している。ii.は前件に利用する場合に適している。ただし、条件節に置く式の方が変数がすべて左辺に置く式に現れていなければならない。
- - iii.は「A implies B」と「(A and B) = A」が等価であることを利用する方法であり直感的にわかりにくいものの、前件にも後件にも利用できること、AとBに含まれる変数の包含関係に気にしないで利用できること、という利点がある。
+ - Style i. is suitable when the goal has a form `X implies Y` and the lemma is used to claim Y is true.
+ - Style ii. is suitable when the goal has a form `X implies Y` and the lemma is used to claim X is false.
+ - However, all variables included in the conditional clause should appear in the left hand side clause.
+ - Style iii. is not easy to understand but can be used in both cases without concerning appearance of variables.
+ 
+### Technique (2)
+ - When a case including an equation `eq pred(sPR) = true .` where sPR is a proof constant of sort SetOfProperty is split into several cases, some of its descendant may include another equation such as `eq sPR = (aPR sPR') .` where aPR is a proof constant of sort Property and sPR' is of sort SetOfProperty. Then, pred(sPR) reduces to true when it is evaluated from outermost whereas it may not reduce to true when evaluated from innermost. The following idiom can be used to avoid depending on the evaluation strategy of the prover.
+   ```
+   :set(normalize-init,on)
+   :init ( ceq B1 = true if not B2 . ) by { B1 <- pred(sPR) ; B2 <- pred(sPR) == true ; }
+   :set(normalize-init,off)
+   ```
+ - `:set(normalize-init,on)` specifies that the substituted terms be normalized (reduced) before substitution. Then, if pred(sPR) reduces to true, both of B1 and B2 reduce to true and so the introduced equation is `ceq true = true if not true .` which has no meaning. Whereas, if pred(sPR) reduces to B1' which is not true, B2 reduces to false and so the introduced equation is `ceq B1' = true if not false .` which makes B1 reduce to true. As the result, B1 reduces to true anyway.
 
-### テクニック (2)
- - 任意定数をさらに詳細化した場合に、定義済みの等式が成立しなくなることがある。
- - すでに eq pred(sPR) = true .を定義済みのケースをさらに分けたときに、eq sPR = (aPR sPR') .とsPRを詳細化することがある。
- - 「pred(sPR)」を外側から評価すればtrueになるが、引数のsPRから先に評価した場合にpredの定義によってtrueにならないことがある。
- - そこで、「もしpred(sPR)がtrueにならないならばtrueである」というlemmaを以下のように導入しておく。
-   - :init ( ceq B1 = true if not B2 . ) by { B1 <- pred(sPR) ; B2 <- pred(sPR) == true ; }
- - 「:set(normalize-init,on)」を指定すると、変数置換の前に置換式を評価するので、pred(sPR)の評価後の式がなんであれtrueであることを表明できる。
-  - pred(sPR)の評価がtrueの場合は、ceq true = true if not true .となって影響が無い。
+## Preparation of Proof (Domain.cafe)
+### Step 0-1: Define init(S) and final(S).
+ - Among conditions explicitly composing init(S), one referring to no local states of objects and being expected to be an invariant is called a wfs (well-formed state) and they are usually gathered and defined as predicate wfs(S) as a conjunction of them.
+   ```
+   eq wfs(S)
+      = wfs-atLeastOneRS(S) and
+        wfs-uniqRS(S) and wfs-uniqPR(S) and 
+        wfs-allPRHaveRS(S) and wfs-allPRHaveRRS(S) .
+   eq init(< SetRS,SetPR >)
+      = wfs(< SetRS,SetPR >) and
+        noRSCycle(< SetRS,SetPR >) and
+        allRSInStates(SetRS,initial) and 
+        allPRInStates(SetPR,notready) .
+   eq final(< SetRS,SetPR >)
+      = allRSInStates(SetRS,started) .
+   ```
 
-## 証明の準備　(Proof.cafe)
-### invariantとwell-formed stateの準備
- - 各invariantはinv-AAA、各wfsはwfs-BBBという述語として定義しておく。
- - CITPテクニック(1)を使って、あらかじめ以下の定義を与えておく。
-   - eq inv(S) = false if not inv-AAA(S) .
-   - eq inv(S) = false if not wfs-BBB(S) .
+## Preparation of Proof (Proof.cafe)
+### Step 0-2: Define cont(S).
+ - Since cont(S) means that state S has at least one next state, it can be specified as follows using the unconditional search predicate.
+   ```
+   eq cont(S) = (S =(*,1)=>+ SS) .
+   ```
 
-### Cyclic Dependency Lemma(CDL)適用の準備
+### Step 0-3: Define m(S).
+ - The measuring function, m, can be typically defined as the weighted sum of counting local states of all the classes of objects.
+
+### Step 0-4: Define inv(S).
+ - Each of wfs's and invariants is recommended to define as inv-AAA(S) or wfs-BBB(S).
+ - Predicate inv(S) can be defined as follows using CITP Technique (1) ii.
+   ```
+   eq inv(S) = false if not inv-AAA(S) .
+   eq inv(S) = false if not wfs-BBB(S) .
+   ```
+
+### Step 0-5: Prepare for using the Cyclic Dependency Lemma.
  - 「状態Sで、あるinitialリソースのDDSに、別のinitialリソースが含まれたら、矛盾する」という未実行(nonexec)lemma Cycleを定義しておく。
  - CDL適用可能な状態に対して、initコマンドで対象リソースと矛盾lemmaを導入する。
 

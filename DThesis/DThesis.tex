@@ -3580,17 +3580,17 @@ be represented by \cafeobj as follows:
 \end{verbatim}
 \normalsize
 %% =======================================================================
-Among conditions composing $init(S)$, one referring to no local
-states of objects is called a {\it wfs (well-formed state)} and we
-usually gather them and define predicate {\tt wfs} as a conjunction of
-them. The reason why we need several wfs predicates
-is because representing a global state as a tuple of sets of
-objects is too general to represent structural constraints, such as
-identifiers should be unique, there is no dangling link, and so on. Each
-structural constraint is typically represented as a wfs and should be
-an invariant. In addition, do not forget to include $noCycle$
-in the $init$ predicate when using the Cyclic
-Dependency Lemma.\\
+Among conditions explicitly composing $init(S)$, one referring to no
+local states of objects and being expected to be an invariant is
+called a {\it wfs (well-formed state)} and we usually gather them and
+define predicate {\tt wfs} as a conjunction of them. The reason why we
+need several wfs predicates is because representing a global state as
+a tuple of sets of objects is too general to represent structural
+constraints, such as identifiers should be unique, there is no
+dangling link, and so on. Each structural constraint is typically
+represented as a wfs and should be an invariant. In addition, do not
+forget to include $noCycle$ in the $init$ predicate when using the
+Cyclic Dependency Lemma.\\
 
 \noindent{\bf Step 0-2:} Define $cont$. \\ Since $cont(S)$ means that
 state $S$ has at least one next state, it can be specified as follows
