@@ -49,8 +49,8 @@
  - wfs(well-formed state)とは、invariantの内でinitに現れるものである。wfsについてはcondition (5)の証明は不要。（以下、invariantとはwfsではないinvariantのこと）
  - 各invariantはinv-AAA、各wfsはwfs-BBBという述語として定義しておく。
  - CITPテクニック(1)を使って、あらかじめ以下の定義を与えておく。
-   - eq inv(S) = false if not inv-AAA(S) .
-   - eq inv(S) = false if not wfs-BBB(S) .
+   - ceq inv(S) = false if not inv-AAA(S) .
+   - ceq inv(S) = false if not wfs-BBB(S) .
 
 ### Cyclic Dependency Lemma(CDL)適用の準備
 #### R01に対して
