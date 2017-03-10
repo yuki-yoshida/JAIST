@@ -147,10 +147,10 @@
 ### Step 1-4: Split the first rule case into cases where the condition of the rule does or does not hold.
  - Since the conditional clause of R01 requires that all properties of the initial resource are ready, the current case should be split into following two cases:
   - Case 2-1-1: All properties of the initial resource are ready => the goal holds because R01 is applicable and so `cont(S)` reduces to true.
-  - Case 2-1-2: At least one property of the initial resource is notready.
+  - Case 2-1-2: At least one property of the initial resource is not-ready.
 
 ### Step 1-5: When there is a dangling link, split the case into cases where the linked object does or does not exist.
- - Since the notready property has a dangling `refer` link, the current case should be split into following three cases:
+ - Since the not-ready property has a dangling `refer` link, the current case should be split into following three cases:
   - Case 2-1-2-1: When the resource referred by the property does not exist => the goal holds because `wfs-allPRHaveRRS(S)` reduces to false and so `inv(S)` reduces to false.
   - Case 2-1-2-2-1: When the resource idRRS referred by the property is initial.
   - Case 2-1-2-2-1: When the resource idRRS referred by the property is started => the goal holds because `init(S)` reduces to false.
@@ -186,9 +186,7 @@
  - The most general state matching to LHS of R01 can be represented by replacing all variables of the LHS by proof constants.
 
   ```
-  :goal {
-    eq contcont(< (res(trs,idRS,initial) sRS), sPR >) = true .
-  }
+  :goal { eq contcont(< (res(trs,idRS,initial) sRS), sPR >) = true . }
   ```
 
 ### Step 2-2: Split the most general case for a rule into cases where the condition of the rule does or does not hold.
@@ -197,8 +195,8 @@
   - Case 2: Not all properties of the initial resource are ready => the goal holds because there is no next state.
 
 ### Step 2-3: Split the rule applied case into cases where predicate final does or does not hold in the next state.
- - Since the next state includes one started resource and so `final(S')` holds when all of the rest resources are started, the current case should be split into following two cases:
-  - Case 1-1: When all of the other resources are started => the goal holds because `final(S')` reduces to true.
+ - Since the next state includes one started resource and so `final(SS)` holds when all of the rest resources are started, the current case should be split into following two cases:
+  - Case 1-1: When all of the other resources are started => the goal holds because `final(SS)` reduces to true.
   - Case 1-2: When there is an initial resource.
 
 ### Step 2-4: Think which rule can be applied to the next state.
@@ -209,8 +207,8 @@
 
 ### Step 2-6: Split the general case into cases where the condition of the applicable rule does or does not hold.
  - Since the conditional clause of R01 requires that all properties of the initial resource are ready, the current case should be split into following two cases:
-  - Case 1-2-1: All properties of the initial resource are ready => the goal holds because R01 is applicable to the next state and so `cont(S')` reduces to true.
-  - Case 1-2-2: At least one property of the initial resource is notready.
+  - Case 1-2-1: All properties of the initial resource are ready => the goal holds because R01 is applicable to the next state and so `cont(SS)` reduces to true.
+  - Case 1-2-2: At least one property of the initial resource is not-ready.
 
 ### Because sPR is redefined, allPROfRSInStates(sPR,idRS,ready) should be claimed again using CITP Technique (2) as follows:
 
@@ -224,10 +222,10 @@
   ```
 
 ### Step 2-7: When there is a dangling link, split the case into cases where the linked object does or does not exist.
- - Since the notready property has a dangling `refer` link, the current case should be split into following three cases:
+ - Since the not-ready property has a dangling `refer` link, the current case should be split into following three cases:
   - Case 1-2-2-1: When the resource referred by the property does not exist => the goal holds because `wfs-allPRHaveRRS(S)` reduces to false and so `inv(S)` reduces to false.
   - Case 1-2-2-2-1: When the resource idRRS referred by the property is initial.
-  - Case 1-2-2-2-2: When the resource idRRS referred by the property is started => the goal holds because R02 is applicable to the next state and so `cont(S')` reduces to true.
+  - Case 1-2-2-2-2: When the resource idRRS referred by the property is started => the goal holds because R02 is applicable to the next state and so `cont(SS)` reduces to true.
 
 ### Step 2-8: When falling in a cyclic situation, use the Cyclic Dependency Lemma.
  - Since resource idRS is an arbitrary initial resource introduced in Case 1-2, the CDL assures that DDS of the resource does not include any other initial resources.
@@ -243,179 +241,220 @@
 
  - The goal holds because DDS of idRS' includes an initial resource, idRRS, referred by the `refer` link.
 
-## R02に対するCondition (2)の証明譜 (Proof-contcont-R02.cafe)
-### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
- - R02のLHSを任意定数trs, idRRS, sRS, tpr, idPR, idRS, sPRで表現する。
+## Proof of Condition (2) for R02 (Proof-contcont-R02.cafe)
+### Step 2-1: Begin with the cases each of which matches to LHS of each rule.
 
-### ステップ 2-2: ルールの条件節が成り立つ/成り立たないでケース分け
- - R02は無条件ルールなので、ケース分けは不要。
+  ```
+  :goal {
+    eq contcont(< (res(trs,idRRS,started) sRS), 
+                  (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
+  }
+  ```
 
-### ステップ 2-3: ルール適用後の次状態がfinalになる/ならないでケース分け
- - R02適用後にはstartedリソースが一つあるので、残りのリソースが全部startedならfinalになる。そこで、以下の２つにケース分けする。
- - Case 1: 残りのリソースすべてがstarted => 証明可能 (final(S')がtrue)
- - Case 2: 残りのリソースすべてがstarted、ではない
+### Step 2-2: Split the most general case for a rule into cases where the condition of the rule does or does not hold.
+ - Since R02 is unconditional, this step is ignored.
 
-### ステップ 1-5: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
- - readyになったプロパティのparentリンクが未定なので、以下の３つにケース分けする
- - Case 2-1: parentリンクの参照先が存在しない => 証明可能 (wfs-allPRHaveRRS(S)がfalse)
- - Case 2-2-1: parentリンクの参照先リソースが存在してinitial
- - Case 2-2-2: referリンクの参照先リソースが存在してstarted
+### Step 2-3: Split the rule applied case into cases where predicate final does or does not hold in the next state.
+ - Since the next state after applying R02 includes a started resource, it would be final if all the rest resources are started. But it is not the case because we know a not-ready property has an initial parent resource.
 
-### CDL適用の準備
- - ここでCase 2-2-1にはinitialリソースが存在するのでCDLを適用できるが、このinitialリソースは任意に選択したものではないので、CDL適用対象のinitialリソースを別に用意する必要がある。
- - sRS'を分解してCDL適用対象リソースidRS1を導入する。
+### Step 2-7: When there is a dangling link, split the case into cases where the linked object does or does not exist.
+ - Since the property becoming ready has a dangling `parent` link, the current case should be split into following three cases:
+ - Case 1: When the resource referred by the property does not exist => the goal holds because `wfs-allPRHveRS(S)` reduce to false and s `inv(S)` reduces to false.
+ - Case 2-1: When the resource idRS referred by the property is initial.
+ - Case 2-2: When the resource idRS referred by the property is started => the goal holds because R02 is applicable to the next state.
 
-### ステップ 2-4: 次状態に適用されるルールを考察
- - initialリソースがあるので、適用されるルールはR01。
+### Preparing to use the Cyclic Dependency Lemma.
+ - Since Case 2-1 includes initial resource idRS, the Cyclic Depenency Lemma ensures there is an initial resource R where DDSC(R,S) does not include any initial nodes.
+ - Assuming R = `res(trs'',idRS1,initial)`, decompose `sRS'` into R and `sRS''` as follows:
 
-### ステップ 1-4: 最初のルールの条件節が成り立つ/成り立たないでケース分け
- - R01の条件節は「initialリソースのプロパティがすべてready」なので以下の２つにケース分けする。
- - Case 2-2-1-1: initialリソースのプロパティがすべてready => 証明可能 (次状態にR01が適用可能)
- - Case 2-2-1-2: initialリソースのプロパティのうちnotreadyなものが少なくとも一つある
+  ```
+  :init ( eq SRS:SetOfResource = (RS:Resource SRS':SetOfResource) . ) by {
+    SRS:SetOfResource <- sRS';
+    SRS':SetOfResource <- sRS'';
+    RS:Resource <- res(trs'',idRS1,initial);
+  }
+  ```
 
-### ステップ 1-5: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
- - notreadyプロパティのreferリンクが未定なので、以下の３つにケース分けする
- - Case 2-2-1-2-1: referリンクの参照先が存在しない => 証明可能 (wfs-allPRHaveRRS(S)がfalse)
- - Case 2-2-1-2-2-1: referリンクの参照先リソースが存在してinitial
- - Case 2-2-1-2-2-2: referリンクの参照先リソースが存在してstarted => 証明可能 (次状態にR02が適用可能)
+### Step 2-4: Think which rule can be applied to the next state.
+ - The next rule should be R01 for the initial resource of idRS1.
 
-### ステップ 2-5: 循環する状況になったらCyclic Dependency Lemmaを適用
- - Case 2-2-1で導入したリソースのDDSに、referリンクの参照先リソースが含まれるので、矛盾が生じ、証明が完了する。
+### Step 2-5: Split the general case into cases which collectively cover the general case and one of which matches to LHS of the applicable rule.
+ - The case already matches to LHS of R01.
 
-## Condition (3): inv(S) and not final(S) implies m(S) > m(SS) の証明譜 (Proof-measure.cafe)
-### ステップ 3-0: 証明すべき述語を定義
- - mmes = inv and not final implies m > m'
- - 次状態が存在する状態に関する条件なので、前件にcont(S)が不要であることに注意。
- - mesmesを二重否定イディオムを使って定義する。
- - 自然数に対するAxiomとして N < N+1 を定義しておく。
+### Step 2-6: Split the general case into cases where the condition of the applicable rule does or does not hold.
+ - Since the conditional clause of R01 requires that all properties of the initial resource are ready, the current case should be split into following two cases:
+ - 
+ - Case 2-1-1: When all the properties of the resource idRS1 are ready => the goal holds because R01 is applicable to the next state and so `cont(SS)` reduces to true.
+ - Case 2-1-2: When one of the properties of the resource idRS1 are not-ready.
 
-## R01に対するCondition (3)の証明譜
-### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
- - R01のLHSを任意定数trs, idRS, sRS, sPRで表現する。
+### Step 2-7: When there is a dangling link, split the case into cases where the linked object does or does not exist.
+ - Since the not-ready property idPR1 has a dangling `refer` link idRRS1, the current case should be split into following three cases:
+  - Case 2-1-2-1: When the resource referred by the property does not exist => the goal holds because `wfs-allPRHaveRRS(S)` reduces to false and so `inv(S)` reduces to false.
+  - Case 2-1-2-2-1: When the resource idRRS1 referred by the property is initial.
+  - Case 2-1-2-2-2: When the resource idRRS1 referred by the property is started => the goal holds because R02 is applicable to the next state and so `cont(SS)` reduces to true.
 
-### ステップ 3-2: ルールの条件節が成り立つ/成り立たないでケース分け
- - R01の条件節は「initialリソースのプロパティがすべてready」なので以下の２つにケース分けする。
- - Case 1: initialリソースのプロパティがすべてready => 証明可能 (m(S) > m(SS)が成り立つ)
- - Case 2: initialリソースのプロパティがすべてready、ではない => 証明可能 (次状態が無い)
+### Step 2-8: When falling in a cyclic situation, use the Cyclic Dependency Lemma.
+ - Introduce the prepared nonexec lemma specifying resource idRS'.
 
-## R02に対するCondition (3)の証明譜
-### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
- - R02のLHSを任意定数trs, idRRS, sRS, tpr, idPR, idRS, sPRで表現する。
+  ```
+  :init [Cycle] by {
+    T:RSType <- trs'';
+    IDRS:RSID <- idRS1;
+    S:State <- < (res(trs, idRRS, started) sRS),
+                 (prop(tpr,idPR,notready,idRS,idRRS) sPR) >;
+  }
+  ```
 
-### ステップ 3-2: ルールの条件節が成り立つ/成り立たないでケース分け
- - R02は無条件ルールなので、ケース分けは不要。
- - Case 1: R02のLHSにマッチする最も一般的なケース => 証明可能 (m(S) > m(SS)が成り立つ)
+ - The goal holds because DDS of idRS1 includes an initial resource, idRRS1, referred by the `refer` link.
 
-## Condition (4): inv(S) and (cont(S) or final(S)) and m(S) = 0 implies final(S) の証明譜 (Proof-measure.cafe)
-### ステップ 4-0: 証明すべき述語を定義
- - mesfinal = inv and (cont or final) and m = 0 implies final .
+## Proof of Condition (3): `inv(S) and not final(S) implies m(S) > m(SS)` (Proof-measure.cafe)
+### Step 3-0: Use natural number axioms.
+ - Protecting include module NATAXIOM provided by the framework.
 
-### ステップ 4-1: m(S)用の一般Lemmaをインスタンシエート
- - initialリソースの数が0ならば、すべてのリソースはstartedである。
+### Step 3-1: Define a predicate to be proved.
 
-### ステップ 4-2: 自然数に対するAxiomを定義
- - 「N1 + N2 = 0」と「N1 = 0 かつ N2 = 2」が等価である。
+  ```
+  eq mmes(S,SS)
+     = inv(S) and not final(S) implies m(S) > m(SS) .
 
-## Condition (5)(6): init(S) implies inv(S) . inv(S) implies inv(SS) .の証明譜 (Proof-inv.cafe)
- - 各invariantはinv-AAA、各wfsはwfs-BBBという述語として定義しておく。
- - (5)(6)はinvariant毎に一つずつ証明するが、証明するinvariantをinvS(S)とする。
- - Condition (5)のゴールは、initinv = init implies invS .
- - Condition (6)のゴールは、iinv = inv and invS implies invS'.とし、invinvを二重否定イディオムを使って定義する。
- - 抽象レベルで証明済みのLemmaを利用するには、具象レベルにインスタンシエートする必要があるが、現在のところ、インスタンシエーションはCafeOBJの機能を利用するように整備されていないので、手作業が必要である。
+  pred mesmes : State .
+  eq mesmes(S)
+     = not (S =(*,1)=>+ SS if CC suchThat
+            not ((CC implies mmes(S,SS)) == true)
+     	   { S => SS !! CC ! inv(S) ! final(S) ! (m(S) > m(SS)) }) .
+  ```
 
-## inv-ifRSStartedThenPRReadyのCondition (5)(6)の証明譜
- - 対象invariantを設定する：invS = inv-ifRSStartedThenPRReady。
- - 一般Lemma m2o-lemma11をインスタンシエートし、「すべてのリソースがinitialならば、startedなリソースのプロパティはすべてreadyである」を言明する。Condition (5)で利用。
- - 一般Lemma m2o-lemma08をインスタンシエートし、「startedなリソースのプロパティはすべてreadyであることは、not readyプロパティがreadyに遷移しても変わらない」を言明する。Condition (6)のR02で利用。
+## Proof of Condition (3) for R01
+### Step 3-2: Begin with the cases each of which matches to LHS of each rule.
 
-## inv-ifRSStartedThenPRReadyのCondition (5)の証明譜
- - lemmaにより、最も一般的なケースで証明可能。
+  ```
+  :goal { eq mesmes(< (res(trs,idRS,initial) sRS), sPR >) = true . }
+  ```
 
-## inv-ifRSStartedThenPRReadyのR01に対するCondition (6)の証明譜
-### ステップ 6-1: 各ルールのLHSにマッチする最も一般的なケースから開始
- - R01のLHSを任意定数sRS, sPRで表現する。
+### Step 3-3: Split the most general case for a rule into cases where the condition of the rule does or does not hold. 
+ - Since the conditional clause of R01 requires that all properties of the initial resource are ready, the current case should be split into following two cases:
+ - 
+ - Case 1: When all the properties of the resource idRS are ready => the goal holds because R01 is applicable to the current state and `m(S) > m(SS)` reduces to true.
+ - Case 2: When one of the properties of the resource idRS1 are not-ready => the goal holds because there is no next state.
 
-### ステップ 6-2: ルールの条件節が成り立つ/成り立たないでケース分け
- - R01の条件節は「initialリソースのプロパティがすべてready」なので以下の２つにケース分けする。
- - Case 1: initialリソースのプロパティがすべてready
- - Case 2: initialリソースのプロパティがすべてready、ではない => 証明可能 (次状態が無い)
+## Proof of Condition (3) for R02
+### Step 3-2: Begin with the cases each of which matches to LHS of each rule.
 
-### ステップ 6-3: ルール適用後の次状態がinvSになる/ならないでケース分け
- - ifRSStartedThenPRReadyは、sPRが空か否かで定義が異なる。
- - Case 1-1: sPRが空      => 証明可能 (invS(S')がtrue)
- - Case 1-2: sPRが空でない => 証明可能 (invS(S) implies invS(S')が成り立つ)
+  ```
+  :goal {
+    eq mesmes(< (res(trs,idRRS,started) sRS), 
+                (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
+  }
+  ```
 
-## inv-ifRSStartedThenPRReadyのR02に対するCondition (6)の証明譜
-### ステップ 6-1: 各ルールのLHSにマッチする最も一般的なケースから開始
- - R02のLHSを任意定数trs, idRRS, sRS, tpr, idPR, idRS, sPRで表現する。
+ - The goal holds because `m(S) > m(SS)` reduces to true.
 
-### ステップ 6-2: ルールの条件節が成り立つ/成り立たないでケース分け
- - R02は無条件ルールなので、ケース分けは不要。
- - Case 1: R02のLHSにマッチする最も一般的なケース => 証明可能 (invS(S) implies invS(S')が成り立つ)
+## Proof of Condition (4): `inv(S) and (cont(S) or final(S)) and m(S) = 0 implies final(S)` (Proof-measure.cafe)
+### Step 4-0: Use a natural number axiom.
+ - Protecting include module NATAXIOM provided by the framework.
 
-## wfs-allPRHaveRSのCondition (5)(6)の証明譜
- - wfs-*はinitに含まれているのでCondition (5)の証明は不要。
- - 対象invariantを設定する：invS = wfs-allPRHaveRS。
- - 一般Lemma m2o-lemma12をインスタンシエートし、「すべてのプロパティが親リソースを持つことは、initialリソースがstartedに遷移しても変わらない」を言明する。Condition (6)のR01で利用。
+### Step 4-1: Define a predicate to be proved.
 
-## wfs-allPRHaveRSのR01に対するCondition (6)の証明譜
-### ステップ 6-1: 各ルールのLHSにマッチする最も一般的なケースから開始
- - R01のLHSを任意定数sRS, sPRで表現する。
+  ```
+  eq mesfinal(S)
+     = inv(S) and cont(S) and m(S) = 0 implies final(S) .
+  ```
 
-### ステップ 6-2: ルールの条件節が成り立つ/成り立たないでケース分け
- - R01の条件節は「initialリソースのプロパティがすべてready」なので以下の２つにケース分けする。
- - Case 1: initialリソースのプロパティがすべてready         => 証明可能 (lemmaによる)
- - Case 2: initialリソースのプロパティがすべてready、ではない => 証明可能 (次状態が無い)
+## Proof of Condition (4) for R01
+### Step 4-2: Begin with the cases each of which matches to LHS of each rule.
 
-## wfs-allPRHaveRSのR02に対するCondition (6)の証明譜
-### ステップ 6-1: 各ルールのLHSにマッチする最も一般的なケースから開始
- - R02のLHSを任意定数trs, idRRS, sRS, tpr, idPR, idRS, sPRで表現する。
+  ```
+  :goal {  eq mesfinal(< (res(trs,idRS,initial) sRS), sPR >) = true . }
+  ```
 
-### ステップ 6-2: ルールの条件節が成り立つ/成り立たないでケース分け
- - R02は無条件ルールなので、ケース分けは不要。
- - Case 1: R02のLHSにマッチする最も一般的なケース => 証明可能 (invS(S) implies invS(S')が成り立つ)
+ - The goal holds because `m(S) = 0` reduces to false.
 
-## wfs-allPRHaveRRSのCondition (5)(6)の証明譜
- - wfs-*はinitに含まれているのでCondition (5)の証明は不要。
- - 対象invariantを設定する：invS = wfs-allPRHaveRRS。
- - 一般Lemma m2o-lemma12をインスタンシエートし、「すべてのプロパティが参照リソースを持つことは、initialリソースがstartedに遷移しても変わらない」を言明する。Condition (6)のR01で利用。
+## Proof of Condition (4) for R02
+### Step 4-2: Begin with the cases each of which matches to LHS of each rule.
 
-## wfs-allPRHaveRRSのR01に対するCondition (6)の証明譜
-### ステップ 6-1: 各ルールのLHSにマッチする最も一般的なケースから開始
- - R01のLHSを任意定数sRS, sPRで表現する。
+  ```
+  :goal {  eq mesfinal(< (res(trs,idRS,initial) sRS), sPR >) = true . }
+  ```
+ - The goal holds because `m(S) = 0` reduces to false.
 
-### ステップ 6-2: ルールの条件節が成り立つ/成り立たないでケース分け
- - R01の条件節は「initialリソースのプロパティがすべてready」なので以下の２つにケース分けする。
- - Case 1: initialリソースのプロパティがすべてready         => 証明可能 (lemmaによる)
- - Case 2: initialリソースのプロパティがすべてready、ではない => 証明可能 (次状態が無い)
+## Proof of Condition (5)(6): `init(S) implies inv(S) . inv(S) implies inv(SS) .` (Proof-inv.cafe)
+### Step 5-0,6-0: Define a predicate to be proved.
 
-## wfs-allPRHaveRRSのR02に対するCondition (6)の証明譜
-### ステップ 6-1: 各ルールのLHSにマッチする最も一般的なケースから開始
- - R02のLHSを任意定数trs, idRRS, sRS, tpr, idPR, idRS, sPRで表現する。
+  ```
+  eq initinv(S)
+     = init(S) implies invK(S) .
+  eq iinv(S,SS)
+     = inv(S) and invK(S) implies invK(SS) .
+  eq invinv(S)
+     = not (S =(*,1)=>+ SS if CC suchThat
+            not ((CC implies iinv(S,SS)) == true)
+     	   { S => SS !! CC ! inv(S) ! invK(S) ! invK(SS) }) .
+  ```
 
-### ステップ 6-2: ルールの条件節が成り立つ/成り立たないでケース分け
- - R02は無条件ルールなので、ケース分けは不要。
- - Case 1: R02のLHSにマッチする最も一般的なケース => 証明可能 (invS(S) implies invS(S')が成り立つ)
+ - Condition (5)(6) are proved for each invariants and `invK` above will be defined as the target invariant.
 
-## wfs-atLeastOneRSのCondition (5)(6)の証明譜
- - wfs-*はinitに含まれているのでCondition (5)の証明は不要。
- - 対象invariantを設定する：invS = wfs-atLeastOneRS。
+## Proof of Condition (5)(6) for inv-ifRSStartedThenPRReady.
+ - Define `invK` to be `inv-ifRSStartedThenPRReady`.
 
-## wfs-atLeastOneRSのR01に対するCondition (6)の証明譜
-### ステップ 6-1: 各ルールのLHSにマッチする最も一般的なケースから開始
- - R01のLHSを任意定数sRS, sPRで表現する。
+  ```
+  eq invK(S) = inv-ifRSStartedThenPRReady(S) .
+  ```
 
-### ステップ 6-2: ルールの条件節が成り立つ/成り立たないでケース分け
- - R01の条件節は「initialリソースのプロパティがすべてready」なので以下の２つにケース分けする。
- - Case 1: initialリソースのプロパティがすべてready         => 証明可能 (invS(S')がtrue)
- - Case 2: initialリソースのプロパティがすべてready、ではない => 証明可能 (次状態が無い)
+ - Instantiate general lemma `m2o-lemma07` which means that all the properties of a started resource are ready when all resources are initial and not started.
 
-## wfs-atLeastOneRSのR02に対するCondition (6)の証明譜
-### ステップ 6-1: 各ルールのLHSにマッチする最も一般的なケースから開始
- - R02のLHSを任意定数trs, idRRS, sRS, tpr, idPR, idRS, sPRで表現する。
+  ```
+  eq [m2o-lemma07]:
+      (allRSInStates(SetRS,initial) and 
+       ifRSInStatesThenPRInStates(SetRS,started,SetPR,ready))
+    = allRSInStates(SetRS,initial) .
+  ```
 
-### ステップ 6-2: ルールの条件節が成り立つ/成り立たないでケース分け
- - R02は無条件ルールなので、ケース分けは不要。
- - Case 1: R02のLHSにマッチする最も一般的なケース => 証明可能 (invS(S')がtrue)
+ - Instantiate general lemma `m2o-lemma11` which means that all the properties of a started resource keep to be ready when a not-ready property transits to be ready.
 
-以上で、すべての十分条件が証明済みとなり、init leads-to finalが証明できた。
+  ```
+  eq [m2o-lemma11]:
+     (ifRSInStatesThenPRInStates(SetRS, started, (prop(TPR,IDPR,notready,IDRS,IDRRS) SetPR), ready) and
+      ifRSInStatesThenPRInStates(SetRS, started, (prop(TPR,IDPR,   ready,IDRS,IDRRS) SetPR), ready))
+    = ifRSInStatesThenPRInStates(SetRS, started, (prop(TPR,IDPR,notready,IDRS,IDRRS) SetPR), ready) .
+  ```
+
+## Proof of Condition (5) for inv-ifRSStartedThenPRReady.
+### Step 5-2: Begin with the most general case. 
+
+  ```
+  :goal { eq initinv(< sRS,sPR >) = true . }
+  ```
+
+ - The goal holds because of `m2o-lemma07`.
+
+## Proof of Condition (6) for inv-ifRSStartedThenPRReady and R01
+###  Step 6-2: Begin with the cases each of which matches to LHS of each rule.
+
+  ```
+  :goal { eq invinv(< (res(trs,idRS,initial) sRS), sPR >) = true . }
+  ```
+
+### Step 6-3: Split the most general case for a rule into cases  where the condition of the rule does or does not hold. 
+ - Since the conditional clause of R01 requires that all properties of the initial resource are ready, the current case should be split into following two cases:
+  - Case 1-1: The is no properties of the initial resource => the goal holds because the initial resource transits to be started but it has no properties.
+  - Case 1-2: All properties of the initial resource are ready => the goal holds because the initial resource transits to be started but all of its properties are ready.
+  - Case 2: At least one property of the initial resource is not-ready => the goal holds because no next state.
+
+## Proof of Condition (6) for inv-ifRSStartedThenPRReady and R02
+###  Step 6-2: Begin with the cases each of which matches to LHS of each rule.
+
+  ```
+  :goal {
+    eq invinv(< (res(trs,idRRS,started) sRS), 
+                (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
+  }
+  ```
+
+ - Case 1: The goal holds because `invS(S) implies invS(SS)` holds by `m2o-lemma11`.
+
+## Proof of Condition (5)(6) for wfs-allPRHaveRSのCondition.
+## Proof of Condition (5)(6) for wfs-allPRHaveRRSのCondition.
+## Proof of Condition (5)(6) for wfs-atLeastOneRSのCondition.
+ - Almost the same as above.
+
+Thus all the sufficient conditions have been proved, which means that `init leads-to final` holds.
