@@ -18,10 +18,10 @@ select ProofContCont .
 :goal {
   eq contcont(< (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >) = true .
 }
---> ***********************************************************
---> Step 2-2: Split the most general case for a rule into cases
--->  where the condition of the rule does or does not hold.
---> ***********************************************************
+--> ******************************************************
+--> Step 2-2: Split the current case for a rule into cases
+--> where the condition of the rule does or does not hold.
+--> ******************************************************
 -- The condition of R01 does or does not hold for the node of idND.
 :ctf {
   eq allHostedOnRQOfNDInStates(sRQ,idND,ready) = true .

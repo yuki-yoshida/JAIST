@@ -24,10 +24,10 @@ select ProofContCont .
                 (rel(connectsTo,idRL,idCP,idRQ) sRL), 
                 (opMsg(idCP) mp) >) = true .
 }
---> ***********************************************************
---> Step 1-5: When there is a dangling link, split the case
+--> ***************************************************************
+--> Step 2-7: When there is a dangling link, split the current case
 -->  into cases where the linked object does or does not exist.
---> ***********************************************************
+--> ***************************************************************
 -- The node of the requirement of idRQ does or does not exist.
 :csp {
   eq existND(sND,idND) = false .
@@ -36,10 +36,10 @@ select ProofContCont .
 -- Case 1: The node of the requirement of idRQ does not exist:
 :apply (rd) -- 1
 -- Case 2: The node of the requriement of idRQ exists:
---> ***********************************************************
---> Step 2-2: Split the most general case for a rule into cases
--->  where the condition of the rule does or does not hold.
---> ***********************************************************
+--> ******************************************************
+--> Step 2-2: Split the current case for a rule into cases
+--> where the condition of the rule does or does not hold.
+--> ******************************************************
 -- The condition of R11 does or does not hold for the node of idND.
 :csp {
   eq snd = initial .

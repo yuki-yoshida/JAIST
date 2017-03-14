@@ -77,9 +77,8 @@ module! ProofBase {
 -- (1) init(S) implies cont(S).
 -- (2) inv(S) and not final(S) implies cont(SS) or final(SS).
 -- (3) inv(S) and not final(S) implies measure(S) > measure(SS).
--- (4) inv(S) and (cont(S) or final(S)) and measure(S) = 0 implies final(S).
--- (5) init(S) implies inv(S).
--- (6) inv(S) implies inv(SS).
+-- (4) init(S) implies inv(S).
+-- (5) inv(S) implies inv(SS).
 -- *************************************************************************
 
 -- ****************************
@@ -94,12 +93,11 @@ module! ProofBase {
 
 -- *************************************************************************
 -- (3) inv(S) and not final(S) implies measure(S) > measure(SS).
--- (4) inv(S) and (cont(S) or final(S)) and measure(S) = 0 implies final(S).
 -- *************************************************************************
 -- in Proof-measure.cafe
 
 -- ***************************
--- (5) init(S) implies inv(S).
--- (6) inv(S) implies inv(SS).
+-- (4) init(S) implies inv(S).
+-- (5) inv(S) implies inv(SS).
 -- ***************************
 -- in Proof-inv.cafe

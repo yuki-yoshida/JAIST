@@ -19,22 +19,22 @@ select ProofContCont .
 :goal {
   eq contcont(< (res(trs,idRRS,started) sRS), (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
 }
---> ***********************************************************
---> Step 2-2: Split the most general case for a rule into cases
--->  where the condition of the rule does or does not hold.
---> ***********************************************************
+--> ******************************************************
+--> Step 2-2: Split the current case for a rule into cases
+--> where the condition of the rule does or does not hold.
+--> ******************************************************
 -- R02 is unconditional.
---> ***************************************************************
---> Step 2-3: Split the rule applied case into cases
--->  where predicate final does or does not hold in the next state.
---> ***************************************************************
+--> *********************************************************
+--> Step 2-3: Split the current case into cases where
+-->  predicate final does or does not hold in the next state.
+--> *********************************************************
 -- If all of the other resources are started, the next state is final.
 -- But it is not the case because we know a notready property has
 -- an initial parent resource.
---> ***********************************************************
---> Step 2-7: When there is a dangling link, split the case
+--> ***************************************************************
+--> Step 2-7: When there is a dangling link, split the current case
 -->  into cases where the linked object does or does not exist.
---> ***********************************************************
+--> ***************************************************************
 -- The parent resource of the property does or does not exist.
 :csp {
   eq existRS(sRS,idRS) = false .
@@ -57,18 +57,18 @@ select ProofContCont .
   RS:Resource <- res(trs'',idRS1,initial);
 }
 --> ************************************************************
---> Step 2-4: Think which rule can be applied to the next state.
+--> Step 2-4: Consider which rule can be applied to the next state.
 --> ************************************************************
 -- The next rule should be R01 for the resource of idRS1.
---> ************************************************************************
---> Step 2-5: Split the general case into cases which collectively cover
---> the general case and one of which matches to LHS of the applicable rule.
---> ************************************************************************
+--> *************************************************************************************
+--> Step 2-5: Split the current case into cases which collectively cover the current case
+-->  and the next state of one of the split cases matches to LHS of the current rule.
+--> *************************************************************************************
 --> The case already matches to LHS of R01.
---> ***********************************************************
---> Step 2-6: Split the general case into cases where 
---> the condition of the applicable rule does or does not hold.
---> ***********************************************************
+--> ***************************************************************
+--> Step 2-6: Split the current case into cases where the condition
+-->  of the current rule does or does not hold in the next state.
+--> ***************************************************************
 -- The condition of R01 does or does not hold for the resource o idRS1.
 :csp {
   eq allPROfRSInStates(sPR,idRS1,ready) = true .
@@ -77,10 +77,10 @@ select ProofContCont .
 -- Case 2-1-1: When all the properties of the resource idRS1 are ready.
 :apply (rd) -- 2-1-1
 -- Case 2-1-2: When one of properties of the resource idRS1 is not-ready.
---> ***********************************************************
---> Step 2-7: When there is a dangling link, split the case
+--> ***************************************************************
+--> Step 2-7: When there is a dangling link, split the current case
 -->  into cases where the linked object does or does not exist.
---> ***********************************************************
+--> ***************************************************************
 -- The resource referred by the property does or does not exist.
 :csp {
   eq existRS(sRS'',idRRS1) = false .

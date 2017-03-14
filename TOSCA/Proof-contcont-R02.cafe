@@ -18,19 +18,19 @@ select ProofContCont .
 :goal {
   eq contcont(< (node(tnd,idND,created) sND), sCP, sRQ, sRL, mp >) = true .
 }
---> ***********************************************************
---> Step 2-2: Split the most general case for a rule into cases
--->  where the condition of the rule does or does not hold.
---> ***********************************************************
+--> ******************************************************
+--> Step 2-2: Split the current case for a rule into cases
+--> where the condition of the rule does or does not hold.
+--> ******************************************************
 -- The condition of R02 does or does not hold for the node of idND.
 :ctf {
   eq allRQOfNDInStates(sRQ,idND,ready) = true .
 }
 -- Case 1: When the condition of R02 holds for the node of idND:
---> ***************************************************************
---> Step 2-3: Split the rule applied case into cases
--->  where predicate final does or does not hold in the next state.
---> ***************************************************************
+--> *********************************************************
+--> Step 2-3: Split the current case into cases where
+-->  predicate final does or does not hold in the next state.
+--> *********************************************************
 -- All of the other nodes are or are not started.
 :csp {
   eq allNDInStates(sND,started) = true .

@@ -43,10 +43,10 @@ select ProofMeasure .
 :goal {
   eq mesmes(< (res(trs,idRS,initial) sRS), sPR >) = true .
 }
---> ************************************************************
---> Step 3-3: Split the most general case for a rule into cases
+--> ********************************************************
+--> Step 3-3: Split the current case for a rule into cases
 -->  where the condition of the rule does or does not hold. 
---> ************************************************************
+--> ********************************************************
 -- The condition of R01 does or does not hold for S.
 :ctf {
   eq allPROfRSInStates(sPR,idRS,ready) = true .
@@ -69,58 +69,6 @@ show proof
 --> *************************************************************************
 :goal {
   eq mesmes(< (res(trs,idRRS,started) sRS), (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
-}
-:apply (rd) -- goal
-show proof
-
---> *******************************************************************
---> (4) inv(S) and (cont(S) or final(S)) and m(S) = 0 implies final(S).
---> *******************************************************************
-module! ProofMeasFinal {
-  protecting(ProofBase)
-
---> *************************************
---> Step 4-0: Use a natural number axiom.
---> *************************************
-  protecting(NATAXIOM)
-
---> ******************************************
---> Step 4-1: Define a predicate to be proved.
---> ******************************************
-  var S : State
-  pred mesfinal : State .
-  eq mesfinal(S)
-     = inv(S) and cont(S) and m(S) = 0 implies final(S) .
-}
-
---> ********************************************
--->  ctrans [R01]:
--->     < (res(TRS,IDRS,initial) SetRS), SetPR >
--->  => < (res(TRS,IDRS,started) SetRS), SetPR > 
--->     if allPROfRSInStates(SetPR,IDRS,ready) .
---> ********************************************
-select ProofMeasFinal
---> *************************************************************************
---> Step 4-2: Begin with the cases each of which matches to LHS of each rule.
---> *************************************************************************
-:goal {
-  eq mesfinal(< (res(trs,idRS,initial) sRS), sPR >) = true .
-}
-:apply (rd)
-show proof
-
---> ****************************************************
--->  trans [R02]:
--->     < (res(TRS,IDRRS,started) SetRS), 
--->       (prop(TPR,IDPR,notready,IDRS,IDRRS) SetPR) >
--->  => < (res(TRS,IDRRS,started) SetRS), 
--->       (prop(TPR,IDPR,ready   ,IDRS,IDRRS) SetPR) > .
---> ****************************************************
---> *************************************************************************
---> Step 4-2: Begin with the cases each of which matches to LHS of each rule.
---> *************************************************************************
-:goal {
-  eq mesfinal(< (res(trs,idRRS,started) sRS), (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
 }
 :apply (rd) -- goal
 show proof

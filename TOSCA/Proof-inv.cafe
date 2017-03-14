@@ -1,8 +1,8 @@
 require Proof Proof.cafe
 
 --> ***************************
---> (5) init(S) implies inv(S).
---> (6) inv(S) implies inv(SS).
+--> (4) init(S) implies inv(S).
+--> (5) inv(S) implies inv(SS).
 --> ***************************
 
 module! ProofInv {
@@ -74,7 +74,7 @@ module! Proofinv-ifNDInitialThenRQUnboundReady {
 }
 
 --> ***************************
---> (5) init(S) implies inv(S).
+--> (4) init(S) implies inv(S).
 --> ***************************
 select Proofinv-ifNDInitialThenRQUnboundReady .
 :goal {
@@ -84,7 +84,7 @@ select Proofinv-ifNDInitialThenRQUnboundReady .
 show proof
 
 --> ***************************
---> (6) inv(S) implies inv(SS).
+--> (5) inv(S) implies inv(SS).
 --> ***************************
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
@@ -375,7 +375,7 @@ module! Proofinv-ifNDCreatedThenHostedOnRQReady {
 }
 
 --> ***************************
---> (5) init(S) implies inv(S).
+--> (4) init(S) implies inv(S).
 --> ***************************
 select Proofinv-ifNDCreatedThenHostedOnRQReady .
 :goal {
@@ -385,7 +385,7 @@ select Proofinv-ifNDCreatedThenHostedOnRQReady .
 show proof
 
 --> ***************************
---> (6) inv(S) implies inv(SS).
+--> (5) inv(S) implies inv(SS).
 --> ***************************
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
@@ -653,7 +653,7 @@ module! Proofinv-ifNDStartedThenRQReady {
 }
 
 --> ***************************
---> (5) init(S) implies inv(S).
+--> (4) init(S) implies inv(S).
 --> ***************************
 select Proofinv-ifNDStartedThenRQReady .
 :goal {
@@ -663,7 +663,7 @@ select Proofinv-ifNDStartedThenRQReady .
 show proof
 
 --> ***************************
---> (6) inv(S) implies inv(SS).
+--> (5) inv(S) implies inv(SS).
 --> ***************************
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
@@ -934,7 +934,7 @@ module! Proofinv-ifCPClosedThenRQUnbound {
 }
 
 --> ***************************
---> (5) init(S) implies inv(S).
+--> (4) init(S) implies inv(S).
 --> ***************************
 select Proofinv-ifCPClosedThenRQUnbound .
 :goal {
@@ -944,7 +944,7 @@ select Proofinv-ifCPClosedThenRQUnbound .
 show proof
 
 --> ***************************
---> (6) inv(S) implies inv(SS).
+--> (5) inv(S) implies inv(SS).
 --> ***************************
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
@@ -1238,7 +1238,7 @@ module! Proofinv-ifCPOpenThenRQUnboundWaiting {
 }
 
 --> ***************************
---> (5) init(S) implies inv(S).
+--> (4) init(S) implies inv(S).
 --> ***************************
 select Proofinv-ifCPOpenThenRQUnboundWaiting .
 :goal {
@@ -1252,7 +1252,7 @@ select Proofinv-ifCPOpenThenRQUnboundWaiting .
 show proof
 
 --> ***************************
---> (6) inv(S) implies inv(SS).
+--> (5) inv(S) implies inv(SS).
 --> ***************************
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
@@ -1543,7 +1543,7 @@ module! Proofinv-HostedOnCPNotOpen {
 }
 
 --> ***************************
---> (5) init(S) implies inv(S).
+--> (4) init(S) implies inv(S).
 --> ***************************
 select Proofinv-HostedOnCPNotOpen .
 :goal {
@@ -1553,7 +1553,7 @@ select Proofinv-HostedOnCPNotOpen .
 show proof
 
 --> ***************************
---> (6) inv(S) implies inv(SS).
+--> (5) inv(S) implies inv(SS).
 --> ***************************
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
@@ -1771,7 +1771,7 @@ module! Proofinv-HostedOnRQNotWaiting {
 }
 
 --> ***************************
---> (5) init(S) implies inv(S).
+--> (4) init(S) implies inv(S).
 --> ***************************
 select Proofinv-HostedOnRQNotWaiting .
 :goal {
@@ -1781,7 +1781,7 @@ select Proofinv-HostedOnRQNotWaiting .
 show proof
 
 --> ***************************
---> (6) inv(S) implies inv(SS).
+--> (5) inv(S) implies inv(SS).
 --> ***************************
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
@@ -2052,7 +2052,7 @@ module! Proofinv-ifConnectsToCPOpenThenRQWaitingOrOpenMsg {
 }
 
 --> ***************************
---> (5) init(S) implies inv(S).
+--> (4) init(S) implies inv(S).
 --> ***************************
 select Proofinv-ifConnectsToCPOpenThenRQWaitingOrOpenMsg .
 :goal {
@@ -2062,7 +2062,7 @@ select Proofinv-ifConnectsToCPOpenThenRQWaitingOrOpenMsg .
 show proof
 
 --> ***************************
---> (6) inv(S) implies inv(SS).
+--> (5) inv(S) implies inv(SS).
 --> ***************************
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
@@ -2376,7 +2376,7 @@ module! Proofinv-ifConnectsToCPAvailableThenRQWaitingReadyOrOpenMsg {
 }
 
 --> ***************************
---> (5) init(S) implies inv(S).
+--> (4) init(S) implies inv(S).
 --> ***************************
 select Proofinv-ifConnectsToCPAvailableThenRQWaitingReadyOrOpenMsg .
 :goal {
@@ -2386,7 +2386,7 @@ select Proofinv-ifConnectsToCPAvailableThenRQWaitingReadyOrOpenMsg .
 show proof
 
 --> ***************************
---> (6) inv(S) implies inv(SS).
+--> (5) inv(S) implies inv(SS).
 --> ***************************
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
@@ -2685,7 +2685,7 @@ module! Proofinv-ifConnectsToCPAvailableThenRQReadyOrAvailableMsg {
 }
 
 --> ***************************
---> (5) init(S) implies inv(S).
+--> (4) init(S) implies inv(S).
 --> ***************************
 select Proofinv-ifConnectsToCPAvailableThenRQReadyOrAvailableMsg .
 :goal {
@@ -2695,7 +2695,7 @@ select Proofinv-ifConnectsToCPAvailableThenRQReadyOrAvailableMsg .
 show proof
 
 --> ***************************
---> (6) inv(S) implies inv(SS).
+--> (5) inv(S) implies inv(SS).
 --> ***************************
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
@@ -2931,7 +2931,7 @@ module! Proofinv-ifOpenMsgThenCPActivated {
 }
 
 --> ***************************
---> (5) init(S) implies inv(S).
+--> (4) init(S) implies inv(S).
 --> ***************************
 select Proofinv-ifOpenMsgThenCPActivated .
 :goal {
@@ -2945,7 +2945,7 @@ select Proofinv-ifOpenMsgThenCPActivated .
 show proof
 
 --> ***************************
---> (6) inv(S) implies inv(SS).
+--> (5) inv(S) implies inv(SS).
 --> ***************************
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
@@ -3188,7 +3188,7 @@ module! Proofinv-ifAvailableMsgThenCPAvailable {
 }
 
 --> ***************************
---> (5) init(S) implies inv(S).
+--> (4) init(S) implies inv(S).
 --> ***************************
 select Proofinv-ifAvailableMsgThenCPAvailable .
 :goal {
@@ -3202,7 +3202,7 @@ select Proofinv-ifAvailableMsgThenCPAvailable .
 show proof
 
 --> ***************************
---> (6) inv(S) implies inv(SS).
+--> (5) inv(S) implies inv(SS).
 --> ***************************
 --> *************************************************************************
 --> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >

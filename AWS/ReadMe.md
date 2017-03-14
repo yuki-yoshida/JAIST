@@ -135,21 +135,21 @@
   :goal {eq initcont(< sRS, sPR >) = true .}
   ```
 
-### Step 1-2: Think which rule is applied to the initial state in an unproved case. 
+### Step 1-2: Consider which rule is applied to the global state in the current case. 
  - The first rule is R01.
 
-### Step 1-3: Split the general case into cases which collectively cover the general case and one of which matches to LHS of the first rule.
+### Step 1-3: Split the current case into cases which collectively cover the current case and one of which matches to LHS of the current rule.
  - Since LHS of R01 requires at least one initial resources, the root case should be split into following three cases:
   - Case 1: When there is no resource => the goal holds because `init(S)` reduces to false.
   - Case 2-1: When at least one initial resource.
   - Case 2-2: When at least one started resource => the goal holds because `init(S)` reduces to false.
 
-### Step 1-4: Split the first rule case into cases where the condition of the rule does or does not hold.
+### Step 1-4: Split the current case into cases where the condition of the rule does or does not hold. 
  - Since the conditional clause of R01 requires that all properties of the initial resource are ready, the current case should be split into following two cases:
   - Case 2-1-1: All properties of the initial resource are ready => the goal holds because R01 is applicable and so `cont(S)` reduces to true.
   - Case 2-1-2: At least one property of the initial resource is not-ready.
 
-### Step 1-5: When there is a dangling link, split the case into cases where the linked object does or does not exist.
+### Step 1-5: When there is a dangling link, split the current case into cases where the linked object does or does not exist.
  - Since the not-ready property has a dangling `refer` link, the current case should be split into following three cases:
   - Case 2-1-2-1: When the resource referred by the property does not exist => the goal holds because `wfs-allPRHaveRRS(S)` reduces to false and so `inv(S)` reduces to false.
   - Case 2-1-2-2-1: When the resource idRRS referred by the property is initial.
@@ -189,12 +189,12 @@
   :goal { eq contcont(< (res(trs,idRS,initial) sRS), sPR >) = true . }
   ```
 
-### Step 2-2: Split the most general case for a rule into cases where the condition of the rule does or does not hold.
+### Step 2-2: Split the current case for a rule into cases where the condition of the rule does or does not hold. 
  - The root case should be split into following two cases:
   - Case 1: All properties of the initial resource are ready.
   - Case 2: Not all properties of the initial resource are ready => the goal holds because there is no next state.
 
-### Step 2-3: Split the rule applied case into cases where predicate final does or does not hold in the next state.
+### Step 2-3: Split the current case into cases where predicate `final` does or does not hold in the next state.
  - Since the next state includes one started resource and so `final(SS)` holds when all of the rest resources are started, the current case should be split into following two cases:
   - Case 1-1: When all of the other resources are started => the goal holds because `final(SS)` reduces to true.
   - Case 1-2: When there is an initial resource.

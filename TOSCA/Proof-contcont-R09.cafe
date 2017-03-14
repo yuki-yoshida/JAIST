@@ -18,10 +18,10 @@ select ProofContCont .
 :goal {
   eq contcont(< sND, (cap(connectsTo,idCP,closed,idND) sCP), sRQ, sRL, mp >) = true .
 }
---> ***********************************************************
---> Step 1-5: When there is a dangling link, split the case
+--> ***************************************************************
+--> Step 2-7: When there is a dangling link, split the current case
 -->  into cases where the linked object does or does not exist.
---> ***********************************************************
+--> ***************************************************************
 -- The node of the capability of idCP does or does not exist.
 :csp {
   eq existND(sND,idND) = false .
@@ -30,10 +30,10 @@ select ProofContCont .
 -- Case 1: The node of the capability of idCP does not exist:
 :apply (rd) -- 1
 -- Case 2: The node of the capability of idCP exists:
---> ***********************************************************
---> Step 2-2: Split the most general case for a rule into cases
--->  where the condition of the rule does or does not hold.
---> ***********************************************************
+--> ******************************************************
+--> Step 2-2: Split the current case for a rule into cases
+--> where the condition of the rule does or does not hold.
+--> ******************************************************
 -- The condition of R09 does or does not hold for the node of idND.
 :csp {
   eq snd = initial .

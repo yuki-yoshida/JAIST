@@ -18,19 +18,19 @@ select ProofContCont .
 :goal {
   eq contcont(< (res(trs,idRS,initial) sRS), sPR >) = true .
 }
---> ***********************************************************
---> Step 2-2: Split the most general case for a rule into cases
--->  where the condition of the rule does or does not hold.
---> ***********************************************************
+--> ******************************************************
+--> Step 2-2: Split the current case for a rule into cases
+--> where the condition of the rule does or does not hold.
+--> ******************************************************
 -- The condition of R01 does or does not hold for the resource of idRS.
 :ctf {
   eq allPROfRSInStates(sPR,idRS,ready) = true .
 }
 -- Case 1: When the condition of R01 holds for the resource of idRS:
---> ***************************************************************
---> Step 2-3: Split the rule applied case into cases
--->  where predicate final does or does not hold in the next state.
---> ***************************************************************
+--> *********************************************************
+--> Step 2-3: Split the current case into cases where
+-->  predicate final does or does not hold in the next state.
+--> *********************************************************
 -- All of the other resources are or are not started.
 :csp {
   eq allRSInStates(sRS,started) = true .
@@ -40,18 +40,18 @@ select ProofContCont .
 :apply (rd) -- 1-1
 -- Case 1-2: When there is an initial resource:
 --> ************************************************************
---> Step 2-4: Think which rule can be applied to the next state.
+--> Step 2-4: Consider which rule can be applied to the next state.
 --> ************************************************************
 -- The next rule should be R01 for the resource of idRS'.
---> ************************************************************************
---> Step 2-5: Split the general case into cases which collectively cover
---> the general case and one of which matches to LHS of the applicable rule.
---> ************************************************************************
+--> *************************************************************************************
+--> Step 2-5: Split the current case into cases which collectively cover the current case
+-->  and the next state of one of the split cases matches to LHS of the current rule.
+--> *************************************************************************************
 --> The case already matches to LHS of R01.
---> ***********************************************************
---> Step 2-6: Split the general case into cases where 
---> the condition of the applicable rule does or does not hold.
---> ***********************************************************
+--> ***************************************************************
+--> Step 2-6: Split the current case into cases where the condition
+-->  of the current rule does or does not hold in the next state.
+--> ***************************************************************
 -- The condition of R01 does or does not hold for the resource o idRS'.
 :csp {
   eq allPROfRSInStates(sPR,idRS',ready) = true .
@@ -67,10 +67,10 @@ select ProofContCont .
   B2:Bool <- allPROfRSInStates(sPR,idRS,ready) == true ;
 }
 :set(normalize-init,off)
---> ***********************************************************
---> Step 2-7: When there is a dangling link, split the case
+--> ***************************************************************
+--> Step 2-7: When there is a dangling link, split the current case
 -->  into cases where the linked object does or does not exist.
---> ***********************************************************
+--> ***************************************************************
 -- The resource referred by the property does or does not exist.
 :csp {
   eq existRS(sRS',idRRS) = false .

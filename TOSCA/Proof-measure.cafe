@@ -8,9 +8,9 @@ require Proof Proof.cafe
 module! ProofMeasure {
   protecting(ProofBase)
 
---> *************************************
---> Step 3-0: Use a natural number axiom.
---> *************************************
+--> ************************************
+--> Step 3-0: Use natural number axioms.
+--> ************************************
   protecting(NATAXIOM)
 
 --> ******************************************
@@ -43,10 +43,10 @@ select ProofMeasure .
 :goal {
   eq mesmes(< (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >) = true .
 }
---> ************************************************************
---> Step 3-3: Split the most general case for a rule into cases
+--> ********************************************************
+--> Step 3-3: Split the current case for a rule into cases
 -->  where the condition of the rule does or does not hold. 
---> ************************************************************
+--> ********************************************************
 -- The condition of R01 does or does not hold for S.
 :ctf {
   eq allHostedOnRQOfNDInStates(sRQ,idND,ready) = true .
@@ -67,10 +67,10 @@ select ProofMeasure .
 :goal {
   eq mesmes(< (node(tnd,idND,created) sND), sCP, sRQ, sRL, mp >) = true .
 }
---> ************************************************************
---> Step 3-3: Split the most general case for a rule into cases
+--> ********************************************************
+--> Step 3-3: Split the current case for a rule into cases
 -->  where the condition of the rule does or does not hold. 
---> ************************************************************
+--> ********************************************************
 -- The condition of R02 does or does not hold for S.
 :ctf {
   eq allRQOfNDInStates(sRQ,idND,ready) = true .
@@ -91,10 +91,10 @@ select ProofMeasure .
 :goal {
   eq mesmes(< sND, (cap(hostedOn,idCP,closed,idND) sCP), sRQ, sRL, mp >) = true .
 }
---> ************************************************************
---> Step 3-3: Split the most general case for a rule into cases
+--> ********************************************************
+--> Step 3-3: Split the current case for a rule into cases
 -->  where the condition of the rule does or does not hold. 
---> ************************************************************
+--> ********************************************************
 -- The condition of R03 does or does not hold for S.
 :ctf {
   eq isCreated(state(getNode(sND,idND))) = true .
@@ -133,10 +133,10 @@ select ProofMeasure .
 :goal {
   eq mesmes(< sND, (cap(dependsOn,idCP,closed,idND) sCP), sRQ, sRL, mp >) = true .
 }
---> ************************************************************
---> Step 3-3: Split the most general case for a rule into cases
+--> ********************************************************
+--> Step 3-3: Split the current case for a rule into cases
 -->  where the condition of the rule does or does not hold. 
---> ************************************************************
+--> ********************************************************
 -- The condition of R05 does or does not hold for S.
 :ctf {
   eq isCreated(state(getNode(sND,idND))) = true .
@@ -157,10 +157,10 @@ select ProofMeasure .
 :goal {
   eq mesmes(< sND, (cap(dependsOn,idCP,open,idND) sCP), sRQ, sRL, mp >) = true .
 }
---> ************************************************************
---> Step 3-3: Split the most general case for a rule into cases
+--> ********************************************************
+--> Step 3-3: Split the current case for a rule into cases
 -->  where the condition of the rule does or does not hold. 
---> ************************************************************
+--> ********************************************************
 -- The condition of R06 does or does not hold for S.
 :ctf {
   eq state(getNode(sND,idND)) = started .
@@ -185,10 +185,10 @@ select ProofMeasure .
    	           (req(dependsOn,idRQ,unbound,idND') sRQ), 
 	           (rel(dependsOn,idRL,idCP,idRQ) sRL), mp >) = true .
 }
---> ************************************************************
---> Step 3-3: Split the most general case for a rule into cases
+--> ********************************************************
+--> Step 3-3: Split the current case for a rule into cases
 -->  where the condition of the rule does or does not hold. 
---> ************************************************************
+--> ********************************************************
 -- The condition of R07 does or does not hold for S.
 :ctf {
   eq (state(getNode(sND,idND2)) = created and isActivated(scp)) = true .
@@ -228,10 +228,10 @@ select ProofMeasure .
 :goal {
   eq mesmes(< sND, (cap(connectsTo,idCP,closed,idND) sCP), sRQ, sRL, mp >) = true .
 }
---> ************************************************************
---> Step 3-3: Split the most general case for a rule into cases
+--> ********************************************************
+--> Step 3-3: Split the current case for a rule into cases
 -->  where the condition of the rule does or does not hold. 
---> ************************************************************
+--> ********************************************************
 -- The condition of R09 does or does not hold for S.
 :ctf {
   eq isCreated(state(getNode(sND,idND))) = true .
@@ -253,10 +253,10 @@ select ProofMeasure .
 :goal {
   eq mesmes(< sND, (cap(connectsTo,idCP,open,idND) sCP), sRQ, sRL, mp >) = true .
 }
---> ************************************************************
---> Step 3-3: Split the most general case for a rule into cases
+--> ********************************************************
+--> Step 3-3: Split the current case for a rule into cases
 -->  where the condition of the rule does or does not hold. 
---> ************************************************************
+--> ********************************************************
 -- The condition of R10 does or does not hold for S.
 :ctf {
   eq state(getNode(sND,idND)) = started .
@@ -283,10 +283,10 @@ select ProofMeasure .
 	      (rel(connectsTo,idRL,idCP,idRQ) sRL),
 	      (opMsg(idCP) mp) >) = true .
 }
---> ************************************************************
---> Step 3-3: Split the most general case for a rule into cases
+--> ********************************************************
+--> Step 3-3: Split the current case for a rule into cases
 -->  where the condition of the rule does or does not hold. 
---> ************************************************************
+--> ********************************************************
 -- The condition of R11 does or does not hold for S.
 :ctf {
   eq state(getNode(sND,idND)) = created .
@@ -308,312 +308,6 @@ show proof
 select ProofMeasure .
 :goal {
   eq mesmes(< sND, sCP, 
-   	      (req(connectsTo,idRQ,waiting,idND) sRQ), (rel(connectsTo,idRL,idCP,idRQ) sRL),
-	      (avMsg(idCP) mp) >) = true .
-}
-:apply (rd)
-show proof
-
-
---> *******************************************************************
---> (4) inv(S) and (cont(S) or final(S)) and m(S) = 0 implies final(S).
---> *******************************************************************
-module! ProofMesFinal {
-  protecting(ProofBase)
-
---> *************************************
---> Step 4-0: Use a natural number axiom.
---> *************************************
-  protecting(NATAXIOM)
-
---> ******************************************
---> Step 4-1: Define a predicate to be proved.
---> ******************************************
-  var S : State
-
-  pred mesfinal : State .
-  eq mesfinal(S)
-     = inv(S) and cont(S) and m(S) = 0 implies final(S) .
-}
-
---> *************************************************************************
---> ctrans [R01]: < (node(TND,IDND,initial) SetND), SetCP, SetRQ, SetRL, MP >
--->            => < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP > 
--->	      if allHostedOnRQOfNDInStates(SetRQ,IDND,ready) .
---> *************************************************************************
-select ProofMesFinal .
--- When R01 can be applied to the state S:
---> *************************************************************************
---> Step 4-2: Begin with the cases each of which matches to LHS of each rule.
---> *************************************************************************
-:goal {
-  eq mesfinal(< (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >) = true .
-}
---> ************************************************************
---> Step 4-3: Split the most general case for a rule into cases
--->  where the condition of the rule does or does not hold. 
---> ************************************************************
--- The condition of R01 does or does not hold for S.
-:ctf {
-  eq allHostedOnRQOfNDInStates(sRQ,idND,ready) = true .
-}
-:apply (rd) -- 1
-:apply (rd) -- 2
-show proof
-
---> *************************************************************************
---> ctrans [R02]: < (node(TND,IDND,created) SetND), SetCP, SetRQ, SetRL, MP >
--->            => < (node(TND,IDND,started) SetND), SetCP, SetRQ, SetRL, MP > 
--->	      if allRQOfNDInStates(SetRQ,IDND,ready) .
---> *************************************************************************
---> *************************************************************************
---> Step 4-2: Begin with the cases each of which matches to LHS of each rule.
---> *************************************************************************
-select ProofMesFinal .
-:goal {
-  eq mesfinal(< (node(tnd,idND,created) sND), sCP, sRQ, sRL, mp >) = true .
-}
---> ************************************************************
---> Step 4-3: Split the most general case for a rule into cases
--->  where the condition of the rule does or does not hold. 
---> ************************************************************
--- The condition of R02 does or does not hold for S.
-:ctf {
-  eq allRQOfNDInStates(sRQ,idND,ready) = true .
-}
-:apply (rd) -- 1
-:apply (rd) -- 2
-show proof
-
---> ************************************************************************************
---> ctrans [R03]: < SetND, (cap(hostedOn,IDCP,closed,   IDND) SetCP), SetRQ, SetRL, MP >
--->            => < SetND, (cap(hostedOn,IDCP,available,IDND) SetCP), SetRQ, SetRL, MP >
--->	    if isCreated(state(getNode(SetND,IDND))) .
---> ************************************************************************************
---> *************************************************************************
---> Step 4-2: Begin with the cases each of which matches to LHS of each rule.
---> *************************************************************************
-select ProofMesFinal .
-:goal {
-  eq mesfinal(< sND, (cap(hostedOn,idCP,closed,idND) sCP), sRQ, sRL, mp >) = true .
-}
---> ************************************************************
---> Step 4-3: Split the most general case for a rule into cases
--->  where the condition of the rule does or does not hold. 
---> ************************************************************
--- The condition of R03 does or does not hold for S.
-:ctf {
-  eq isCreated(state(getNode(sND,idND))) = true .
-}
-:apply (rd) -- 1
-:apply (rd) -- 2
-show proof
-
---> ***************************************************************************************************
---> trans [R04]: < SetND, (cap(hostedOn,IDCP,available,IDND1) SetCP), 
--->  	       	(req(hostedOn,IDRQ,unbound,IDND2) SetRQ), (rel(hostedOn,IDRL,IDCP,IDRQ) SetRL), MP >
--->           => < SetND, (cap(hostedOn,IDCP,available,IDND1) SetCP), 
--->  	       	(req(hostedOn,IDRQ,ready,   IDND2) SetRQ), (rel(hostedOn,IDRL,IDCP,IDRQ) SetRL), MP > .
---> ***************************************************************************************************
---> *************************************************************************
---> Step 4-2: Begin with the cases each of which matches to LHS of each rule.
---> *************************************************************************
-select ProofMesFinal .
-:goal {
-  eq mesfinal(< sND, (cap(hostedOn,idCP,available,idND) sCP), 
-  	           (req(hostedOn,idRQ,unbound,idND') sRQ), 
-	           (rel(hostedOn,idRL,idCP,idRQ) sRL), mp >) = true .
-}
-:apply (rd)
-show proof
-
---> **********************************************************************************
---> ctrans [R05]: < SetND, (cap(dependsOn,IDCP,closed,IDND) SetCP), SetRQ, SetRL, MP >
--->            => < SetND, (cap(dependsOn,IDCP,open,  IDND) SetCP), SetRQ, SetRL, MP >
--->	     if isCreated(state(getNode(SetND,IDND))) .
---> **********************************************************************************
---> *************************************************************************
---> Step 4-2: Begin with the cases each of which matches to LHS of each rule.
---> *************************************************************************
-select ProofMesFinal .
-:goal {
-  eq mesfinal(< sND, (cap(dependsOn,idCP,closed,idND) sCP), sRQ, sRL, mp >) = true .
-}
---> ************************************************************
---> Step 4-3: Split the most general case for a rule into cases
--->  where the condition of the rule does or does not hold. 
---> ************************************************************
--- The condition of R05 does or does not hold for S.
-:ctf {
-  eq isCreated(state(getNode(sND,idND))) = true .
-}
-:apply (rd) -- 1
-:apply (rd) -- 2
-show proof
-
---> *************************************************************************************
---> ctrans [R06]: < SetND, (cap(dependsOn,IDCP,open,     IDND) SetCP), SetRQ, SetRL, MP >
--->            => < SetND, (cap(dependsOn,IDCP,available,IDND) SetCP), SetRQ, SetRL, MP >
--->	     if state(getNode(SetND,IDND)) = started .
---> *************************************************************************************
---> *************************************************************************
---> Step 4-2: Begin with the cases each of which matches to LHS of each rule.
---> *************************************************************************
-select ProofMesFinal .
-:goal {
-  eq mesfinal(< sND, (cap(dependsOn,idCP,open,idND) sCP), sRQ, sRL, mp >) = true .
-}
---> ************************************************************
---> Step 4-3: Split the most general case for a rule into cases
--->  where the condition of the rule does or does not hold. 
---> ************************************************************
--- The condition of R06 does or does not hold for S.
-:ctf {
-  eq state(getNode(sND,idND)) = started .
-}
-:apply (rd) -- 1
-:apply (rd) -- 2
-show proof
-
---> ****************************************************************************************************
---> ctrans [R07]: < SetND, (cap(dependsOn,IDCP,SCP,IDND1) SetCP), 
--->  	       	  (req(dependsOn,IDRQ,unbound,IDND2) SetRQ), (rel(dependsOn,IDRL,IDCP,IDRQ) SetRL), MP >
--->            => < SetND, (cap(dependsOn,IDCP,SCP,IDND1) SetCP), 
--->  	       	  (req(dependsOn,IDRQ,waiting,IDND2) SetRQ), (rel(dependsOn,IDRL,IDCP,IDRQ) SetRL), MP >
--->             if state(SetND,IDND2) = created and isActivated(SCP) .
---> ****************************************************************************************************
---> *************************************************************************
---> Step 4-2: Begin with the cases each of which matches to LHS of each rule.
---> *************************************************************************
-select ProofMesFinal .
-:goal {
-  eq mesfinal(< sND, (cap(dependsOn,idCP,scp,idND) sCP), 
-   	           (req(dependsOn,idRQ,unbound,idND') sRQ), 
-	           (rel(dependsOn,idRL,idCP,idRQ) sRL), mp >) = true .
-}
---> ************************************************************
---> Step 4-3: Split the most general case for a rule into cases
--->  where the condition of the rule does or does not hold. 
---> ************************************************************
--- The condition of R07 does or does not hold for S.
-:ctf {
-  eq (state(getNode(sND,idND2)) = created and isActivated(scp)) = true .
-}
-:apply (rd) -- 1
-:apply (rd) -- 2
-show proof
-
---> ******************************************************************************************************
---> trans [R08]: < SetND, (cap(dependsOn,IDCP,available,IDND1) SetCP), 
--->  	          (req(dependsOn,IDRQ,waiting,IDND2) SetRQ), (rel(dependsOn,IDRL,IDCP,IDRQ) SetRL), MP >
--->           => < SetND, (cap(dependsOn,IDCP,available,IDND1) SetCP), 
--->  	       	  (req(dependsOn,IDRQ,ready,  IDND2) SetRQ), (rel(dependsOn,IDRL,IDCP,IDRQ) SetRL), MP > .
---> ******************************************************************************************************
---> *************************************************************************
---> Step 4-2: Begin with the cases each of which matches to LHS of each rule.
---> *************************************************************************
-select ProofMesFinal .
-:goal {
-  eq mesfinal(< sND, (cap(dependsOn,idCP,scp,idND) sCP), 
-   	           (req(dependsOn,idRQ,waiting,idND') sRQ), 
-	           (rel(dependsOn,idRL,idCP,idRQ) sRL), mp >) = true .
-}
-:apply (rd)
-show proof
-
---> ***********************************************************************************
---> ctrans [R09]: < SetND, (cap(connectsTo,IDCP,closed,IDND) SetCP), SetRQ, SetRL, MP >
--->            => < SetND, (cap(connectsTo,IDCP,open,  IDND) SetCP), SetRQ, SetRL, 
--->	       	 (opMsg(IDCP) MP) >
--->	    if isCreated(state(getNode(SetND,IDND))) .
---> ***********************************************************************************
---> *************************************************************************
---> Step 4-2: Begin with the cases each of which matches to LHS of each rule.
---> *************************************************************************
-select ProofMesFinal .
-:goal {
-  eq mesfinal(< sND, (cap(connectsTo,idCP,closed,idND) sCP), sRQ, sRL, mp >) = true .
-}
---> ************************************************************
---> Step 4-3: Split the most general case for a rule into cases
--->  where the condition of the rule does or does not hold. 
---> ************************************************************
--- The condition of R09 does or does not hold for S.
-:ctf {
-  eq isCreated(state(getNode(sND,idND))) = true .
-}
-:apply (rd) -- 1
-:apply (rd) -- 2
-show proof
-
---> **************************************************************************************
---> ctrans [R10]: < SetND, (cap(connectsTo,IDCP,open,     IDND) SetCP), SetRQ, SetRL, MP >
--->            => < SetND, (cap(connectsTo,IDCP,available,IDND) SetCP), SetRQ, SetRL,
--->	       	  (avMsg(IDCP) MP) >
--->	     if state(getNode(SetND,IDND)) = started .
---> **************************************************************************************
---> *************************************************************************
---> Step 4-2: Begin with the cases each of which matches to LHS of each rule.
---> *************************************************************************
-select ProofMesFinal .
-:goal {
-  eq mesfinal(< sND, (cap(connectsTo,idCP,open,idND) sCP), sRQ, sRL, mp >) = true .
-}
---> ************************************************************
---> Step 4-3: Split the most general case for a rule into cases
--->  where the condition of the rule does or does not hold. 
---> ************************************************************
--- The condition of R10 does or does not hold for S.
-:ctf {
-  eq state(getNode(sND,idND)) = started .
-}
-:apply (rd) -- 1
-:apply (rd) -- 2
-show proof
-
---> ********************************************************************************************************
---> ctrans [R11]: < SetND, SetCP, 
---> 	       	  (req(connectsTo,IDRQ,unbound,IDND) SetRQ), (rel(connectsTo,IDRL,IDCP,IDRQ) SetRL), 
---> 		  (opMsg(IDCP) MP) >
--->            => < SetND, SetCP, 
---> 	       	  (req(connectsTo,IDRQ,waiting,IDND) SetRQ), (rel(connectsTo,IDRL,IDCP,IDRQ) SetRL), MP >
---> 	     if state(getNode(SetND,IDND)) = created .
---> ********************************************************************************************************
---> *************************************************************************
---> Step 4-2: Begin with the cases each of which matches to LHS of each rule.
---> *************************************************************************
-select ProofMesFinal .
-:goal {
-  eq mesfinal(< sND, sCP, 
-   	      (req(connectsTo,idRQ,unbound,idND) sRQ), 
-	      (rel(connectsTo,idRL,idCP,idRQ) sRL),
-	      (opMsg(idCP) mp) >) = true .
-}
---> ************************************************************
---> Step 4-3: Split the most general case for a rule into cases
--->  where the condition of the rule does or does not hold. 
---> ************************************************************
--- The condition of R11 does or does not hold for S.
-:ctf {
-  eq state(getNode(sND,idND)) = created .
-}
-:apply (rd) -- 1
-:apply (rd) -- 2
-show proof
-
---> *******************************************************************************************************
---> trans [R12]: < SetND, SetCP, 
---> 	       	  (req(connectsTo,IDRQ,waiting,IDND) SetRQ), (rel(connectsTo,IDRL,IDCP,IDRQ) SetRL), 
---> 		  (avMsg(IDCP) MP) >
--->            => < SetND, SetCP, 
---> 	       	  (req(connectsTo,IDRQ,ready,  IDND) SetRQ), (rel(connectsTo,IDRL,IDCP,IDRQ) SetRL), MP > .
---> *******************************************************************************************************
---> *************************************************************************
---> Step 4-2: Begin with the cases each of which matches to LHS of each rule.
---> *************************************************************************
-select ProofMesFinal .
-:goal {
-  eq mesfinal(< sND, sCP, 
    	      (req(connectsTo,idRQ,waiting,idND) sRQ), (rel(connectsTo,idRL,idCP,idRQ) sRL),
 	      (avMsg(idCP) mp) >) = true .
 }
@@ -621,4 +315,4 @@ select ProofMesFinal .
 show proof
 
 select
---> Totally 24 goals should be proved.
+--> Totally 12 goals should be proved.

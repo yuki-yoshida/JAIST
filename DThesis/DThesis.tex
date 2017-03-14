@@ -1702,7 +1702,6 @@ properties of cloud orchestration specifications. The provided lemmas
 are already proved in a general level of abstraction and can be reused
 simply by renaming included general terms to some specific ones
 without reproving.
-
 The reason why the framework can provide such a proof development
 procedure and reusable lemmas for the specific problem domain, cloud
 orchestration in our case, is because it makes specific specifications
@@ -3443,33 +3442,39 @@ of sufficient conditions for it as follows:
 
 \begin{lemma}[sufficient conditions for leads-to]
 \label{def:sufcond}
-  Let $TS=(\mathit{St},\mathit{Tr},In)$ be a state machine, $p$ and $q$ predicates of
-  $\mathit{St}$, $inv$ an invariant of $TS$, and $m$ a natural number
-  function of $\mathit{St}$, then the following four conditions are sufficient
-  for ($p~\mbstt{leads-to}~q$) to hold.
+  Let $TS=(\mathit{St},\mathit{Tr},In)$ be a state machine, $p$ and
+  $q$ predicates of $\mathit{St}$, $inv$ an invariant of $TS$, and $m$
+  a natural number function of $\mathit{St}$, then the following three
+  conditions\footnote{However Futatsugi~\cite{Futatsugi15} proposes
+    four conditions, we have discussed and concluded that they can be
+    rearranged into three conditions.}  are sufficient for
+  ($p~\mbstt{leads-to}~q$) to
+  hold\footnote{Definition~\ref{def:leadsto} of
+    ($p~\mbtt{leads-to}~q$) includes the case where there is an
+    infinite transition sequence
+    $\alpha_{\infty}\!=\!(\mathit{S_0},\mathit{S_1},\dots)$ such that
+    predicate $q$ never holds in $\alpha_{\infty}$, $\forall
+    \mathit{S_i}\!\in\!\alpha_{\infty}\!:\!\neg q(\mathit{S_i})$, but
+    any prefix of $\alpha_{\infty}$ reaches a state where $q$ holds,
+    $\forall \alpha_i\!=\!(\mathit{S_0},\dots,\mathit{S_i}),\exists
+    T\!\in\!\mathit{St}, \exists\beta\!\in\!\Theta\!:\!(q(T) \land
+    S\alpha_i\beta T\in \Theta))$.  However, {\tt leads-to} may be
+    defined in a narrower sense where no such infinite transition
+    sequence is allowed. Here, we call the former as {\it
+      weak-leads-to} and the latter as {\it strong-leads-to}. The set
+    of conditions proposed by Lemma~\ref{def:sufcond} is sufficient to
+    both meanings of leads-to because the properly decreasing natural
+    number function, $m$, ensures that transition sequences never
+    become infinite while keeping $q$ not to hold. In the rest of this
+    dissertation, we mean ($p~\mbtt{leads-to}~q$) as
+    ($p~\mbtt{strong-leads-to}~q$).}.
+
 \begin{eqnarray*}
 \forall (S,S')\in \mathit{Tr}:&&((inv(S)\land p(S)\land\neg q(S))\ra(p(S')\lor q(S')))\\
 \forall (S,S')\in \mathit{Tr}:&&((inv(S)\land p(S)\land\neg q(S))\ra(m(S) > m(S')))\\
-\forall S\in \mathit{St}:&&((inv(S)\land p(S)\land\neg q(S))\ra\exists S'\in \mathit{St}:(S,S')\in \mathit{Tr})\\
-\forall S\in \mathit{St}:&&((inv(S)\land p(S)\land(m(S) = 0)) \ra q(S))
+\forall S\in \mathit{St}:&&((inv(S)\land p(S)\land\neg q(S))\ra\exists S'\in \mathit{St}:(S,S')\in \mathit{Tr})
 \end{eqnarray*}
 \end{lemma}
-Definition~\ref{def:leadsto} of ($p~\mbstt{leads-to}~q$) includes the
-case where there is an infinite transition sequence
-$\alpha_{\infty}\!=\!(\mathit{S_0},\mathit{S_1},\dots)$ such that predicate $q$ never holds in $\alpha_{\infty}$,
-$\forall \mathit{S_i}\!\in\!\alpha_{\infty}\!:\!\neg q(\mathit{S_i})$,
-but any prefix of $\alpha_{\infty}$ reaches a state where $q$ holds,
-$\forall \alpha_i\!=\!(\mathit{S_0},\dots,\mathit{S_i}),\exists T\!\in\!\mathit{St},
-\exists\beta\!\in\!\Theta\!:\!(q(T) \land S\alpha_i\beta T\in \Theta))$.
-However, \stt{leads-to} may be
-defined in a narrower sense where no such infinite transition sequence
-is allowed. Here, we call the former as {\it weak-leads-to} and the
-latter as {\it strong-leads-to}. The set of conditions proposed by
-Lemma~\ref{def:sufcond} is sufficient to both meanings of leads-to
-because the properly decreasing natural number function, $m$, ensures
-that transition sequences never become infinite while keeping $q$ not
-to hold. In the rest of this dissertation, we mean ($p~\mbstt{leads-to}~q$)
-as ($p~\mbstt{strong-leads-to}~q$).
 
 Let the automation of a setup operation be modeled as a state machine
 $TS=(\mathit{St},\mathit{Tr},In)$ specified by sort {\tt State} and a set of transition
@@ -3498,14 +3503,13 @@ continues to transit until it reaches a final state.
 \begin{lemma}[sufficient conditions for $init~\mbstt{leads-to}~final$]
   Let $TS=(\mathit{St},\mathit{Tr},In)$ be a state machine, $inv$ a conjunction of
   some state predicates and $m$ a natural number function of $\mathit{St}$,
-  then the following six conditions are sufficient for
+  then the following five conditions are sufficient for
   ($init~\mbstt{leads-to}~final$) to hold.
   \begin{eqnarray}
   \forall S\in \mathit{St}:&&(init(S)\ra cont(S))\\
   \forall (S,S')\in \mathit{Tr}:&&((inv(S)\land\neg final(S))
   \ra(cont(S')\lor final(S')))\\
   \forall (S,S')\in \mathit{Tr}:&&((inv(S)\land\neg final(S))\ra(m(S)> m(S')))\\
-  \forall S\in \mathit{St}:&&((inv(S)\land cont(S)\land(m(S) = 0))\ra final(S))\\
   \forall S\in \mathit{St}:&&(init(S)\ra inv(S))\\
   \forall (S,S')\in \mathit{Tr}:&&(inv(S)\ra inv(S'))
   \end{eqnarray}
@@ -3514,20 +3518,18 @@ Proof: Let $p$ in the ``sufficient conditions for leads-to'' lemma
 be $cont$, then $\forall (S,S')\in \mathit{Tr}:p(S)=true$ holds and
 $\forall S\in \mathit{St}:(p(s)\ra\exists S'\in \mathit{St}:(S,S')\in \mathit{Tr})$. $\Box$\\
 
-Condition~(1) means an initial state should be a
-continuing state, i.e.\ it should start
-transitions. Condition~(2) means transitions continue
-until $final(S')$ holds. Condition~(3) implies that
-$m(S)$ keeps to decrease properly while $final(S)$ does not
-hold. Since $m(S)$ is a natural number, it should stop to decrease in
-finite steps and the state machine should get to state $S'$ such that
-$((cont(S')\ \lor\ final(S'))$ $\land\ (m(S') = 0))$.
-Condition~(4) then ensures $final(S')$ holds. Here, $m$ is
-called a {\it state measuring function}. When
-condition~(5) and~(6) hold, each state
-predicate included in $inv$ is called an invariant.
+Condition~(1) means an initial state should be a continuing state,
+i.e.\ it should start transitions. Condition~(2) means transitions
+continue until $final(S')$ holds. Condition~(3) implies that $m(S)$
+keeps to decrease properly while $final(S)$ does not hold. Since
+$m(S)$ is a natural number, it should stop to decrease in finite steps
+and the state machine should get to state $S'$ where $cont(S')$ does
+not hold and $final(S')$ does hold, because condition~(2) ensures that
+transitions would still continue if $cont(S')$ does hold. Here, $m$ is
+called a {\it state measuring function}. When condition~(4) and~(5)
+hold, each state predicate included in $inv$ is called an invariant.
 
-The rest of this chapter explains the verification procedure for six
+The rest of this chapter explains the verification procedure for five
 sufficient conditions above using the CloudFormation example case and
 the case of TOSCA topologies will be explained in
 Chapter~\ref{chap:appTOSCA}.
@@ -3644,7 +3646,7 @@ is to introduce an object whose local state is a loop counter.\\
 
 \noindent{\bf Step 0-4:} Define $inv$. \\ Invariants other than wfs
 predicates are usually recognized to be necessary in the course of
-proving conditions (1) to (6) above and are introduced by the users of
+proving conditions (1) to (5) above and are introduced by the users of
 the framework. For example, the CloudFormation example case requires
 an invariant {\tt inv-ifRSStartedThenPRReady} as explained in
 Section~\ref{sec:lemma}.
@@ -3653,7 +3655,7 @@ Predicate $inv$ is a conjunction of all the invariants, however, the
 straightforward representation is not so efficient. \cafeobj needs to
 internally maintain long ANDed terms and to spend much processing
 time. Fortunately, there is more efficient representation. Since the sufficient
-conditions (2), (3), (4), and (6) include $inv$ in their antecedent
+conditions (2), (3), and (5) include $inv$ in their antecedent
 parts, it is enough to know whether each invariant does or does not
 reduce to false. Thereby, we can define $inv$ such that it reduces to
 false when one of invariants reduces to false as follows:
@@ -3677,7 +3679,7 @@ false when one of invariants reduces to false as follows:
 Note that only three of six wfs predicates are used to define $inv$,
 since they directly take some roles in proofs.
 
-As to sufficient conditions (5) and (6), $inv$ is also included in
+As to sufficient conditions (4) and (5), $inv$ is also included in
 their consequent parts, which case will be explained in
 Section~\ref{sec:invariant}.\\
 
@@ -3779,7 +3781,7 @@ respectively:
 This case is too general to judge whether the condition does or does
 not hold. Thereby, no reduction occurs.\\
 
-\noindent{\bf Step 1-2:} Consider which rule is applied to the global
+\noindent{\bf Step 1-2:} Consider which rule can be applied to the global
 state in the current case. The rule is referred to as the {\it current
 rule}.\\
 One of the main benefits of interactive proof development is that
@@ -4074,7 +4076,7 @@ resources respectively:
 The goal of Case 1-1 is proved because the next state is final.  Case
 1-2 remains unproved.\\
 
-\noindent{\bf Step 2-4:} Similarly as Step 1-2, think which rule can
+\noindent{\bf Step 2-4:} Similarly as Step 1-2, consider which rule can
 be applied to the next state. The rule is referred to as the {\it current
 rule}.\\
 Since the next state in Case 1-2 includes an {\tt initial} resource
@@ -4332,80 +4334,7 @@ condition~(3) is proved as follows:
 %% =======================================================================
 
 %% ===============================================================
-\section{Procedure: Proof of Sufficient Condition~(4)}
-\label{sec:mesfinal}
-%% ===============================================================
-\noindent{\bf Step 4-0:} Use natural number axioms. \\
-Since the measuring function $m$ is defined as the sum of natural
-numbers, $m(S) = 0$ means each of the numbers is also zero. Thereby,
-when either \stt{\#ResourceInStates(initial,sRS)} or
-\stt{\#PropertyInStates(notready,sPR)} is not zero, $m(S) = 0$ does
-not hold and the goal is proved. The framework provides
-several natural number axioms to enable such deduction as follows:
-%% ===============================================================
-\small
-\begin{verbatim}
-  vars N1 N2 : Nat
-  var Nz : NzNat
-  eq (N1 + N2 = 0) = (N1 = 0) and (N2 = 0) .
-  eq (Nz = 0) = false .
-\end{verbatim}
-\normalsize
-%% ===============================================================
-Note that {\tt NzNat} is a subsort of {\tt Nat} which does not
-include {\tt 0}.\\
-
-\noindent{\bf Step 4-1:} Define a predicate to be proved. \\ Predicate
-         {\tt mesfinal} for condition~(4) can be defined as follows:
-%% =======================================================================
-\small
-\begin{verbatim}
-  var S : State
-  pred mesfinal : State .
-  eq mesfinal(S)
-     = inv(S) and cont(S) and m(S) = 0 implies final(S) .
-\end{verbatim}
-\normalsize
-%% =======================================================================
-
-\noindent{\bf Step 4-2:} Begin with the cases each of which matches to
-LHS of each rule. \\ 
-\noindent{\bf Step 4-3:} Split the current case for a rule into
-cases where the condition of the rule does or does not hold. 
-
-For the CloudFormation example case, we can begin with two cases for
-two rules. Since rule {\tt R01} is conditional, the general case
-should be split into two cases according to Step 4-3. Then, the goals
-of totally three cases can be proved and thus condition~(4) is proved
-as follows:
-%% ===============================================================
-\small
-\begin{verbatim}
-  -- Goal of Condition (4)' for rule R01
-  :goal {
-    eq mesfinal(< (res(trs,idRS,initial) sRS), sPR >) = true .
-  }
-  -- The condition of R01 does or does not hold for S.
-  :ctf {
-    eq allPROfRSInStates(sPR,idRS,ready) = true .
-  }
-  -- Case 1: When the condition of R01 holds:
-  :apply (rd) -- 1
-  -- Case 2: When the condition of R01 does not hold:
-  :apply (rd) -- 2
-
-  -- Goal of Condition (4)' for rule R02
-  :goal {
-    eq mesfinal(< (res(trs,idRRS,started) sRS),
-                  (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
-  }
-  :apply (rd) -- goal
-\end{verbatim}
-\normalsize
-%% ===============================================================
-
-%% ===============================================================
-\section{Procedure: Proof of Sufficient Condition~(5) \&~(6)}
+\section{Procedure: Proof of Sufficient Condition~(4) \&~(5)}
 \label{sec:invariant}
 %% ===============================================================
 Since predicate $inv$ typically is a conjunction of many predicates, it is
@@ -4432,9 +4361,8 @@ defined by using a predefined predicate {\tt ifXInStatesThenZInStates}
 provides many lemmas for predefined predicates, it is easy to
 prove the invariant property of such a predicate. \\
 
-\noindent{\bf Step 5-0:} Define a predicate to be proved. \\ Predicate
-         {\tt initinv} for condition~(5) can be defined
-         as follows:
+\noindent{\bf Step 4-0:} Define a predicate to be proved. \\
+Predicate {\tt initinv} for condition~(4) can be defined as follows:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -4449,11 +4377,11 @@ prove the invariant property of such a predicate. \\
 \normalsize
 %% =======================================================================
 
-\noindent{\bf Step 5-1:} Instantiate proved lemmas for predefined
+\noindent{\bf Step 4-1:} Instantiate proved lemmas for predefined
 predicates. \\
 As described in Section~\ref{sec:linklemma}, proved lemma {\tt
   m2o-lemma07} can be instantiated and used for proof of
-condition~(5) as follows:
+condition~(4) as follows:
 %% ===============================================================
 \small
 \begin{verbatim}
@@ -4472,7 +4400,7 @@ condition~(5) as follows:
 \normalsize
 %% ===============================================================
 
-\noindent{\bf Step 5-2:} Begin with the most general case. \\
+\noindent{\bf Step 4-2:} Begin with the most general case. \\
 The most general case is as follows where {\tt sRS} and {\tt
   sPR} are proof constants for a set of resources and properties
 respectively:
@@ -4489,9 +4417,9 @@ respectively:
 The instantiated proved lemma is effective enough to prove the most
 general goal.\\
 
-\noindent{\bf Step 6-0:} Define a predicate to be proved. \\ Using the
+\noindent{\bf Step 5-0:} Define a predicate to be proved. \\ Using the
 double negation idiom, predicate {\tt invinv} for
-condition~(6) can be defined as follows:
+condition~(5) can be defined as follows:
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -4516,12 +4444,12 @@ However $inv(S)$ includes $inv_k(S)$, the antecedent part of
   inv(S)} is defined only to reduce to false when one of {\tt invK(S)}
 reduces to false as described in Section~\ref{sec:support}.\\
 
-\noindent{\bf Step 6-1:} Instantiate proved lemmas for predefined
+\noindent{\bf Step 5-1:} Instantiate proved lemmas for predefined
 predicates. \\ Rule {\tt R02} increases {\tt ready} properties which
 has intuitively no effect on \\ {\tt inv-ifRSStartedThenPRReady}. As
 explained in Section~\ref{sec:linklemma}, proved lemma {\tt
   m2o-lemma11} ensures it and can be used for proof of
-condition~(6) as follows:
+condition~(5) as follows:
 %% ===============================================================
 \small
 \begin{verbatim}
@@ -4548,21 +4476,21 @@ condition~(6) as follows:
 \normalsize
 %% ===============================================================
 
-\noindent{\bf Step 6-2:} Begin with the cases each of which matches to
+\noindent{\bf Step 5-2:} Begin with the cases each of which matches to
 LHS of each rule. \\ 
-\noindent{\bf Step 6-3:} Split the current case for a rule into
+\noindent{\bf Step 5-3:} Split the current case for a rule into
 cases where the condition of the rule does or does not hold. 
 
 We can begin with two cases for two rules. Since rule {\tt R01} is
 conditional, the general case should be split into two cases according
-to Step 6-3. The first case should be split into more two cases
+to Step 5-3. The first case should be split into more two cases
 where the set of properties is or is not empty.
 Then, the goals of all four cases can be proved and
-thus condition~(6) is proved as follows:
+thus condition~(5) is proved as follows:
 %% ===============================================================
 \small
 \begin{verbatim}
-  -- Goal of Condition (6) for rule R01
+  -- Goal of Condition (5) for rule R01
   :goal {
     eq invinv(< (res(trs,idRS,initial) sRS), sPR >) = true .
   }
@@ -4580,7 +4508,7 @@ thus condition~(6) is proved as follows:
   -- Case 2: When the condition of R01 does not hold:
   :apply (rd) -- 2
 
-  -- Goal of Condition (6) for rule R02
+  -- Goal of Condition (5) for rule R02
   :goal {
     eq invinv(< (res(trs,idRRS,started) sRS),
                 (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
@@ -4595,7 +4523,7 @@ thus condition~(6) is proved as follows:
 %% ===============================================================
 We should prove all of the wfs predicates as invariants, however, they are
 included in $init$ and so we only need to prove
-condition~(6) for each of them. Most of them check some
+condition~(5) for each of them. Most of them check some
 structural constraints of the cloud systems, which should usually keep
 to hold when some transition rule changes a local state only and
 does not change any links of some
@@ -4605,7 +4533,7 @@ provides many lemmas for the predefined predicates.
 
 Here we use {\tt wfs-allPRHaveRS} as an example to show the procedure.\\
 
-\noindent{\bf Step 6-0:} Define a predicate to be proved. 
+\noindent{\bf Step 5-0:} Define a predicate to be proved. 
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -4615,10 +4543,10 @@ Here we use {\tt wfs-allPRHaveRS} as an example to show the procedure.\\
 \normalsize
 %% =======================================================================
 
-\noindent{\bf Step 6-1:} Instantiate proved lemmas for predefined
+\noindent{\bf Step 5-1:} Instantiate proved lemmas for predefined
 predicates. \\ Since {\tt wfs-allPRHaveRS} uses the predefined
 predicate {\tt allZHaveX}, the proved lemma \\ {\tt m2o-lemma05} can be
-instantiated and used for proof of condition~(6) as
+instantiated and used for proof of condition~(5) as
 follows:
 %% ===============================================================
 \small
@@ -4639,14 +4567,14 @@ follows:
 \normalsize
 %% ===============================================================
 
-\noindent{\bf Step 6-2:} Begin with the cases each of which matches to
+\noindent{\bf Step 5-2:} Begin with the cases each of which matches to
 LHS of each rule. \\ 
-\noindent{\bf Step 6-3:} Split the current case for a rule into
+\noindent{\bf Step 5-3:} Split the current case for a rule into
 cases where the condition of the rule does or does not hold. 
 %% ===============================================================
 \small
 \begin{verbatim}
-  -- Goal of Condition (6) for rule R01
+  -- Goal of Condition (5) for rule R01
   :goal {
     eq invinv(< (res(trs,idRS,initial) sRS), sPR >) = true .
   }
@@ -4658,7 +4586,7 @@ cases where the condition of the rule does or does not hold.
   -- Case 2: When the condition of R01 does not hold:
   :apply (rd) -- 2
 
-  -- Goal of Condition (6) for rule R02
+  -- Goal of Condition (5) for rule R02
   :goal {
     eq invinv(< (res(trs,idRRS,started) sRS),
                 (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
@@ -4673,13 +4601,13 @@ cases where the condition of the rule does or does not hold.
 %% ===============================================================
 We should prove the invariant property of $noCycle_C(S)$ in order to
 use the Cyclic Dependency Lemma, however, it is included in $init$ and
-thus we only need to prove condition~(6) for $noCycle_C$.
+thus we only need to prove condition~(5) for $noCycle_C$.
 The Depending Subset Lemma in Section~\ref{sec:lemma}
 ensures that we should prove that $\forall (S,S') \in \mathit{Tr}, \forall X\in
 C:\mathit{DDS_C}(X,S')\subseteq \mathit{DDS_C}(X,S)$ instead of
-condition~(6).\\
+condition~(5).\\
 
-\noindent{\bf Step 6-0:} Define a predicate to be proved. 
+\noindent{\bf Step 5-0:} Define a predicate to be proved. 
 %% =======================================================================
 \small
 \begin{verbatim}
@@ -4697,7 +4625,7 @@ condition~(6).\\
 \normalsize
 %% =======================================================================
 
-\noindent{\bf Step 6-1:} Instantiate proved lemmas for predefined
+\noindent{\bf Step 5-1:} Instantiate proved lemmas for predefined
 predicates. \\ As described in Section~\ref{sec:lemma}, the proved
 lemma {\tt m2o-lemma24} and {\tt set-lemma12} can be instantiated and
 used for proof as follows:
@@ -4729,9 +4657,9 @@ used for proof as follows:
 \normalsize
 %% ===============================================================
 
-\noindent{\bf Step 6-2:} Begin with the cases each of which matches to
+\noindent{\bf Step 5-2:} Begin with the cases each of which matches to
 LHS of each rule. \\ 
-\noindent{\bf Step 6-3:} Split the current case for a rule into
+\noindent{\bf Step 5-3:} Split the current case for a rule into
 cases where the condition of the rule does or does not hold. \\
 
 The following is a proof score for $\mathit{DDS_C}(X,S')\subseteq \mathit{DDS_C}(X,S)$ for
@@ -4908,7 +4836,7 @@ condition~1 as follows.
 \end{verbatim}
 \normalsize
 %% =======================================================================
-\noindent{\bf Step 1-2:} Consider which rule is applied to the global
+\noindent{\bf Step 1-2:} Consider which rule can be applied to the global
 state in the current case. The rule is referred to as the {\it current
 rule}.\\
 The applicable transition may be {\tt R01} because the global state
@@ -4951,7 +4879,7 @@ exist.
 \end{verbatim}
 \normalsize
 %% =======================================================================
-\noindent{\bf Step 1-2:} Consider which rule is applied to the 
+\noindent{\bf Step 1-2:} Consider which rule can be applied to the 
 global state in the current case. \\
 In this case, the transition rule to be applied may be {\tt R02} because the
 global state includes a property.\\
@@ -5115,7 +5043,7 @@ The following list describes the role and content of each module:
   \item Define transition rules.
   \end{enumerate}
 \item {\tt ProofBase}\\
-  Module for common definitions to prove six sufficient conditions.
+  Module for common definitions to prove five sufficient conditions.
   \begin{enumerate}
   \item Protecting import {\tt STATERules}.
   \item Define invariant predicates.
@@ -5158,7 +5086,7 @@ The following list describes the role and content of each module:
   \end{enumerate}
 \item {\tt ProofInv}\\
   Module for common definitions for proving sufficient
-  condition~(5) and (6).
+  condition~(4) and (5).
   \begin{enumerate}
   \item Protecting import {\tt ProofBase}.
   \item Define predicates {\tt invK}, {\tt initinv}, and {\tt invinv}.
@@ -5355,9 +5283,9 @@ It should be noted that the double negation idiom always returns true
 when there is no next state. The typical pitfall is to give the idiom
 a global state term which does not match to any LHS and condition of
 transition rules. Since the idiom is used for the sufficient
-conditions (2) (3) and (6), the users of the framework should
+conditions (2) (3) and (5), the users of the framework should
 carefully check the goal of proofs especially in Step 2-1, 2-2, 3-2,
-3-3, 6-2, and 6-3.
+3-3, 5-2, and 5-3.
 
 A simple but effective way to check this pitfall is
 to temporally remove the inner ``\stt{not}'' in the double negation
@@ -6490,7 +6418,7 @@ setup operations of the TOSCA models consisting of four node types,
 three relationship types, and twelve transition rules. As described in
 Chapter~\ref{chap:verification}, reachability of setup operations of
 cloud systems is formalized as ($init~\mbstt{leads-to}~final$) and
-there are six sufficient conditions for it.
+there are five sufficient conditions for it.
 
 %% ===============================================================
 \subsection{Definition of Predicates}
@@ -6804,7 +6732,7 @@ because {\tt S} is a reachable global state.
 \end{verbatim}
 \normalsize
 %% =======================================================================
-\noindent{\bf Step 1-2:} Consider which rule is applied to the 
+\noindent{\bf Step 1-2:} Consider which rule can be applied to the 
 global state in the current case. \\
 The applicable rule may be {\tt R01} because the global state includes
 an {\tt initial} node.\\
@@ -6835,7 +6763,7 @@ the condition of the current rule does or does not hold.
 %% =======================================================================
 Only Case 2 remains unproved and it then becomes the current case.\\
 
-\noindent{\bf Step 1-2:} Consider which rule is applied to the 
+\noindent{\bf Step 1-2:} Consider which rule can be applied to the 
 global state in the current case. \\
 The applicable rule may be {\tt R04} because the global state in Case
 2 includes an {\tt unbound hostedOn} requirement.\\
@@ -6898,7 +6826,7 @@ the current rule.
 %% =======================================================================
 Only Case 2-2-2-2-1 remains unproved.\\
 
-\noindent{\bf Step 1-2:} Consider which rule is applied to the 
+\noindent{\bf Step 1-2:} Consider which rule can be applied to the 
 global state in the current case. \\
 The applicable rule may be {\tt R03} because the global state in Case
 2-2-2-2-1 includes an {\tt unbound hostedOn} requirement.\\
@@ -7006,7 +6934,7 @@ state {\tt S}.
 \end{verbatim}
 \normalsize
 %% =======================================================================
-\noindent{\bf Step 1-2:} Consider which rule is applied to the 
+\noindent{\bf Step 1-2:} Consider which rule can be applied to the 
 global state in the current case. \\
 The applicable rule may be {\tt R02} because the global state includes
 a {\tt created} node.\\
@@ -7037,7 +6965,7 @@ the condition of the current rule does or does not hold.
 %% =======================================================================
 Both Case 2 and 3 remain unproved. Let Case 2 be the current state.\\
 
-\noindent{\bf Step 1-2:} Consider which rule is applied to the 
+\noindent{\bf Step 1-2:} Consider which rule can be applied to the 
 global state in the current case. \\
 The applicable rule may be {\tt R04}, {\tt R07}, or {\tt R11} because
 the global state in Case 2 includes an {\tt unbound} requirement and
@@ -7126,7 +7054,7 @@ the current rule.
 Case 2-2-2-2-2-2 and 2-2-2-2-2-2 are proved because {\tt R07} is
 applicable.  Thus, only Case 2-2-2-2-2-1 remains unproved.\\
 
-\noindent{\bf Step 1-2:} Consider which rule is applied to the 
+\noindent{\bf Step 1-2:} Consider which rule can be applied to the 
 global state in the current case. \\
 The applicable rule may be {\tt R05} because the global state in Case
 2-2-2-2-2-1 includes an {\tt closed dependsOn} capability.\\
@@ -7278,7 +7206,7 @@ initial-cont lemma:
 \normalsize
 %% =======================================================================
 
-\noindent{\bf Step 1-2:} Consider which rule is applied to the 
+\noindent{\bf Step 1-2:} Consider which rule can be applied to the 
 global state in the current case. \\
 The first rule is {\tt R01}. \\
 
@@ -7676,8 +7604,7 @@ All of the cases are successfully proved.
 %% ===============================================================
 \noindent{\bf Step 3-0:} Use natural number axioms. \\
 The framework provides a module, {\tt NATAXIOM}, which defines several
-natural number axioms to be used for proof of
-condition~(3) and (4).  Module {\tt
+natural number axioms to be used for proof of condition~(3).  Module {\tt
   ProofMeasure} should protecting import {\tt NATAXIOM} as well as
 {\tt ProofBase}:
 %% =======================================================================
@@ -7744,67 +7671,6 @@ cases where the condition of the rule does or does not hold.
 Condition~(3) for other rules can be similarly proved.
 
 %% ===============================================================
-\subsection{Proof of Sufficient Condition~(4)}
-\label{sec:TOSCAmesfinal}
-%% ===============================================================
-\noindent{\bf Step 4-0:} Use natural number axioms. \\
-Module {\tt ProofMesFinal} should protecting import {\tt NATAXIOM} as
-well as {\tt ProofBase}:
-%% =======================================================================
-\small
-\begin{verbatim}
-  module! ProofMesFinal {
-    protecting(ProofBase)
-    protecting(NATAXIOM)
-\end{verbatim}
-\normalsize
-%% =======================================================================
-
-\noindent{\bf Step 4-1:} Define a predicate to be proved.
-%% =======================================================================
-\small
-\begin{verbatim}
-  var S : State
-  pred mesfinal : State .
-  eq mesfinal(S)
-     = inv(S) and cont(S) and m(S) = 0 implies final(S) .
-\end{verbatim}
-\normalsize
-%% =======================================================================
-
-\noindent{\bf Step 4-2:} Begin with the cases each of which matches to
-LHS of each rule. \\ 
-Here we show the proof of condition~(3) for rule {\tt R06}
-as an example:
-%% =======================================================================
-\small
-\begin{verbatim}
-  -- Goal of Condition (3) for rule R06
-  select ProofMesFinal .
-  :goal {
-    eq mesfinal(< sND, (cap(dependsOn,idCP,open,idND) sCP), sRQ, sRL, mp >)
-       = true .
-  }
-\end{verbatim}
-\normalsize
-%% =======================================================================
-
-\noindent{\bf Step 4-3:} Split the current case for a rule into
-cases where the condition of the rule does or does not hold. 
-%% ===============================================================
-\small
-\begin{verbatim}
-  :ctf {
-    eq state(getNode(sND,idND)) = started .
-  }
-  :apply (rd) -- 1
-  :apply (rd) -- 2
-\end{verbatim}
-\normalsize
-%% ===============================================================
-Condition~(4) for other rules can be similarly proved.
-
-%% ===============================================================
 \section{Evaluation}
 \label{sec:evaluation}
 %% ===============================================================
@@ -7812,13 +7678,13 @@ Table~\ref{table:goalscases} shows the number of proved goals and
 split cases to verify the liveness property of setup operations of the
 TOSCA models consisting of four node types, three relationship types,
 and twelve transition rules. Condition (1) requires only one goal and
-6 cases whereas (2) (3) and (4) require 12 goals each of which
-is for each of 12 transition rules. Condition (5) also requires 12
-goals for each of 12 invariants and (6) requires 144 goals for
+6 cases whereas (2) and (3) require 12 goals each of which
+is for each of 12 transition rules. Condition (4) also requires 12
+goals for each of 12 invariants and (5) requires 144 goals for
 each combination of 12 invariants and 12 rules. We need 25
 problem specific lemmas each of which requires one goal.
-The verification consists of totally 216 goals which
-are split into 948 cases.
+The verification consists of totally 206 goals which
+are split into 918 cases.
 
 \begin{table}[hbtp]
   \caption{Number of goals and cases}
@@ -7831,12 +7697,11 @@ are split into 948 cases.
     Condition (1)  & 1  & (condition) & 6 \\
     Condition (2)  & 12 & (12 rules) & 115  \\
     Condition (3)  & 12 & (12 rules) & 30 \\
-    Condition (4)  & 12 & (12 rules) & 30 \\
-    Condition (5)  & 12 & (12 invariants) & 18  \\
-    Condition (6)  & 144 & (12 rules $\times$ 12 invariants) & 443  \\
+    Condition (4)  & 12 & (12 invariants) & 18  \\
+    Condition (5)  & 144 & (12 rules $\times$ 12 invariants) & 443  \\
     Lemmas  & 25 & (25 lemmas) & 306  \\
     \hline    \hline
-    Total  & 218  & & 948 \\
+    Total  & 206  & & 918 \\
     \hline
   \end{tabular}
 \end{table}
@@ -7900,7 +7765,7 @@ Section~\ref{sec:TOSCAstructRep}, there are three kinds of them:
 The proofs of the TOSCA example need 38
 lemmas, 13 of which are already proved by the framework in a general
 level of abstraction. Reminding 25 lemmas are required to prove
-condition~(5) and (6) for invariants about
+condition~(4) and (5) for invariants about
 three kinds of problem specific operators described above.
 
 %% ===============================================================
@@ -7947,7 +7812,7 @@ mainly because this is our second experience of the same problem,
 whereas the previous proof scores did not have any unified policies of
 splitting and so were very difficult to understand even for us. The
 framework makes the new proof scores become much clear, especially
-those of conditions (2)(3)(6) which should be proved for each of
+those of conditions (2)(3)(5) which should be proved for each of
 twelve trans rules.
 
 The recommended module structure also helps to make proof scores easier
