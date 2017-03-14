@@ -260,16 +260,14 @@
     - Case 1-2-1: The relationship is hostedOn.
       - Case 1-2-1-1: There is no corresponding requirement => the goal holds because `wfs-allRLHaveRQ(S)` reduces to false.
       - Case 1-2-1-2: There is a corresponding requirement.
-　　　 　 - Case 1-2-1-2-1: The requirement is hostedOn.
-  　　 　　 - Case 1-2-1-2-1-1: The requirement is unbound => the goal holds because `cont(SS)` reduces to true since R04 is available.
-  　　 　　 - Case 1-2-1-2-1-2: The requirement is waiting => the goal holds because `inv-ifCPClosedThenRQUnbound(S)` reduces to false.
-　  　 　　 - Case 1-2-1-2-1-3: The requirement is ready => the goal holds because `inv-ifCPClosedThenRQUnbound(S)` reduces to false.
-
-　　　 　 - Case 1-2-1-2-2: The requirement is dependsOn => the goal holds because wfs-allRLHaveSameTypeCPRQ(S) reduces to false.
-　　　 　 - Case 1-2-1-2-3: The requirement is connectsTo => the goal holds because wfs-allRLHaveSameTypeCPRQ(S) reduces to false.
-
-    - Case 1-2-2: The relationship is dependsOn => the goal holds because wfs-allRLHaveSameTypeCPRQ(S) reduces to false.
-    - Case 1-2-3: The relationship is connectsTo => the goal holds because wfs-allRLHaveSameTypeCPRQ(S) reduces to false.
+        - Case 1-2-1-2-1: The requirement is hostedOn.
+          - Case 1-2-1-2-1-1: The requirement is unbound => the goal holds because `cont(SS)` reduces to true since R04 is available.
+          - Case 1-2-1-2-1-2: The requirement is waiting => the goal holds because `inv-ifCPClosedThenRQUnbound(S)` reduces to false.
+          - Case 1-2-1-2-1-3: The requirement is ready => the goal holds because `inv-ifCPClosedThenRQUnbound(S)` reduces to false.
+        - Case 1-2-1-2-2: The requirement is dependsOn => the goal holds because `wfs-allRLHaveSameTypeCPRQ(S)` reduces to false.
+        - Case 1-2-1-2-3: The requirement is connectsTo => the goal holds because `wfs-allRLHaveSameTypeCPRQ(S)` reduces to false.
+    - Case 1-2-2: The relationship is dependsOn => the goal holds because `wfs-allRLHaveSameTypeCPRQ(S)` reduces to false.
+    - Case 1-2-3: The relationship is connectsTo => the goal holds because `wfs-allRLHaveSameTypeCPRQ(S)` reduces to false.
 
 ## Proof of Condition (2) for R04 (Proof-contcont-R04.cafe)
 ### Step 2-1: Begin with the cases each of which matches to LHS of each rule.
@@ -353,19 +351,22 @@
     - Case 2-3-2-2: The corresponding relationship is dependsOn
       - Case 2-3-2-2-1: There is no corresponding requirement => the goal holds because `wfs-allRLHaveRQ(S)(S)` reduces to false.
       - Case 2-3-2-2-2: There is a corresponding requirement.
-　　　　  - Case 2-3-2-2-2-1: The corresponding requirement is hostedOn => the goal holds because `wfs-allRLHaveSameTypeCPRQ(S)` reduces to false.
-　　　　  - Case 2-3-2-2-2-2: The corresponding requirement is dependsOn
-  　　　　  - Case 2-3-2-2-2-2-1: The corresponding requirement is unbound.
-  　　　　  - Case 2-3-2-2-2-2-2: The corresponding requirement is waiting => the goal holds because`cont(SS)` reduces to true because R08 is available to the next state.
-　  　　　  - Case 2-3-2-2-2-2-3: The corresponding requirement is ready => the goal holds because `inv-ifCPClosedThenRQUnbound(S)` reduces to false.
-　　　　  - Case 2-3-2-2-2-3: The corresponding requirement is connectsTo => the goal holds because `wfs-allRLHaveSameTypeCPRQ(S)` reduces to false.
+        - Case 2-3-2-2-2-1: The corresponding requirement is hostedOn => the goal holds because `wfs-allRLHaveSameTypeCPRQ(S)` reduces to false.
+        - Case 2-3-2-2-2-2: The corresponding requirement is dependsOn
+          - Case 2-3-2-2-2-2-1: The corresponding requirement is unbound.
+          - Case 2-3-2-2-2-2-2: The corresponding requirement is waiting => the goal holds because`cont(SS)` reduces to true because R08 is available to the next state.
+          - Case 2-3-2-2-2-2-3: The corresponding requirement is ready => the goal holds because `inv-ifCPClosedThenRQUnbound(S)` reduces to false.
+        - Case 2-3-2-2-2-3: The corresponding requirement is connectsTo => the goal holds because `wfs-allRLHaveSameTypeCPRQ(S)` reduces to false.
     - Case 2-3-2-3: The corresponding relationship is connectsTo => the goal holds because `wfs-allRLHaveSameTypeCPRQ(S)` reduces to false.
 
-   - Here, Case 2-3-2-2-2-2-1 remains not to be proved where the current global state is
-   - `< (node(dependsOn,idND,started) sND'), `
-   - `  (cap(dependsOn,idCP,open,idND) sCP), `
-   - `  (req(dependsOn,idRQ,unbound,idND')), `
-   - `  (rel(dependsOn,idRL,idCP,idRQ) sRL'), mp >`
+  - Here, Case 2-3-2-2-2-2-1 remains not to be proved where the current global state is
+
+  ```
+  < (node(dependsOn,idND,started) sND'), 
+    (cap(dependsOn,idCP,open,idND) sCP), 
+    (req(dependsOn,idRQ,unbound,idND')), 
+    (rel(dependsOn,idRL,idCP,idRQ) sRL'), mp >
+  ```
 
 ### Step 2-4: Consider which rule can be applied to the next state.
  - Since there is an unbound dependsOn requirement in the next state, the next rule should be R07.
@@ -492,18 +493,20 @@
     - Case 2-3-2-3: The corresponding relationship is connectsTo
       - Case 2-3-2-3-1: There is no corresponding requirement => the goal holds because `wfs-allRLHaveRQ(S)(S)` reduces to false.
       - Case 2-3-2-3-2: There is a corresponding requirement.
-　　　　  - Case 2-3-2-3-2-1: The corresponding requirement is hostedOn => the goal holds because `wfs-allRLHaveSameTypeCPRQ(S)` reduces to false.
-　　　　  - Case 2-3-2-3-2-2: The corresponding requirement is dependsOn => the goal holds because `wfs-allRLHaveSameTypeCPRQ(S)` reduces to false.
-　　　　  - Case 2-3-2-3-2-3: The corresponding requirement is connectsTo
-  　　　　  - Case 2-3-2-3-2-3-1: The corresponding requirement is unbound
-  　　　　  - Case 2-3-2-3-2-3-2: The corresponding requirement is waiting => the goal holds because`cont(SS)` reduces to true because R12 is available to the next state.
-　  　　　  - Case 2-3-2-3-2-3-3: The corresponding requirement is ready => the goal holds because `inv-ifCPClosedThenRQUnbound(S)` reduces to false.
+        - Case 2-3-2-3-2-1: The corresponding requirement is hostedOn => the goal holds because `wfs-allRLHaveSameTypeCPRQ(S)` reduces to false.
+        - Case 2-3-2-3-2-2: The corresponding requirement is dependsOn => the goal holds because `wfs-allRLHaveSameTypeCPRQ(S)` reduces to false.
+        - Case 2-3-2-3-2-3: The corresponding requirement is connectsTo
+          - Case 2-3-2-3-2-3-1: The corresponding requirement is unbound
+          - Case 2-3-2-3-2-3-2: The corresponding requirement is waiting => the goal holds because`cont(SS)` reduces to true because R12 is available to the next state.
+          - Case 2-3-2-3-2-3-3: The corresponding requirement is ready => the goal holds because `inv-ifCPClosedThenRQUnbound(S)` reduces to false.
 
-   - Here, Case 2-3-2-3-2-3-1 remains not to be proved where the current global state is
-   - `< (node(started,idND,snd) sND'),        `
-   - `  (cap(connectsTo,idCP,open,idND) sCP), `
-   - `  (req(connectsTo,idRQ,unbound,idND') sRQ'), `
-   - `  (rel(connectsTo,idRL,idCP,idRQ) sRL'), mp >`
+  - Here, Case 2-3-2-3-2-3-1 remains not to be proved where the current global state is
+  ```
+  < (node(started,idND,snd) sND'),
+    (cap(connectsTo,idCP,open,idND) sCP),
+    (req(connectsTo,idRQ,unbound,idND') sRQ'),
+    (rel(connectsTo,idRL,idCP,idRQ) sRL'), mp >
+  ```
 
 ### Step 2-4: Consider which rule can be applied to the next state.
  - Since there is an unbound connectsTo requirement in the next state, the next rule should be R11.

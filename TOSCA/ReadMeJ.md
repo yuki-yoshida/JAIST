@@ -137,14 +137,12 @@
    - Case 1-2-1: 対応するrelationshipがhostedOn
      - Case 1-2-1-1: 対応するrequirementが無い => 証明可能 (wfs-allRLHaveRQ(S)がfalse)
      - Case 1-2-1-2: 対応するrequirementがある
-　　　　 - Case 1-2-1-2-1: 対応するrequirementがhostedOn
-  　　　　 - Case 1-2-1-2-1-1: 対応するrequirementがunbound => 証明可能 (R04が適用可能なのでcont(SS)がtrue)
-  　　　　 - Case 1-2-1-2-1-2: 対応するrequirementがwaiting => 証明可能 (inv-ifCPClosedThenRQUnbound(S)がfalse)
-　  　　　 - Case 1-2-1-2-1-3: 対応するrequirementがready => 証明可能 (inv-ifCPClosedThenRQUnbound(S)がfalse)
-
-　　　　 - Case 1-2-1-2-2: 対応するrequirementがdependsOn => 証明可能 (wfs-allRLHaveSameTypeCPRQ(S)がfalse)
-　　　　 - Case 1-2-1-2-3: 対応するrequirementがconnectsTo => 証明可能 (wfs-allRLHaveSameTypeCPRQ(S)がfalse)
-
+       - Case 1-2-1-2-1: 対応するrequirementがhostedOn
+         - Case 1-2-1-2-1-1: 対応するrequirementがunbound => 証明可能 (R04が適用可能なのでcont(SS)がtrue)
+         - Case 1-2-1-2-1-2: 対応するrequirementがwaiting => 証明可能 (inv-ifCPClosedThenRQUnbound(S)がfalse)
+         - Case 1-2-1-2-1-3: 対応するrequirementがready => 証明可能 (inv-ifCPClosedThenRQUnbound(S)がfalse)
+       - Case 1-2-1-2-2: 対応するrequirementがdependsOn => 証明可能 (wfs-allRLHaveSameTypeCPRQ(S)がfalse)
+       - Case 1-2-1-2-3: 対応するrequirementがconnectsTo => 証明可能 (wfs-allRLHaveSameTypeCPRQ(S)がfalse)
    - Case 1-2-2: 対応するrelationshipがdependsOn => 証明可能 (wfs-allRLHaveSameTypeCPRQ(S)がfalse)
    - Case 1-2-3: 対応するrelationshipがconnectsTo => 証明可能 (wfs-allRLHaveSameTypeCPRQ(S)がfalse)
 
@@ -213,19 +211,22 @@
    - Case 2-3-2-2: 対応するrelationshipがdependsOn
      - Case 2-3-2-2-1: 対応するrequirementが無い => 証明可能 (wfs-allRLHaveRQ(S)(S)がfalse)
      - Case 2-3-2-2-2: 対応するrequirementがある
-　　　　 - Case 2-3-2-2-2-1: 対応するrequirementがhostedOn => 証明可能 (wfs-allRLHaveSameTypeCPRQ(S)がfalse)
-　　　　 - Case 2-3-2-2-2-2: 対応するrequirementがdependsOn
-  　　　　 - Case 2-3-2-2-2-2-1: 対応するrequirementがunbound
-  　　　　 - Case 2-3-2-2-2-2-2: 対応するrequirementがwaiting => 証明可能 (R08が適用可能なのでcont(SS)がfalse)
-　  　　　 - Case 2-3-2-2-2-2-3: 対応するrequirementがready => 証明可能 (inv-ifCPClosedThenRQUnbound(S)がfalse)
-　　　　 - Case 2-3-2-2-2-3: 対応するrequirementがconnectsTo => 証明可能 (wfs-allRLHaveSameTypeCPRQ(S)がfalse)
+       - Case 2-3-2-2-2-1: 対応するrequirementがhostedOn => 証明可能 (wfs-allRLHaveSameTypeCPRQ(S)がfalse)
+       - Case 2-3-2-2-2-2: 対応するrequirementがdependsOn
+         - Case 2-3-2-2-2-2-1: 対応するrequirementがunbound
+         - Case 2-3-2-2-2-2-2: 対応するrequirementがwaiting => 証明可能 (R08が適用可能なのでcont(SS)がfalse)
+         - Case 2-3-2-2-2-2-3: 対応するrequirementがready => 証明可能 (inv-ifCPClosedThenRQUnbound(S)がfalse)
+       - Case 2-3-2-2-2-3: 対応するrequirementがconnectsTo => 証明可能 (wfs-allRLHaveSameTypeCPRQ(S)がfalse)
    - Case 2-3-2-3: 対応するrelationshipがconnectsTo => 証明可能 (wfs-allRLHaveSameTypeCPRQ(S)がfalse)
 
-   - ここでCase 2-3-2-2-2-2-1がまだ残っている。現在の状態は以下の通り:
-   - `< (node(dependsOn,idND,started) sND'), `
-   - `  (cap(dependsOn,idCP,open,idND) sCP), `
-   - `  (req(dependsOn,idRQ,unbound,idND')), `
-   - `  (rel(dependsOn,idRL,idCP,idRQ) sRL'), mp >`
+  - ここでCase 2-3-2-2-2-2-1がまだ残っている。現在の状態は以下の通り:
+
+  ```
+  < (node(dependsOn,idND,started) sND'), 
+    (cap(dependsOn,idCP,open,idND) sCP), 
+    (req(dependsOn,idRQ,unbound,idND')), 
+    (rel(dependsOn,idRL,idCP,idRQ) sRL'), mp >
+  ```
 
 ### ステップ 2-4: 次状態に適用されるルールを考察
  - unboundなdependsOn requirementがあるので、適用されるルールはR07。
@@ -325,18 +326,21 @@
    - Case 2-3-2-3: 対応するrelationshipがconnectsTo
      - Case 2-3-2-3-1: 対応するrequirementが無い => 証明可能 (wfs-allRLHaveRQ(S)(S)がfalse)
      - Case 2-3-2-3-2: 対応するrequirementがある
-　　　　 - Case 2-3-2-3-2-1: 対応するrequirementがhostedOn => 証明可能 (wfs-allRLHaveSameTypeCPRQ(S)がfalse)
-　　　　 - Case 2-3-2-3-2-2: 対応するrequirementがdependsOn => 証明可能 (wfs-allRLHaveSameTypeCPRQ(S)がfalse)
-　　　　 - Case 2-3-2-3-2-3: 対応するrequirementがconnectsTo
-  　　　　 - Case 2-3-2-3-2-3-1: 対応するrequirementがunbound
-  　　　　 - Case 2-3-2-3-2-3-2: 対応するrequirementがwaiting => 証明可能 (R12が適用可能なのでcont(SS)がfalse)
-　  　　　 - Case 2-3-2-3-2-3-3: 対応するrequirementがready => 証明可能 (inv-ifCPClosedThenRQUnbound(S)がfalse)
+       - Case 2-3-2-3-2-1: 対応するrequirementがhostedOn => 証明可能 (wfs-allRLHaveSameTypeCPRQ(S)がfalse)
+       - Case 2-3-2-3-2-2: 対応するrequirementがdependsOn => 証明可能 (wfs-allRLHaveSameTypeCPRQ(S)がfalse)
+       - Case 2-3-2-3-2-3: 対応するrequirementがconnectsTo
+         - Case 2-3-2-3-2-3-1: 対応するrequirementがunbound
+         - Case 2-3-2-3-2-3-2: 対応するrequirementがwaiting => 証明可能 (R12が適用可能なのでcont(SS)がfalse)
+         - Case 2-3-2-3-2-3-3: 対応するrequirementがready => 証明可能 (inv-ifCPClosedThenRQUnbound(S)がfalse)
 
-   - ここでCase 2-3-2-3-2-3-1がまだ残っている。現在の状態は以下の通り:
-   - `< (node(started,idND,snd) sND'),        `
-   - `  (cap(connectsTo,idCP,open,idND) sCP), `
-   - `  (req(connectsTo,idRQ,unbound,idND') sRQ'), `
-   - `  (rel(connectsTo,idRL,idCP,idRQ) sRL'), mp >`
+  - ここでCase 2-3-2-3-2-3-1がまだ残っている。現在の状態は以下の通り:
+
+  ```
+  < (node(started,idND,snd) sND'),
+    (cap(connectsTo,idCP,open,idND) sCP),
+    (req(connectsTo,idRQ,unbound,idND') sRQ'),
+    (rel(connectsTo,idRL,idCP,idRQ) sRL'), mp >
+  ```
 
 ### ステップ 2-4: 次状態に適用されるルールを考察
  - unboundなconnectsTo requirementがあるので、適用されるルールはR11。
