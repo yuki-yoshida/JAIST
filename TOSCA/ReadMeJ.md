@@ -49,8 +49,11 @@
  - wfs(well-formed state)とは、invariantの内でinitに現れるものである。wfsについてはcondition (5)の証明は不要。（以下、invariantとはwfsではないinvariantのこと）
  - 各invariantはinv-AAA、各wfsはwfs-BBBという述語として定義しておく。
  - CITPテクニック(1)を使って、あらかじめ以下の定義を与えておく。
-   - ceq inv(S) = false if not inv-AAA(S) .
-   - ceq inv(S) = false if not wfs-BBB(S) .
+
+  ```
+  ceq inv(S) = false if not inv-AAA(S) .
+  ceq inv(S) = false if not wfs-BBB(S) .
+  ```
 
 ### Cyclic Dependency Lemma(CDL)適用の準備
 #### R01に対して
@@ -67,11 +70,18 @@
 
 ## Condition (1): init(S) implies cont(S) の証明譜 (Proof-initcont.cafe)
 ### ステップ 1-0: 証明すべき述語を定義
- - initcont = init implies cont
+
+  ```
+  eq initcont(S) = init(S) implies cont(S) .
+  ```
  - Initial Cont Lemmaを導入し、initial nodeがあればcont(S)はtrueになることを表明しておく。
 
 ### ステップ 1-1: 最も一般的なケースから開始
  - 任意定数sND(nodeの集合)、sCP(Capabilityの集合)、sRQ(Requirementの集合)、sRL(Relationshipの集合)、mp(メッセージプール)により、最も一般的な状態は< sND, sCP, sRQ, sRL, mp >。
+
+  ```
+  :goal {eq initcont(< sND, sCP, sRQ, sRL, mp >) = true .}
+  ```
 
 ### ステップ 1-2: 初期状態で最初に適用されるルールを考察
  - 最初のルールはR01。
@@ -85,15 +95,26 @@
 
 ## Condition (2): inv(S) and not final(S) implies cont(SS) or final(SS) の証明譜 (Proof-contcont.cafe)
 ### ステップ 2-0: 証明すべき述語を定義
- - ccont = inv and not final implies cont' or final'
- - 次状態が存在する状態に関する条件なので、前件にcont(S)が不要であることに注意。
- - contcontを二重否定イディオムを使って定義する。
+
+  ```
+  eq ccont(S,SS)
+     = inv(S) and not final(S) implies cont(SS) or final(SS) .
+  eq contcont(S)
+     = not (S =(*,1)=>+ SS if CC suchThat
+            not ((CC implies ccont(S,SS)) == true)
+     	   { S => SS !! CC ! inv(S) ! final(S) ! cont(SS) ! final(SS) }) .
+  ```
+
  - Initial Cont Lemmaを導入し、initial nodeがあればcont(S)はtrueになることを表明しておく。
  - Created Cont Lemmaを導入し、created nodeがあればcont(S)はtrueになることを表明しておく。
 
 ## R01に対するCondition (2)の証明譜 (Proof-contcont-R01.cafe)
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R01のLHSは１つ以上のinitial nodeが必要なので、tnd, idND, sND, sCP, sRQ, sRL,mpを任意定数として< (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >が最も一般的な状態。
+
+  ```
+  :goal { eq contcont(< (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >) = true . }
+  ```
 
 ### ステップ 2-2: ルールの条件節が成り立つ/成り立たないでケース分け
  - R01の条件節は「initial nodeのhostedOn requirementがすべてready」なので以下の２つにケース分けする。
@@ -103,6 +124,10 @@
 ## R02に対するCondition (2)の証明譜 (Proof-contcont-R02.cafe)
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R02のLHSは１つ以上のcreated nodeが必要なので、tnd, idND, sND, sCP, sRQ, sRL,mpを任意定数として< (node(tnd,idND,created) sND), sCP, sRQ, sRL, mp >が最も一般的な状態。
+
+  ```
+  :goal { eq contcont(< (node(tnd,idND,created) sND), sCP, sRQ, sRL, mp >) = true . }
+  ```
 
 ### ステップ 2-2: ルールの条件節が成り立つ/成り立たないでケース分け
  - R02の条件節は「created nodeのrequirementがすべてready」なので以下の２つにケース分けする。
@@ -118,6 +143,10 @@
 ## R03に対するCondition (2)の証明譜 (Proof-contcont-R03.cafe)
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R03のLHSは１つ以上のclosedなhostedOn capabilityが必要なので、< sND, (cap(hostedOn,idCP,closed,idND) sCP), sRQ, sRL, mp >が最も一般的な状態。
+
+  ```
+  :goal { eq contcont(< sND, (cap(hostedOn,idCP,closed,idND) sCP), sRQ, sRL, mp >) = true . }
+  ```
 
 ### ステップ 2-2: ルールの条件節が成り立つ/成り立たないでケース分け
  - R03の条件節は「closed capabilityの親nodeがisCreated」なので以下の２つにケース分けする。
@@ -150,6 +179,15 @@
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R04のLHSはavailable capability、それに対応するrelationshipと、されにそれに対応するunbound requirementが必要なので、< sND, (cap(hostedOn,idCP,available,idND) sCP), (req(hostedOn,idRQ,unbound,idND') sRQ), (rel(hostedOn,idRL,idCP,idRQ) sRL), mp >が最も一般的な状態。
 
+  ```
+  :goal {
+    eq contcont(< sND, 
+                  (cap(hostedOn,idCP,available,idND) sCP),
+                  (req(hostedOn,idRQ,unbound,idND')  sRQ),
+                  (rel(hostedOn,idRL,idCP,idRQ)      sRL), mp >) = true .
+  }
+  ```
+
 ### ステップ 2-2: ルールの条件節が成り立つ/成り立たないでケース分け
  - R04は無条件ルール。
 
@@ -171,6 +209,10 @@
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R05のLHSは１つ以上のclosedなdependsOn capabilityが必要なので、< sND, (cap(dependsOn,idCP,closed,idND) sCP), sRQ, sRL, mp >が最も一般的な状態。
 
+  ```
+  :goal { eq contcont(< sND, (cap(dependsOn,idCP,closed,idND) sCP), sRQ, sRL, mp >) = true . }
+  ```
+
 ### ステップ 2-7: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
  - capabilityの親nodeのリンクが未定なので、以下の２つにケース分けする
  - Case 1: 対応するnodeが無い => 証明可能 (wfs-allCPHaveND(S)がfalse)
@@ -185,6 +227,10 @@
 ## R06に対するCondition (2)の証明譜 (Proof-contcont-R06.cafe)
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R06のLHSは１つ以上のopenなdependsOn capabilityが必要なので、< sND, (cap(dependsOn,idCP,open,idND) sCP), sRQ, sRL, mp >が最も一般的な状態。
+
+  ```
+  :goal { eq contcont(< sND, (cap(dependsOn,idCP,open,idND) sCP), sRQ, sRL, mp >) = true . }
+  ```
 
 ### ステップ 2-7: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
  - capabilityの親nodeのリンクが未定なので、以下の２つにケース分けする
@@ -246,6 +292,15 @@
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R07のLHSはunbound requirementに対応するrelationshipと、さらにそれに対応するcapabilityが必要なので、< sND, (cap(dependsOn,idCP,scp,idND) sCP), (req(dependsOn,idRQ,unbound,idND') sRQ), (rel(dependsOn,idRL,idCP,idRQ) sRL), mp >が最も一般的な状態。
 
+  ```
+  :goal {
+    eq contcont(< sND, 
+                  (cap(dependsOn,idCP,scp,idND) sCP), 
+                  (req(dependsOn,idRQ,unbound,idND') sRQ), 
+                  (rel(dependsOn,idRL,idCP,idRQ) sRL), mp >) = true .
+  }
+  ```
+
 ### ステップ 2-7: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
  - requirementの親nodeのリンクが未定なので、以下の２つにケース分けする
  - Case 1: 対応するnodeが無い => 証明可能 (wfs-allRQHaveND(S)がfalse)
@@ -260,6 +315,15 @@
 ## R08に対するCondition (2)の証明譜 (Proof-contcont-R08.cafe)
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R08のLHSはwaiting requirementに対応するrelationshipと、さらにそれに対応するavailable capabilityが必要なので、< sND, (cap(dependsOn,idCP,available,idND) sCP), (req(dependsOn,idRQ,waiting,idND') sRQ), (rel(dependsOn,idRL,idCP,idRQ) sRL), mp >が最も一般的な状態。
+
+  ```
+  :goal {
+    eq contcont(< sND, 
+                  (cap(dependsOn,idCP,available,idND) sCP), 
+                  (req(dependsOn,idRQ,waiting,idND')  sRQ), 
+                  (rel(dependsOn,idRL,idCP,idRQ)      sRL), mp >) = true .
+  }
+  ```
 
 ### ステップ 2-7: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
  - requirementの親nodeのリンクが未定なので、以下の２つにケース分けする
@@ -285,6 +349,11 @@
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R09のLHSは１つ以上のclosedなconnectsTo capabilityが必要なので、< sND, (cap(connectsTo,idCP,closed,idND) sCP), sRQ, sRL, mp >が最も一般的な状態。
 
+  ```
+  :goal { eq contcont(< sND, (cap(connectsTo,idCP,closed,idND) sCP), sRQ, sRL, mp >) = true . }
+
+  ```
+
 ### ステップ 2-7: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
  - capabilityの親nodeのリンクが未定なので、以下の２つにケース分けする
  - Case 1: 対応するnodeが無い => 証明可能 (wfs-allCPHaveND(S)がfalse)
@@ -300,6 +369,10 @@
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R10のLHSは１つ以上のopenなconnectsTo capabilityが必要なので、< sND, (cap(connectsTo,idCP,open,idND) sCP), sRQ, sRL, mp >が最も一般的な状態。
 
+  ```
+  :goal { eq contcont(< sND, (cap(connectsTo,idCP,open,idND) sCP), sRQ, sRL, mp >) = true . }
+  ```
+  
 ### ステップ 2-7: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
  - capabilityの親nodeのリンクが未定なので、以下の２つにケース分けする
  - Case 1: 対応するnodeが無い => 証明可能 (wfs-allCPHaveND(S)がfalse)
@@ -360,6 +433,15 @@
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R11のLHSはunbound requirementに対応するrelationshipと、対応するopen messageが必要なので、< sND, sCP, (req(connectsTo,idRQ,unbound,idND') sRQ), (rel(connectsTo,idRL,idCP,idRQ) sRL), (opMsg(idCP) mp) >が最も一般的な状態。
 
+  ```
+  :goal {
+    eq contcont(< sND, sCP,
+                  (req(connectsTo,idRQ,unbound,idND) sRQ), 
+                  (rel(connectsTo,idRL,idCP,idRQ) sRL), 
+                  (opMsg(idCP) mp) >) = true .
+  }
+  ```
+
 ### ステップ 2-7: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
  - requirementの親nodeのリンクが未定なので、以下の２つにケース分けする
  - Case 1: 対応するnodeが無い => 証明可能 (wfs-allRQHaveND(S)がfalse)
@@ -374,6 +456,15 @@
 ## R12に対するCondition (2)の証明譜 (Proof-contcont-R12.cafe)
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R12のLHSはwaiting requirementに対応するrelationshipと、さらにそれに対応するavailable capabilityが必要なので、< sND, (cap(dependsOn,idCP,available,idND) sCP), (req(dependsOn,idRQ,waiting,idND') sRQ), (rel(dependsOn,idRL,idCP,idRQ) sRL), mp >が最も一般的な状態。
+
+  ```
+  :goal {
+    eq contcont(< sND, sCP, 
+                  (req(connectsTo,idRQ,waiting,idND) sRQ), 
+                  (rel(connectsTo,idRL,idCP,idRQ)    sRL),
+                  (avMsg(idCP) mp) >) = true .
+  }
+  ```
 
 ### ステップ 2-7: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
  - requirementの親nodeのリンクが未定なので、以下の２つにケース分けする
@@ -396,132 +487,232 @@
  - Case 2-3: requirementに対応するnodeがstarted => 証明可能 (inv-ifNDStartedThenRQReady(S)がfalse)
 
 ## Condition (3): inv(S) and not final(S) implies m(S) > m(SS) の証明譜 (Proof-measure.cafe)
-### ステップ 3-0: 証明すべき述語を定義
- - mmes = inv and not final implies m > m'
- - 次状態が存在する状態に関する条件なので、前件にcont(S)が不要であることに注意。
- - mesmesを二重否定イディオムを使って定義する。
- - 自然数に対するAxiomとして N < N+1, N < N+2, N < N+3, N < N+4, を定義しておく。
+### ステップ 3-0: 自然数に対するAxiomを使う
+ - フレームワークが提供するモジュールNATAXIOMをprotecting importしておく。
+
+### ステップ 3-1: 証明すべき述語を定義
+
+  ```
+  eq mmes(S,SS)
+     = inv(S) and not final(S) implies m(S) > m(SS) .
+  eq mesmes(S)
+     = not (S =(*,1)=>+ SS if CC suchThat
+            not ((CC implies mmes(S,SS)) == true)
+     	   { S => SS !! CC ! inv(S) ! final(S) ! (m(S) > m(SS)) }) .
+  ```
 
 ## R01に対するCondition (3)の証明譜
-### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
+### ステップ 3-2: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R01のLHSを任意定数tnd, idND, sND, sCP, sRQ, sRL, mpで表現する。
 
-### ステップ 3-2: ルールの条件節が成り立つ/成り立たないでケース分け
+  ```
+  :goal { eq mesmes(< (node(tnd,idND,initial) sND), sCP, sRQ, sRL, mp >) = true . }
+  ```
+
+### ステップ 3-3: ルールの条件節が成り立つ/成り立たないでケース分け
  - R01の条件節は「initial nodeのhostedOn requirementがすべてready」なので以下の２つにケース分けする。
  - Case 1: initial nodeのhostedOn requirementがすべてready => 証明可能 (m(S) > m(SS)が成り立つ)
  - Case 2: initial nodeのhostedOn requirementがすべてready、ではない => 証明可能 (次状態が無い)
 
 ## R02に対するCondition (3)の証明譜
-### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
+### ステップ 3-2: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R02のLHSを任意定数tnd, idND, sND, sCP, sRQ, sRL, mpで表現する。
 
-### ステップ 3-2: ルールの条件節が成り立つ/成り立たないでケース分け
+  ```
+  :goal { eq mesmes(< (node(tnd,idND,created) sND), sCP, sRQ, sRL, mp >) = true . }
+  ```
+
+### ステップ 3-3: ルールの条件節が成り立つ/成り立たないでケース分け
  - R02の条件節は「created nodeのrequirementがすべてready」なので以下の２つにケース分けする。
  - Case 1: created nodeのrequirementがすべてready => 証明可能 (m(S) > m(SS)が成り立つ)
  - Case 2: created nodeのrequirementがすべてready、ではない => 証明可能 (次状態が無い)
 
 ## R03に対するCondition (3)の証明譜
-### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
+### ステップ 3-2: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R03のLHSを任意定数sND, idCP, idND, sCP, sRQ, sRL, mpで表現する。
 
-### ステップ 3-2: ルールの条件節が成り立つ/成り立たないでケース分け
+  ```
+  :goal { eq mesmes(< sND, (cap(hostedOn,idCP,closed,idND) sCP), sRQ, sRL, mp >) = true . }
+  ```
+
+### ステップ 3-3: ルールの条件節が成り立つ/成り立たないでケース分け
  - R03の条件節は「closedなhostedOn capabilityに対するnodeがisCreated」なので以下の２つにケース分けする。
  - Case 1: closedなhostedOn capabilityに対するnodeがisCreated => 証明可能 (m(S) > m(SS)が成り立つ)
  - Case 2: closedなhostedOn capabilityに対するnodeがisCreated、ではない => 証明可能 (次状態が無い)
 
 ## R04に対するCondition (3)の証明譜
-### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
+### ステップ 3-2: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R04のLHSを任意定数sND, idCP, idND, sCP, idRQ, idND', sRQ, idRL, sRL, mpで表現する。
 
-### ステップ 3-2: ルールの条件節が成り立つ/成り立たないでケース分け
+  ```
+  :goal {
+    eq mesmes(< sND, 
+                (cap(hostedOn,idCP,available,idND) sCP),
+                (req(hostedOn,idRQ,unbound,idND')  sRQ),
+                (rel(hostedOn,idRL,idCP,idRQ)      sRL), mp >) = true .
+  }
+  ```
+
+### ステップ 3-3: ルールの条件節が成り立つ/成り立たないでケース分け
  - R04は無条件ルールなので、ケース分けは不要。
  - Case 1: R04のLHSにマッチする最も一般的なケース => 証明可能 (m(S) > m(SS)が成り立つ)
 
 ## R05に対するCondition (3)の証明譜
-### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
+### ステップ 3-2: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R05のLHSを任意定数sND, idCP, idND, sCP, sRQ, sRL, mpで表現する。
 
-### ステップ 3-2: ルールの条件節が成り立つ/成り立たないでケース分け
+  ```
+  :goal { eq mesmes(< sND, (cap(dependsOn,idCP,closed,idND) sCP), sRQ, sRL, mp >) = true . }
+  ```
+
+### ステップ 3-3: ルールの条件節が成り立つ/成り立たないでケース分け
  - R05の条件節は「closedなdependsOn capabilityに対するnodeがisCreated」なので以下の２つにケース分けする。
  - Case 1: closedなdependsOn capabilityに対するnodeがisCreated => 証明可能 (m(S) > m(SS)が成り立つ)
  - Case 2: closedなdependsOn capabilityに対するnodeがisCreated、ではない => 証明可能 (次状態が無い)
 
 ## R06に対するCondition (3)の証明譜
-### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
+### ステップ 3-2: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R06のLHSを任意定数sND, idCP, idND, sCP, sRQ, sRL, mpで表現する。
 
-### ステップ 3-2: ルールの条件節が成り立つ/成り立たないでケース分け
+  ```
+  :goal { eq mesmes(< sND, (cap(dependsOn,idCP,open,idND) sCP), sRQ, sRL, mp >) = true . }
+  ```
+
+### ステップ 3-3: ルールの条件節が成り立つ/成り立たないでケース分け
  - R06の条件節は「openなdependsOn capabilityに対するnodeがstarted」なので以下の２つにケース分けする。
  - Case 1: openなdependsOn capabilityに対するnodeがstarted => 証明可能 (m(S) > m(SS)が成り立つ)
  - Case 2: openなdependsOn capabilityに対するnodeがstarted、ではない => 証明可能 (次状態が無い)
 
 ## R07に対するCondition (3)の証明譜
-### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
+### ステップ 3-2: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R07のLHSを任意定数sND, idCP, idND, sCP, idRQ, idND', sRQ, idRL, sRL, mpで表現する。
 
-### ステップ 3-2: ルールの条件節が成り立つ/成り立たないでケース分け
+  ```
+  :goal {
+    eq mesmes(< sND, 
+                (cap(dependsOn,idCP,scp,idND) sCP), 
+                (req(dependsOn,idRQ,unbound,idND') sRQ), 
+                (rel(dependsOn,idRL,idCP,idRQ) sRL), mp >) = true .
+  }
+  ```
+
+### ステップ 3-3: ルールの条件節が成り立つ/成り立たないでケース分け
  - R07の条件節は「requiementに対するnodeがcreated、かつcapabilityがisActivated」なので以下の２つにケース分けする。
  - Case 1: requiementに対するnodeがcreated、かつcapabilityがisActivated => 証明可能 (m(S) > m(SS)が成り立つ)
  - Case 2: requiementに対するnodeがcreated、かつcapabilityがisActivated、ではない => 証明可能 (次状態が無い)
 
 ## R08に対するCondition (3)の証明譜
-### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
+### ステップ 3-2: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R08のLHSを任意定数sND, idCP, idND, sCP, idRQ, idND', sRQ, idRL, sRL, mpで表現する。
 
-### ステップ 3-2: ルールの条件節が成り立つ/成り立たないでケース分け
+  ```
+  :goal {
+    eq mesmes(< sND, 
+                (cap(dependsOn,idCP,available,idND) sCP), 
+                (req(dependsOn,idRQ,waiting,idND')  sRQ), 
+                (rel(dependsOn,idRL,idCP,idRQ)      sRL), mp >) = true .
+  }
+  ```
+
+### ステップ 3-3: ルールの条件節が成り立つ/成り立たないでケース分け
  - R08は無条件ルールなので、ケース分けは不要。
  - Case 1: R08のLHSにマッチする最も一般的なケース => 証明可能 (m(S) > m(SS)が成り立つ)
 
 ## R09に対するCondition (3)の証明譜
-### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
+### ステップ 3-2: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R09のLHSを任意定数sND, idCP, idND, sCP, sRQ, sRL, mpで表現する。
 
-### ステップ 3-2: ルールの条件節が成り立つ/成り立たないでケース分け
+  ```
+  :goal { eq mesmes(< sND, (cap(connectsTo,idCP,closed,idND) sCP), sRQ, sRL, mp >) = true . }
+
+  ```
+  
+### ステップ 3-3: ルールの条件節が成り立つ/成り立たないでケース分け
  - R05の条件節は「closedなconnectsTo capabilityに対するnodeがisCreated」なので以下の２つにケース分けする。
  - Case 1: closedなconnectsTo capabilityに対するnodeがisCreated => 証明可能 (m(S) > m(SS)が成り立つ)
  - Case 2: closedなconnectsTo capabilityに対するnodeがisCreated、ではない => 証明可能 (次状態が無い)
 
 ## R10に対するCondition (3)の証明譜
-### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
+### ステップ 3-2: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R10のLHSを任意定数sND, idCP, idND, sCP, sRQ, sRL, mpで表現する。
 
-### ステップ 3-2: ルールの条件節が成り立つ/成り立たないでケース分け
+  ```
+  :goal {
+    eq mesmes(< sND, 
+                (cap(dependsOn,idCP,scp,idND) sCP), 
+                (req(dependsOn,idRQ,unbound,idND') sRQ), 
+                (rel(dependsOn,idRL,idCP,idRQ) sRL), mp >) = true .
+  }
+  ```
+
+### ステップ 3-3: ルールの条件節が成り立つ/成り立たないでケース分け
  - R10の条件節は「openなconnectsTo capabilityに対するnodeがstarted」なので以下の２つにケース分けする。
  - Case 1: openなconnectsTo capabilityに対するnodeがstarted => 証明可能 (m(S) > m(SS)が成り立つ)
  - Case 2: openなconnectsTo capabilityに対するnodeがstarted、ではない => 証明可能 (次状態が無い)
 
 ## R11に対するCondition (3)の証明譜
-### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
+### ステップ 3-2: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R11のLHSを任意定数sND, sCP, idRQ, idND, sRQ, idRL, idCP, sRL, mpで表現する。
 
-### ステップ 3-2: ルールの条件節が成り立つ/成り立たないでケース分け
+  ```
+  :goal {
+    eq mesmes(< sND, 
+                (cap(dependsOn,idCP,available,idND) sCP), 
+                (req(dependsOn,idRQ,waiting,idND')  sRQ), 
+                (rel(dependsOn,idRL,idCP,idRQ)      sRL), mp >) = true .
+  }
+  ```
+
+### ステップ 3-3: ルールの条件節が成り立つ/成り立たないでケース分け
  - R11の条件節は「requiementに対するnodeがcreated」なので以下の２つにケース分けする。
  - Case 1: requiementに対するnodeがcreated => 証明可能 (m(S) > m(SS)が成り立つ)
  - Case 2: requiementに対するnodeがcreated、ではない => 証明可能 (次状態が無い)
 
 ## R12に対するCondition (3)の証明譜
-### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
+### ステップ 3-2: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R12のLHSを任意定数sND, sCP, idRQ, idND, sRQ, idRL, idCP, sRL, mpで表現する。
 
-### ステップ 3-2: ルールの条件節が成り立つ/成り立たないでケース分け
+  ```
+  :goal { eq mesmes(< sND, (cap(connectsTo,idCP,closed,idND) sCP), sRQ, sRL, mp >) = true . }
+
+  ```
+
+### ステップ 3-3: ルールの条件節が成り立つ/成り立たないでケース分け
  - R12は無条件ルールなので、ケース分けは不要。
  - Case 1: R12のLHSにマッチする最も一般的なケース => 証明可能 (m(S) > m(SS)が成り立つ)
 
 ## Condition (4)(5): init(S) implies inv(S) . inv(S) implies inv(SS) .の証明譜 (Proof-inv.cafe)
- - 各invariantはinv-AAA、各wfsはwfs-BBBという述語として定義しておく。
- - (4)(5)はinvariant毎に一つずつ証明するが、証明するinvariantをinvS(S)とする。
- - Condition (4)のゴールは、initinv = init implies invS .
- - Condition (5)のゴールは、iinv = inv and invS implies invS'.とし、invinvを二重否定イディオムを使って定義する。
- - 抽象レベルで証明済みのLemmaを利用するには、具象レベルにインスタンシエートする必要があるが、現在のところ、インスタンシエーションはCafeOBJの機能を利用するように整備されていないので、手作業が必要である。
+
+  ```
+  eq initinv(S:State)
+     = init(S) implies invK(S) .
+  eq iinv(S:State,SS:State)
+     = inv(S) and invK(S) implies invK(SS) .
+  eq invinv(S:State)
+     = not (S =(*,1)=>+ SS:State if CC:Bool suchThat
+            not ((CC implies iinv(S,SS)) == true)
+     	   { S => SS !! CC ! inv(S) ! invK(S) ! invK(SS) }) .
+  ```
+
+ - (4)(5)はinvariant毎に一つずつ証明するが、証明するinvariantをinvK(S)とする。
  - 個々のinvariantの証明譜の説明は割愛する。
 
 ## Initial Cont Lemmaの証明譜(Proof-cyclelemma.cafe)
 ### ステップ 1-0: 証明すべき述語を定義
- - invcont = inv implies cont
+
+  ```
+  eq invcont(S) 
+    = cont(S) = true
+    when inv(S) .
+  ```
  - Sにinitial nodeが含まれる時に、invcont(S)が成り立つことを証明する。
 
 ### ステップ 1-1: 最も一般的なケースから開始
- - 一つ以上のinitial nodeが存在する場合は、< (node(tnd, idND, initial) sND), sCP, sRQ, sRL, mp >が最も一般的な状態。
+
+  ```
+  :goal { eq invcont(< (node(tnd, idND, initial) sND), sCP, sRQ, sRL, mp >) = true .}
+  ```
+
  - ここで、idND nodeは任意に選択しているので、Cyclic Dependency Lemmaが存在を保証する「initialであって、かつDDSR01にinitialなnodeが含まれないnode」であることを仮定してよい。
 
 ### ステップ 1-2: 次状態に適用されるルールを考察
@@ -769,7 +960,7 @@
    - Case 3-3-2: 対応するrelationshipがある
 
 ### ステップ 1-3: 最初のルールのLHSにマッチするケースを含むようにケース分け
- - R11のLHSはrequiremntに対応するavailable messageが必要なので、以下の2つにケース分けする。
+ - R12のLHSはrequiremntに対応するavailable messageが必要なので、以下の2つにケース分けする。
  - Case 3-3-2-1: 対応するavailable messageが無い
  - Case 3-3-2-2: 対応するavailable messageがある => 証明可能 (R12が適用可能なのでcont(S)がtrue)
 

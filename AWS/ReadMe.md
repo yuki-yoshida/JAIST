@@ -349,36 +349,8 @@
 
  - The goal holds because `m(S) > m(SS)` reduces to true.
 
-## Proof of Condition (4): `inv(S) and (cont(S) or final(S)) and m(S) = 0 implies final(S)` (Proof-measure.cafe)
-### Step 4-0: Use a natural number axiom.
- - Protecting include module NATAXIOM provided by the framework.
-
-### Step 4-1: Define a predicate to be proved.
-
-  ```
-  eq mesfinal(S)
-     = inv(S) and cont(S) and m(S) = 0 implies final(S) .
-  ```
-
-## Proof of Condition (4) for R01
-### Step 4-2: Begin with the cases each of which matches to LHS of each rule.
-
-  ```
-  :goal {  eq mesfinal(< (res(trs,idRS,initial) sRS), sPR >) = true . }
-  ```
-
- - The goal holds because `m(S) = 0` reduces to false.
-
-## Proof of Condition (4) for R02
-### Step 4-2: Begin with the cases each of which matches to LHS of each rule.
-
-  ```
-  :goal {  eq mesfinal(< (res(trs,idRS,initial) sRS), sPR >) = true . }
-  ```
- - The goal holds because `m(S) = 0` reduces to false.
-
-## Proof of Condition (5)(6): `init(S) implies inv(S) . inv(S) implies inv(SS) .` (Proof-inv.cafe)
-### Step 5-0,6-0: Define a predicate to be proved.
+## Proof of Condition (4)(5): `init(S) implies inv(S) . inv(S) implies inv(SS) .` (Proof-inv.cafe)
+### Step 4-0,5-0: Define a predicate to be proved.
 
   ```
   eq initinv(S)
@@ -391,15 +363,16 @@
      	   { S => SS !! CC ! inv(S) ! invK(S) ! invK(SS) }) .
   ```
 
- - Condition (5)(6) are proved for each invariants and `invK` above will be defined as the target invariant.
+ - Condition (4)(5) are proved for each invariants and `invK` above will be defined as the target invariant.
 
-## Proof of Condition (5)(6) for inv-ifRSStartedThenPRReady.
+## Proof of Condition (4)(5) for inv-ifRSStartedThenPRReady.
  - Define `invK` to be `inv-ifRSStartedThenPRReady`.
 
   ```
   eq invK(S) = inv-ifRSStartedThenPRReady(S) .
   ```
 
+### Step 4-1,5-1: Instantiate proved lemmas for predefined predicates. 
  - Instantiate general lemma `m2o-lemma07` which means that all the properties of a started resource are ready when all resources are initial and not started.
 
   ```
@@ -418,8 +391,8 @@
     = ifRSInStatesThenPRInStates(SetRS, started, (prop(TPR,IDPR,notready,IDRS,IDRRS) SetPR), ready) .
   ```
 
-## Proof of Condition (5) for inv-ifRSStartedThenPRReady.
-### Step 5-2: Begin with the most general case. 
+## Proof of Condition (4) for inv-ifRSStartedThenPRReady.
+### Step 4-2: Begin with the most general case. 
 
   ```
   :goal { eq initinv(< sRS,sPR >) = true . }
@@ -427,21 +400,21 @@
 
  - The goal holds because of `m2o-lemma07`.
 
-## Proof of Condition (6) for inv-ifRSStartedThenPRReady and R01
-###  Step 6-2: Begin with the cases each of which matches to LHS of each rule.
+## Proof of Condition (5) for inv-ifRSStartedThenPRReady and R01
+###  Step 5-2: Begin with the cases each of which matches to LHS of each rule.
 
   ```
   :goal { eq invinv(< (res(trs,idRS,initial) sRS), sPR >) = true . }
   ```
 
-### Step 6-3: Split the most general case for a rule into cases  where the condition of the rule does or does not hold. 
+### Step 5-3: Split the most general case for a rule into cases  where the condition of the rule does or does not hold. 
  - Since the conditional clause of R01 requires that all properties of the initial resource are ready, the current case should be split into following two cases:
   - Case 1-1: The is no properties of the initial resource => the goal holds because the initial resource transits to be started but it has no properties.
   - Case 1-2: All properties of the initial resource are ready => the goal holds because the initial resource transits to be started but all of its properties are ready.
   - Case 2: At least one property of the initial resource is not-ready => the goal holds because no next state.
 
-## Proof of Condition (6) for inv-ifRSStartedThenPRReady and R02
-###  Step 6-2: Begin with the cases each of which matches to LHS of each rule.
+## Proof of Condition (5) for inv-ifRSStartedThenPRReady and R02
+###  Step 5-2: Begin with the cases each of which matches to LHS of each rule.
 
   ```
   :goal {
@@ -452,9 +425,9 @@
 
  - Case 1: The goal holds because `invS(S) implies invS(SS)` holds by `m2o-lemma11`.
 
-## Proof of Condition (5)(6) for wfs-allPRHaveRSのCondition.
-## Proof of Condition (5)(6) for wfs-allPRHaveRRSのCondition.
-## Proof of Condition (5)(6) for wfs-atLeastOneRSのCondition.
+## Proof of Condition (4)(5) for wfs-allPRHaveRSのCondition.
+## Proof of Condition (4)(5) for wfs-allPRHaveRRSのCondition.
+## Proof of Condition (4)(5) for wfs-atLeastOneRSのCondition.
  - Almost the same as above.
 
 Thus all the sufficient conditions have been proved, which means that `init leads-to final` holds.

@@ -434,7 +434,7 @@
  - Since there is a ready requirement in the next state, the next rule should be R02.
 
 ### Step 2-5: Split the current case into cases which collectively cover the current case and the next state of one of the split cases matches to LHS of the current rule.
- - Since LHS of R02 requires a node corresponding to the requirement is created, the current case should be split into following cases:
+ - Since LHS of R02 requires a node corresponding to the requirement is created, the current case should be split into following three cases:
   - Case 2-1: The node corresponding to the requirement is initial => the goal holds because `inv-ifNDInitialThenRQUnboundReady(S)` reduces to false.
   - Case 2-2: The node corresponding to the requirement is created => the goal holds because `cont(SS)` reduces to true because R02 is available to the next state.
   - Case 2-3: The node corresponding to the requirement is started => the goal holds because `inv-ifNDStartedThenRQReady(S)` reduces to false.
@@ -574,7 +574,7 @@
  - Since there is a ready requirement in the next state, the next rule should be R02.
 
 ### Step 2-5: Split the current case into cases which collectively cover the current case and the next state of one of the split cases matches to LHS of the current rule.
- - Since LHS of R02 requires a node corresponding to the waiting requirement, the current case should be split into following cases:
+ - Since LHS of R02 requires a node corresponding to the waiting requirement, the current case should be split into following three cases:
   - Case 2-1: The node corresponding to the requirement is initial => the goal holds because `inv-ifNDInitialThenRQUnboundReady(S)` reduces to false.
   - Case 2-2: The node corresponding to the requirement is created => the goal holds because `cont(SS)` reduces to true because R02 is available to the next state.
   - Case 2-3: The node corresponding to the requirement is started => the goal holds because `inv-ifNDStartedThenRQReady(S)` reduces to false.
@@ -774,318 +774,325 @@
  - Since R08 is unconditional, this step is ignored.
   - Case 1: The goal holds because `m(S) > m(SS)` reduces to true.
 
-## Condition (4)(5): init(S) implies inv(S) . inv(S) implies inv(SS) .の証明譜 (Proof-inv.cafe)
- - 各invariantはinv-AAA、各wfsはwfs-BBBという述語として定義しておく。
- - (4)(5)はinvariant毎に一つずつ証明するが、証明するinvariantをinvS(S)とする。
- - Condition (4)のゴールは、initinv = init implies invS .
- - Condition (5)のゴールは、iinv = inv and invS implies invS'.とし、invinvを二重否定イディオムを使って定義する。
- - 抽象レベルで証明済みのLemmaを利用するには、具象レベルにインスタンシエートする必要があるが、現在のところ、インスタンシエーションはCafeOBJの機能を利用するように整備されていないので、手作業が必要である。
- - 個々のinvariantの証明譜の説明は割愛する。
+## Proof of Condition (4)(5): `init(S) implies inv(S) . inv(S) implies inv(SS) .` (Proof-inv.cafe)
 
-## Initial Cont Lemmaの証明譜(Proof-cyclelemma.cafe)
-### ステップ 1-0: 証明すべき述語を定義
- - invcont = inv implies cont
- - Sにinitial nodeが含まれる時に、invcont(S)が成り立つことを証明する。
+  ```
+  eq initinv(S:State)
+     = init(S) implies invK(S) .
+  eq iinv(S:State,SS:State)
+     = inv(S) and invK(S) implies invK(SS) .
+  eq invinv(S:State)
+     = not (S =(*,1)=>+ SS:State if CC:Bool suchThat
+            not ((CC implies iinv(S,SS)) == true)
+     	   { S => SS !! CC ! inv(S) ! invK(S) ! invK(SS) }) .
+  ```
 
-### ステップ 1-1: 最も一般的なケースから開始
- - 一つ以上のinitial nodeが存在する場合は、< (node(tnd, idND, initial) sND), sCP, sRQ, sRL, mp >が最も一般的な状態。
- - ここで、idND nodeは任意に選択しているので、Cyclic Dependency Lemmaが存在を保証する「initialであって、かつDDSR01にinitialなnodeが含まれないnode」であることを仮定してよい。
+ - Condition (4)(5) are proved for each invariants and `invK` above will be defined as the target invariant.
+
+## Proof of Initial Cont Lemma (Proof-cyclelemma.cafe)
+### Step 1-0: Define a predicate to be proved.
+
+  ```
+  eq invcont(S) 
+    = cont(S) = true
+    when inv(S) .
+  ```
+ - Prove that invcont(S) holds when S includes at least one initial node.
+
+### Step 1-1: Begin with the most general case.
+
+  ```
+  :goal { eq invcont(< (node(tnd, idND, initial) sND), sCP, sRQ, sRL, mp >) = true .}
+  ```
+
+ - Since node idND is an arbitrary initial node, the CDL assures that DDS of the node does not include any other initial node.
 
 ### Step 1-2 Consider which rule can be applied to the next state.
- - Since there is an initial node in the next state, the next rule should be R01.
+ - Since there is an initial node, the next rule should be R01.
 
-### ステップ 1-4: 最初のルールの条件節が成り立つ/成り立たないでケース分け
- - R01の条件節は「initial nodeのhostedOn requirementがすべてready」なので以下の3つにケース分けする。
-  - Case 1: initial nodeのhostedOn requirementがすべてready => the goal holds because  (R01が適用可能なのでcont(S)がtrue)
-  - Case 2: initial nodeのhostedOn requirementの一つがunbound.
-  - Case 3: initial nodeのhostedOn requirementの一つがwaiting. =>  the goal holds because `inv-HostedOnRQNotWaiting(S)` reduces to false.
+### Step 1-4: Split the current case into cases where the condition of the rule does or does not hold. 
+ - The current case should be split into following three cases:
+  - Case 1: All hostedOn requirements of the initial node are ready => the goal holds because R01 is applicable and so `cont(S)` reduces to true.
+  - Case 2: At least one  hostedOn requirement of the initial node is unbound.
+  - Case 3: At least one  hostedOn requirement of the initial node is waiting =>  the goal holds because `inv-HostedOnRQNotWaiting(S)` reduces to false.
 
 ### Step 1-2: Consider which rule can be applied to the next state.
- - Since there is an unbound hostedOn requirement in the next state, the next rule should be R04.
+ - Since there is an unbound hostedOn requirement, the next rule should be R04.
 
-### ステップ 1-5: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
- - requirementに対するrelationshipのリンクが未定なので、以下の２つにケース分けする
+### Step 1-5: When there is a dangling link, split the current case into cases where the linked object does or does not exist.
+ - Since the requirement has a dangling `rel` link, the current case should be split into following two cases:
    - Case 2-1: There is no corresponding relationship => the goal holds because `wfs-allRQHaveRL(S)` reduces to false.
    - Case 2-2: There is a corresponding relationship.
 
- - relationshipに対するcapabilityのリンクが未定なので、以下の２つにケース分けする
-   - Case 2-2-1: 対応するcapabilityが無い => the goal holds because `wfs-allRLHaveCP(S)` reduces to false.
-   - Case 2-2-2: 対応するcapabilityがある
+ - Since the relationship has a dangling `cap` link, the current case should be split into following two cases:
+   - Case 2-2-1: There is no corresponding capability => the goal holds because `wfs-allRLHaveCP(S)` reduces to false.
+   - Case 2-2-2: There is a corresponding capability.
    
- - capabilityの親ノードのIDがすでに存在するものかどうかで、以下の２つにケース分けする
-   - Case 2-2-2-1: capabilityの親ノードはrequirementの親ノードと同じ => the goal holds because `wfs-allRLNotInSameND(S)` reduces to false.
-   - Case 2-2-2-2: capabilityの親ノードはrequirementの親ノードと異なる
+ - The current case should be split into following two cases:
+   - Case 2-2-2-1: The node of the capability is the same as of the requirement => the goal holds because `wfs-allRLNotInSameND(S)` reduces to false.
+   - Case 2-2-2-2: The node of the capability is different from the node of the requirement.
 
-### Step 1-3: Split the current case into cases which collectively cover the current case and the next state of one of the split cases matches to LHS of the current rule.
- - Since LHS of R04 requires a relationship corresponding to the available capability and an unbound requirement corresponding to the relationship, the current case should be split into following cases:
- - R04のLHSはrequiremntに対応するavailable capabilityが必要なので、cspコマンドで以下の３つにケース分けする。
-  - Case 2-2-2-2-1: 対応するcapabilityがclosed
-  - Case 2-2-2-2-2: 対応するcapabilityがopen => the goal holds because `inv-HostedOnCPNotOpen(S)` reduces to false.
-  - Case 2-2-2-2-3: 対応するcapabilityがavailable => the goal holds because  (R04が適用可能なのでcont(S)がtrue)
+### Step 1-3: Split the current case into cases which collectively cover the current case and one of which matches to LHS of the current rule.
+ - Since LHS of R04 requires a relationship corresponding to the available capability, the current case should be split into following three cases:
+  - Case 2-2-2-2-1: The corresponding capability is closed.
+  - Case 2-2-2-2-2: The corresponding capability is open => the goal holds because `inv-HostedOnCPNotOpen(S)` reduces to false.
+  - Case 2-2-2-2-3: The corresponding capability is available => the goal holds because R04 is applicable and so `cont(S)` reduces to true.
 
 ### Step 1-2: Consider which rule can be applied to the next state.
- - Since there is a closed hostedOn capability in the next state, the next rule should be R03.
+ - Since there is a closed hostedOn capability, the next rule should be R03.
 
-### ステップ 1-5: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
- - capabilityの親ノードのリンクが未定なので、以下の２つにケース分けする
+### Step 1-5: When there is a dangling link, split the current case into cases where the linked object does or does not exist.
+ - Since the capability has a dangling `node` link, the current case should be split into following two cases:
    - Case 2-2-2-2-1-1: There is no such node => the goal holds because `wfs-allCPHaveND(S)` reduces to false.
    - Case 2-2-2-2-1-2: There is such a node.
 
-### ステップ 1-4: 最初のルールの条件節が成り立つ/成り立たないでケース分け
- - R03の条件節はcapabilityに対応するnodeがcreatedまたはstartedなので、以下の３つにケース分けする
-   - Case 2-2-2-2-1-2-1: capabilityの親nodeがinitial => the goal holds because  (元のnodeのDDSR01にinitial nodeが存在して矛盾)
-   - Case 2-2-2-2-1-2-2: capabilityの親nodeがcreated => the goal holds because  (R03が適用可能なのでcont(S)がtrue)
-   - Case 2-2-2-2-1-2-3: capabilityの親nodeがstarted => the goal holds because  (R03が適用可能なのでcont(S)がtrue)
+### Step 1-4: Split the current case into cases where the condition of the rule does or does not hold. 
+ - The current case should be split into following three cases:
+   - Case 2-2-2-2-1-2-1: the node of the capability is initial => the goal holds because DDSR01 of the initial node includes another initial node which is a contradiction. 
+   - Case 2-2-2-2-1-2-2: the node of the capability is created => the goal holds because R03 is applicable and so `cont(S)` reduces to true.
+   - Case 2-2-2-2-1-2-3: the node of the capability is started => the goal holds because R03 is applicable and so `cont(S)` reduces to true.
 
 ## Created Cont Lemmaの証明譜(Proof-cyclelemma.cafe)
-### ステップ 1-0: 証明すべき述語を定義
- - invcont = inv implies cont
- - Sにcreated nodeが含まれる時に、invcont(S)が成り立つことを証明する。
- - 上記で証明済みのInitial Cont Lemmaを導入しておく。 
+### Step 1-0: Define a predicate to be proved.
+ - Prove that invcont(S) holds when S includes at least one created node.
+ - Introduce the Initial Cont Lemma proved above.
 
-### ステップ 1-1: 最も一般的なケースから開始
- - 一つ以上のcreated nodeが存在する場合は、< (node(tnd, idND, created) sND), sCP, sRQ, sRL, mp >が最も一般的な状態。
- - ここで、idND nodeは任意に選択しているので、Cyclic Dependency Lemmaが存在を保証する「createdであって、かつDDSR02にcreatedなnodeが含まれないnode」であることを仮定してよい。
+  ```
+  eq cont(< (node(T, I, initial) SetND), 
+             SetCP, SetRQ, SetRL, M >) = true .
+  ```
+
+### Step 1-1: Begin with the most general case. 
+
+  ```
+  :goal {eq invcont(< (node(tnd, idND, created) sND), sCP, sRQ, sRL, mp >)  = true .}
+  ```
+
+ - Since node idND is an arbitrary initial node, the CDL assures that DDS of the node does not include any other created node.
 
 ### Step 1-2: Consider which rule can be applied to the global state in the current case. 
- - Since there is a created node in the next state, the next rule should be R02.
+ - Since there is a created node, the next rule should be R02.
 
-### ステップ 1-4: 最初のルールの条件節が成り立つ/成り立たないでケース分け
- - R02の条件節は「created nodeのrequirementがすべてready」なので以下の3つにケース分けする。
-  - Case 1: created nodeのrequirementがすべてready => the goal holds because  (R02が適用可能なのでcont(S)がtrue)
-  - Case 2: created nodeのrequirementの一つがunbound.
-  - Case 3: created nodeのrequirementの一つがwaiting.
+### Step 1-4: Split the current case into cases where the condition of the rule does or does not hold. 
+ - The current case should be split into following three cases:
+  - Case 1: All requirements of the created node are ready => the goal holds because R02 is applicable and so `cont(S)` reduces to true.
+  - Case 2: One of requirements of the created node is unbound.
+  - Case 3: One of requirements of the created node is waiting.
 
-### Case 2: created nodeのrequirementの一つがunboundの証明。
+### Case 2: One of requirements of the created node is unbound.
 ### Step 1-2: Consider which rule can be applied to the global state in the current case. 
- - Since there is an available hostedOn capability in the next state, the next rule should be R04.
- - unboundなrequirementのタイプによって適用されるルールが異なるので、以下の３つにケース分け
-  - Case 2-1: unboundなrequirementがhostedOn => the goal holds because `inv-ifNDCreatedThenHostedOnRQReady(S)` reduces to false.
-  - Case 2-2: unboundなrequirementがdependsOn
-  - Case 2-3: unboundなrequirementがconnectsTo
+ - Since the next applicable rule depends on the type of the unbound requirement, the current case should be split into following three cases:
+  - Case 2-1: The type of the unbound requirement is hostedOn => the goal holds because `inv-ifNDCreatedThenHostedOnRQReady(S)` reduces to false.
+  - Case 2-2: The type of the unbound requirement is dependsOn.
+  - Case 2-3: The type of the unbound requirement is connectsTo.
 
-### Case 2-2: unboundなrequirementがdependsOnの証明
+### Case 2-2: The type of the unbound requirement is dependsOn.
 ### Step 1-2: Consider which rule can be applied to the global state in the current case. 
- - Since there is an available hostedOn capability in the next state, the next rule should be R04.
- - unboundなdependsOn requirementがあるので、適用されるルールはR07。
+ - Since there is an unbound dependsOn requirement, the next rule should be R07.
 
-### Step 1-3: Split the current case into cases which collectively cover the current case and the next state of one of the split cases matches to LHS of the current rule.
- - Since LHS of R04 requires a relationship corresponding to the available capability and an unbound requirement corresponding to the relationship, the current case should be split into following cases:
- - R07のLHSはrequiremntに対応するrelationishipと、されにそれに対応するcapabilityが必要。
+### Step 1-3: Split the current case into cases which collectively cover the current case and one of which matches to LHS of the current rule.
+ - LHS of R07 requires a relationship corresponding to the requiement and a capability corresponding to the relationship.
 
-### ステップ 1-5: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
- - requirementに対するrelationshipのリンクが未定なので、以下の２つにケース分けする
+### Step 1-5: When there is a dangling link, split the current case into cases where the linked object does or does not exist.
+ - Since the requirement has a dangling `rel` link, the current case should be split into following two cases:
    - Case 2-2-1: There is no corresponding relationship => the goal holds because `wfs-allRQHaveRL(S)` reduces to false.
    - Case 2-2-2: There is a corresponding relationship.
 
- - relationshipに対するcapabilityのリンクが未定なので、以下の２つにケース分けする
-   - Case 2-2-2-1: 対応するcapabilityが無い => the goal holds because `wfs-allRLHaveCP(S)` reduces to false.
-   - Case 2-2-2-2: 対応するcapabilityがある
+ - Since the relationship has a dangling `cap` link, the current case should be split into following two case   - Case 2-2-2-1: There is no corresponding capability => the goal holds because `wfs-allRLHaveCP(S)` reduces to false.
+   - Case 2-2-2-2: There is a corresponding capability.
    
- - capabilityの親ノードのIDがすでに存在するものかどうかで、以下の２つにケース分けする
-   - Case 2-2-2-2-1: capabilityの親ノードはrequirementの親ノードと同じ => the goal holds because `wfs-allRLNotInSameND(S)` reduces to false.
-   - Case 2-2-2-2-2: capabilityの親ノードはrequirementの親ノードと異なる
+ - The current case should be split into following two cases:
+   - Case 2-2-2-2-1: The node of the capability is the same as of the requirement => the goal holds because `wfs-allRLNotInSameND(S)` reduces to false.
+   - Case 2-2-2-2-2: The node of the capability is different from the node of the requirement.
 
-### Step 1-3: Split the current case into cases which collectively cover the current case and the next state of one of the split cases matches to LHS of the current rule.
- - Since LHS of R04 requires a relationship corresponding to the available capability and an unbound requirement corresponding to the relationship, the current case should be split into following cases:
- - R07のLHSはrequiremntに対応するactivatedなcapabilityが必要なので、cspコマンドで以下の３つにケース分けする。
-  - Case 2-2-2-2-2-1: 対応するcapabilityがclosed
-  - Case 2-2-2-2-2-2: 対応するcapabilityがopen => the goal holds because  (R07が適用可能なのでcont(S)がtrue)
-  - Case 2-2-2-2-2-3: 対応するcapabilityがavailable => the goal holds because  (R07が適用可能なのでcont(S)がtrue)
+### Step 1-3: Split the current case into cases which collectively cover the current case and one of which matches to LHS of the current rule.
+ - Since LHS of R07 requires an activated capability corresponding to the requirement, the current case should be split into following three cases:
+  - Case 2-2-2-2-2-1: The corresponding capability is closed.
+  - Case 2-2-2-2-2-2: The corresponding capability is open => the goal holds because R07 is applicable and so `cont(S)` reduces to true.
+  - Case 2-2-2-2-2-3: The corresponding capability is available => the goal holds because R07 is applicable and so `cont(S)` reduces to true.
 
 ### Step 1-2: Consider which rule can be applied to the global state in the current case. 
- - Since there is an available hostedOn capability in the next state, the next rule should be R04.
- - closedなdepensOn capabilityがあるので、適用されるルールはR05。
+ - Since there is a closed dependsOn capability, the next rule should be R05.
 
-### ステップ 1-4: 最初のルールの条件節が成り立つ/成り立たないでケース分け
- - R05の条件節はcapabilityの親nodeがcreatedかstartedであることを要求する
+### Step 1-4: Split the current case into cases where the condition of the rule does or does not hold. 
+ - The condition of R05 requires the parent node of the capability of idCP is created or started.
 
-### ステップ 1-5: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
- - capabilityの親ノードのリンクが未定なので、以下の２つにケース分けする
+### Step 1-5: When there is a dangling link, split the current case into cases where the linked object does or does not exist.
+ - Since the capability has a dangling `node` link, the current case should be split into following two cases:
    - Case 2-2-2-2-2-1-1: There is no such node => the goal holds because `wfs-allCPHaveND(S)` reduces to false.
    - Case 2-2-2-2-2-1-2: There is such a node.
 
-### ステップ 1-4: 最初のルールの条件節が成り立つ/成り立たないでケース分け
- - R05の条件節はcapabilityに対応するnodeがcreatedまたはstartedなので、以下の３つにケース分けする
-   - Case 2-2-2-2-2-1-2-1: capabilityの親nodeがinitial => the goal holds because  (Initial Cont Lemmaによりcont(S)がtrue)
-   - Case 2-2-2-2-2-1-2-2: capabilityの親nodeがcreated => the goal holds because  (R05が適用可能なのでcont(S)がtrue)
-   - Case 2-2-2-2-2-1-2-3: capabilityの親nodeがstarted => the goal holds because  (R05が適用可能なのでcont(S)がtrue)
+### Step 1-4: Split the current case into cases where the condition of the rule does or does not hold. 
+ - The current case should be split into following three cases:
+   - Case 2-2-2-2-2-1-2-1: the node of the capability is initial => the goal holds because of the Initial Cont Lemma.
+   - Case 2-2-2-2-2-1-2-2: the node of the capability is created => the goal holds because R05 is applicable and so `cont(S)` reduces to true.
+   - Case 2-2-2-2-2-1-2-3: the node of the capability is started => the goal holds because R05 is applicable and so `cont(S)` reduces to true.
 
-### Case 2-3: unboundなrequirementがconnectsToの証明
+### Case 2-3: The type of the unbound requirement is connectsTo.
 ### Step 1-2: Consider which rule can be applied to the global state in the current case. 
- - Since there is an available hostedOn capability in the next state, the next rule should be R04.
- - unboundなconnectsTo requirementがあるので、適用されるルールはR11。
+ - Since there is an unboud connectsTo requirement, the next rule should be R11.
 
-### Step 1-3: Split the current case into cases which collectively cover the current case and the next state of one of the split cases matches to LHS of the current rule.
- - Since LHS of R04 requires a relationship corresponding to the available capability and an unbound requirement corresponding to the relationship, the current case should be split into following cases:
- - R11のLHSはrequiremntに対応するrelationishipが必要。
+### Step 1-3: Split the current case into cases which collectively cover the current case and one of which matches to LHS of the current rule.
+ - LHS of R11 requires a relationship corresponding to the requirement.
 
-### ステップ 1-5: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
- - requirementに対するrelationshipのリンクが未定なので、以下の２つにケース分けする
+### Step 1-5: When there is a dangling link, split the current case into cases where the linked object does or does not exist.
+ - Since the requirement has a dangling `rel` link, the current case should be split into following two cases:
    - Case 2-3-1: There is no corresponding relationship => the goal holds because `wfs-allRQHaveRL(S)` reduces to false.
    - Case 2-3-2: There is a corresponding relationship.
 
-### Step 1-3: Split the current case into cases which collectively cover the current case and the next state of one of the split cases matches to LHS of the current rule.
- - Since LHS of R04 requires a relationship corresponding to the available capability and an unbound requirement corresponding to the relationship, the current case should be split into following cases:
- - R11のLHSはrequiremntに対応するopen messageが必要なので、以下の2つにケース分けする。
-  - Case 2-3-2-1: 対応するopen messageが無い
-  - Case 2-3-2-2: 対応するopen messageがある => the goal holds because  (R11が適用可能なのでcont(S)がtrue)
+### Step 1-3: Split the current case into cases which collectively cover the current case and one of which matches to LHS of the current rule.
+ - Since LHS of R11 requires an open message, the current case should be split into following two cases:
+  - Case 2-3-2-1: There is no corresponding open message.
+  - Case 2-3-2-2: There is a corresponding open message => the goal holds because R11 is applicable and so `cont(S)` reduces to true.
 
-### ステップ 1-5: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
- - open messageに対するcapabilityのリンクが未定なので、以下の２つにケース分けする
-   - Case 2-3-2-1-1: 対応するcapabilityが無い => the goal holds because `wfs-allRLHaveCP(S)` reduces to false.
-   - Case 2-3-2-1-2: 対応するcapabilityがある
+### Step 1-5: When there is a dangling link, split the current case into cases where the linked object does or does not exist.
+ - Since the open message has a dangling `cap` link, the current case should be split into following two cases:
+   - Case 2-3-2-1-1: There is no corresponding capability => the goal holds because `wfs-allRLHaveCP(S)` reduces to false.
+   - Case 2-3-2-1-2: There is a corresponding capability.
    
- - capabilityの親ノードのIDがすでに存在するものかどうかで、以下の２つにケース分けする
-   - Case 2-3-2-1-2-1: capabilityの親ノードはrequirementの親ノードと同じ => the goal holds because `wfs-allRLNotInSameND(S)` reduces to false.
-   - Case 2-3-2-1-2-2: capabilityの親ノードはrequirementの親ノードと異なる
+ - The current case should be split into following two cases:
+   - Case 2-3-2-1-2-1: The node of the capability is the same as of the requirement => the goal holds because `wfs-allRLNotInSameND(S)` reduces to false.
+   - Case 2-3-2-1-2-2: The node of the capability is different from the node of the requirement.
 
-### ステップ 1-2: 次状態に適用されるルールを考察
- - connectsTo capabilityの状態によって適用されるルールが異なるので、以下の３つにケース分け
-  - Case 2-3-2-1-2-2-1: Capabilityがclosed
-  - Case 2-3-2-1-2-2-2: Capabilityがopen
-  - Case 2-3-2-1-2-2-3: Capabilityがavailable => the goal holds because `inv-ifConnectsToCPAvailableThenRQWaitingReadyOrOpenMsg(S)` reduces to false.
+### Step 1-2: Consider which rule is applied to the global state in the current case. 
+ - Since the next applicable rule depends on the local state of the connectsTo capability, the current case should be split into following three cases:
+  - Case 2-3-2-1-2-2-1: The capability is closed.
+  - Case 2-3-2-1-2-2-2: The capability is open.
+  - Case 2-3-2-1-2-2-3: The capability is available => the goal holds because `inv-ifConnectsToCPAvailableThenRQWaitingReadyOrOpenMsg(S)` reduces to false.
 
-### Case 2-3-2-1-2-2-1: Capabilityがclosedの証明
-### ステップ 1-2: 次状態に適用されるルールを考察
- - closedなconnectsTo capabilityがあるので、適用されるルールはR09。
+### Case 2-3-2-1-2-2-1: The capability is closed.
+### Step 1-2: Consider which rule is applied to the global state in the current case. 
+ - Since there is a closed connectsTo capability, the next rule should be R09.
 
-### ステップ 1-4: 最初のルールの条件節が成り立つ/成り立たないでケース分け
- - R09の条件節はcapabilityの親nodeがcreatedまたはstartedであることを要求する
+### Step 1-4: Split the current case into cases where the condition of the rule does or does not hold. 
+ - The condition of R09 requires the parent node of the capability of idCP is created or started.
 
-### ステップ 1-5: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
- - capabilityの親ノードのリンクが未定なので、以下の２つにケース分けする
+### Step 1-5: When there is a dangling link, split the current case into cases where the linked object does or does not exist.
+ - Since the capability has a dangling `node` link, the current case should be split into following two cases:
    - Case 2-3-2-1-2-2-1-1: There is no such node => the goal holds because `wfs-allCPHaveND(S)` reduces to false.
    - Case 2-3-2-1-2-2-1-2: There is such a node.
 
-### ステップ 1-4: 最初のルールの条件節が成り立つ/成り立たないでケース分け
- - R09の条件節はcapabilityに対応するnodeがcreatedまたはstartedなので、以下の３つにケース分けする
-   - Case 2-3-2-1-2-2-1-2-1: capabilityの親nodeがinitial => the goal holds because  (Initial Cont Lemmaによりcont(S)がtrue)
-   - Case 2-3-2-1-2-2-1-2-2: capabilityの親nodeがcreated => the goal holds because  (R09が適用可能なのでcont(S)がtrue)
-   - Case 2-3-2-1-2-2-1-2-3: capabilityの親nodeがstarted => the goal holds because  (R09が適用可能なのでcont(S)がtrue)
+### Step 1-4: Split the current case into cases where the condition of the rule does or does not hold. 
+ - The current case should be split into following three cases:
+   - Case 2-3-2-1-2-2-1-2-1: the node of the capability is initial => the goal holds because of the Initial Cont Lemma.
+   - Case 2-3-2-1-2-2-1-2-2: the node of the capability is created => the goal holds because R09 is applicable and so `cont(S)` reduces to true.
+   - Case 2-3-2-1-2-2-1-2-3: the node of the capability is started => the goal holds because R09 is applicable and so `cont(S)` reduces to true.
 
-### Case 2-3-2-1-2-2-2: Capabilityがopenの証明
-### ステップ 1-2: 次状態に適用されるルールを考察
- - openなconnectsTo capabilityがあるので、適用されるルールはR10。
+### Case 2-3-2-1-2-2-2: The capability is open.
+### Step 1-2: Consider which rule is applied to the global state in the current case. 
+ - Since there is an open connectsTo capability, the next rule should be R10.
 
-### ステップ 1-4: 最初のルールの条件節が成り立つ/成り立たないでケース分け
- - R10の条件節はcapabilityの親nodeがstartedであることを要求する
+### Step 1-4: Split the current case into cases where the condition of the rule does or does not hold. 
+-- The condition of R10 requires the parent node of the capability of idCP is started.
 
-### ステップ 1-5: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
- - capabilityの親ノードのリンクが未定なので、以下の２つにケース分けする
+### Step 1-5: When there is a dangling link, split the current case into cases where the linked object does or does not exist.
+ - Since the capability has a dangling `node` link, the current case should be split into following two cases:
    - Case 2-3-2-1-2-2-2-1: There is no such node => the goal holds because `wfs-allCPHaveND(S)` reduces to false.
    - Case 2-3-2-1-2-2-2-2: There is such a node.
 
-### ステップ 1-4: 最初のルールの条件節が成り立つ/成り立たないでケース分け
- - R09の条件節はcapabilityに対応するnodeがcreatedまたはstartedなので、以下の３つにケース分けする
-   - Case 2-3-2-1-2-2-2-2-1: capabilityの親nodeがinitial => the goal holds because  (Initial Cont Lemmaによりcont(S)がtrue)
-   - Case 2-3-2-1-2-2-2-2-2: capabilityの親nodeがcreated => the goal holds because `inv-ifConnectsToCPOpenThenRQWaitingOrOpenMsg(S)` reduces to false.
-   - Case 2-3-2-1-2-2-2-2-3: capabilityの親nodeがstarted => the goal holds because  (R10が適用可能なのでcont(S)がtrue)
+### Step 1-4: Split the current case into cases where the condition of the rule does or does not hold. 
+ - The current case should be split into following three cases:
+   - Case 2-3-2-1-2-2-2-2-1: the node of the capability is initial => the goal holds because of the Initial Cont Lemma.
+   - Case 2-3-2-1-2-2-2-2-2: the node of the capability is created => the goal holds because `inv-ifConnectsToCPOpenThenRQWaitingOrOpenMsg(S)` reduces to false.
+   - Case 2-3-2-1-2-2-2-2-3: the node of the capability is started => the goal holds because R10 is applicable and so `cont(S)` reduces to true.
 
-### Case 3: created nodeのrequirementの一つがwaitingの証明。
-### ステップ 1-2: 次状態に適用されるルールを考察
- - waitingなrequirementのタイプによって適用されるルールが異なるので、以下の３つにケース分け
-  - Case 3-1: waitingなrequirementがhostedOn => the goal holds because `inv-HostedOnRQNotWaiting(S)` reduces to false.
-  - Case 3-2: waitingなrequirementがdependsOn
-  - Case 3-3: waitingなrequirementがconnectsTo
+### Case 3: One of requirements of the created node is waiting.
+### Step 1-2: Consider which rule is applied to the global state in the current case. 
+ - Since the next applicable rule depends on the type of the waiting requirement, the current case should be split into following three cases:
+  - Case 3-1: The type of the waiting requirement is hostedOn => the goal holds because `inv-HostedOnRQNotWaiting(S)` reduces to false.
+  - Case 3-2: The type of the waiting requirement is dependsOn.
+  - Case 3-3: The type of the waiting requirement is connectsTo.
 
-### Case 3-2: waitingなrequirementがdependsOnの証明
-### ステップ 1-2: 次状態に適用されるルールを考察
- - waitingなdependsOn requirementがあるので、適用されるルールはR08。
+### Case 3-2: The type of the waiting requirement is dependsOn.
+### Step 1-2: Consider which rule is applied to the global state in the current case. 
+ - Since there is a waiting dependsOn requirement, the next rule should be R08.
 
-### Step 1-3: Split the current case into cases which collectively cover the current case and the next state of one of the split cases matches to LHS of the current rule.
- - Since LHS of R04 requires a relationship corresponding to the available capability and an unbound requirement corresponding to the relationship, the current case should be split into following cases:
- - R08のLHSはrequiremntに対応するrelationishipと、されにそれに対応するcapabilityが必要。
+### Step 1-3: Split the current case into cases which collectively cover the current case and one of which matches to LHS of the current rule.
+ - LHS of R08 requires a relationship corresponding to the requirement and a capability corresponding to the relationship.
 
-### ステップ 1-5: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
- - requirementに対するrelationshipのリンクが未定なので、以下の２つにケース分けする
+### Step 1-5: When there is a dangling link, split the current case into cases where the linked object does or does not exist.
+ - Since the requirement has a dangling `rel` link, the current case should be split into following two cases:
    - Case 3-2-1: There is no corresponding relationship => the goal holds because `wfs-allRQHaveRL(S)` reduces to false.
    - Case 3-2-2: There is a corresponding relationship.
 
- - relationshipに対するcapabilityのリンクが未定なので、以下の２つにケース分けする
-   - Case 3-2-2-1: 対応するcapabilityが無い => the goal holds because `wfs-allRLHaveCP(S)` reduces to false.
-   - Case 3-2-2-2: 対応するcapabilityがある
+ - Since the relationship has a dangling `cap` link, the current case should be split into following two case   - Case 3-2-2-1: There is no corresponding capability => the goal holds because `wfs-allRLHaveCP(S)` reduces to false.
+   - Case 3-2-2-2: There is a corresponding capability.
    
- - capabilityの親ノードのIDがすでに存在するものかどうかで、以下の２つにケース分けする
-   - Case 3-2-2-2-1: capabilityの親ノードはrequirementの親ノードと同じ => the goal holds because `wfs-allRLNotInSameND(S)` reduces to false.
-   - Case 3-2-2-2-2: capabilityの親ノードはrequirementの親ノードと異なる
+ - The current case should be split into following two cases:
+   - Case 3-2-2-2-1: The node of the capability is the same as of the requirement => the goal holds because `wfs-allRLNotInSameND(S)` reduces to false.
+   - Case 3-2-2-2-2: The node of the capability is different from the node of the requirement.
 
-### Step 1-3: Split the current case into cases which collectively cover the current case and the next state of one of the split cases matches to LHS of the current rule.
- - Since LHS of R04 requires a relationship corresponding to the available capability and an unbound requirement corresponding to the relationship, the current case should be split into following cases:
- - R08のLHSはrequiremntに対応するavailableなcapabilityが必要なので、cspコマンドで以下の３つにケース分けする。
-  - Case 3-2-2-2-2-1: 対応するcapabilityがclosed => the goal holds because `inv-ifCPClosedThenRQUnbound(S)` reduces to false.
-  - Case 3-2-2-2-2-2: 対応するcapabilityがopen
-  - Case 3-2-2-2-2-3: 対応するcapabilityがavailable => the goal holds because  (R08が適用可能なのでcont(S)がtrue)
+### Step 1-3: Split the current case into cases which collectively cover the current case and one of which matches to LHS of the current rule.
+ - Since LHS of R08 requires an available capability corresponding to the requirement, the current case should be split into following three cases:
+  - Case 3-2-2-2-2-1: The corresponding capability is closed => the goal holds because `inv-ifCPClosedThenRQUnbound(S)` reduces to false.
+  - Case 3-2-2-2-2-2: The corresponding capability is open.
+  - Case 3-2-2-2-2-3: The corresponding capability is available => the goal holds because R08 is applicable and so `cont(S)` reduces to true.
 
-### ステップ 1-2: 次状態に適用されるルールを考察
- - openなdepensOn capabilityがあるので、適用されるルールはR06。
+### Step 1-2: Consider which rule is applied to the global state in the current case. 
+ - Since there is an open dependsOn capability, the next rule should be R06.
 
-### ステップ 1-4: 最初のルールの条件節が成り立つ/成り立たないでケース分け
- - R06の条件節はcapabilityの親nodeがstartedであることを要求する
+### Step 1-4: Split the current case into cases where the condition of the rule does or does not hold. 
+ - The condition of R06 requires the parent node of the capability of idCP is started.
 
-### ステップ 1-5: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
- - capabilityの親ノードのリンクが未定なので、以下の２つにケース分けする
+### Step 1-5: When there is a dangling link, split the current case into cases where the linked object does or does not exist.
+ - Since the capability has a dangling `node` link, the current case should be split into following two cases:
    - Case 3-2-2-2-2-1-1: There is no such node => the goal holds because `wfs-allCPHaveND(S)` reduces to false.
    - Case 3-2-2-2-2-1-2: There is such a node.
 
-### ステップ 1-4: 最初のルールの条件節が成り立つ/成り立たないでケース分け
- - R05の条件節はcapabilityに対応するnodeがcreatedまたはstartedなので、以下の３つにケース分けする
-   - Case 3-2-2-2-2-1-2-1: capabilityの親nodeがinitial => the goal holds because  (Initial Cont Lemmaによりcont(S)がtrue)
-   - Case 3-2-2-2-2-1-2-2: capabilityの親nodeがcreated => the goal holds because  (元のnodeのDDSR02にcreated nodeが存在して矛盾)
-   - Case 3-2-2-2-2-1-2-3: capabilityの親nodeがstarted => the goal holds because  (R06が適用可能なのでcont(S)がtrue)
+### Step 1-4: Split the current case into cases where the condition of the rule does or does not hold. 
+ - The current case should be split into following three cases:
+   - Case 3-2-2-2-2-1-2-1: the node of the capability is initial => the goal holds because of the Initial Cont Lemma.
+   - Case 3-2-2-2-2-1-2-2: the node of the capability is created => the goal holds because DDSR02 of the created node includes another created node which is a contradiction.
+   - Case 3-2-2-2-2-1-2-3: the node of the capability is started => the goal holds because R06 is applicable and so `cont(S)` reduces to true.
 
-### Case 3-3: waitingなrequirementがconnectsToの証明
-### ステップ 1-2: 次状態に適用されるルールを考察
- - waitingなconnectsTo requirementがあるので、適用されるルールはR12。
+### Case 3-3: The type of the waiting requirement is connectsTo.
+### Step 1-2: Consider which rule is applied to the global state in the current case. 
+ - Since there is a waiting connectsTo requirement, the next rule should be R12.
 
-### Step 1-3: Split the current case into cases which collectively cover the current case and the next state of one of the split cases matches to LHS of the current rule.
- - Since LHS of R04 requires a relationship corresponding to the available capability and an unbound requirement corresponding to the relationship, the current case should be split into following cases:
- - R12のLHSはrequiremntに対応するrelationishipが必要。
+### Step 1-3: Split the current case into cases which collectively cover the current case and one of which matches to LHS of the current rule.
+ - LHS of R12 requires a relationship corresponding to the requirement.
 
-### ステップ 1-5: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
- - requirementに対するrelationshipのリンクが未定なので、以下の２つにケース分けする
+### Step 1-5: When there is a dangling link, split the current case into cases where the linked object does or does not exist.
+ - Since the requirement has a dangling `rel` link, the current case should be split into following two cases:
    - Case 3-3-1: There is no corresponding relationship => the goal holds because `wfs-allRQHaveRL(S)` reduces to false.
    - Case 3-3-2: There is a corresponding relationship.
 
-### Step 1-3: Split the current case into cases which collectively cover the current case and the next state of one of the split cases matches to LHS of the current rule.
- - Since LHS of R04 requires a relationship corresponding to the available capability and an unbound requirement corresponding to the relationship, the current case should be split into following cases:
- - R11のLHSはrequiremntに対応するavailable messageが必要なので、以下の2つにケース分けする。
-  - Case 3-3-2-1: 対応するavailable messageが無い
-  - Case 3-3-2-2: 対応するavailable messageがある => the goal holds because  (R12が適用可能なのでcont(S)がtrue)
+### Step 1-3: Split the current case into cases which collectively cover the current case and one of which matches to LHS of the current rule.
+ - Since LHS of R12 requires an available message corresponding to the requirement, the current case should be split into following two cases:
+  - Case 3-3-2-1: There is no corresponding available message.
+  - Case 3-3-2-2: There is a corresponding available message => the goal holds because R12 is applicable and so `cont(S)` reduces to true.
 
-### ステップ 1-5: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
- - available messageに対するcapabilityのリンクが未定なので、以下の２つにケース分けする
-   - Case 3-3-2-1-1: 対応するcapabilityが無い => the goal holds because `wfs-allRLHaveCP(S)` reduces to false.
-   - Case 3-3-2-1-2: 対応するcapabilityがある
+### Step 1-5: When there is a dangling link, split the current case into cases where the linked object does or does not exist.
+ - Since the available message has a dangling `cap` link, the current case should be split into following two cases:
+   - Case 3-3-2-1-1: There is no corresponding capability => the goal holds because `wfs-allRLHaveCP(S)` reduces to false.
+   - Case 3-3-2-1-2: There is a corresponding capability.
    
- - capabilityの親ノードのIDがすでに存在するものかどうかで、以下の２つにケース分けする
-   - Case 3-3-2-1-2-1: capabilityの親ノードはrequirementの親ノードと同じ => the goal holds because `wfs-allRLNotInSameND(S)` reduces to false.
-   - Case 3-3-2-1-2-2: capabilityの親ノードはrequirementの親ノードと異なる
+ - The current case should be split into following two cases:
+   - Case 3-3-2-1-2-1: The node of the capability is the same as of the requirement => the goal holds because `wfs-allRLNotInSameND(S)` reduces to false.
+   - Case 3-3-2-1-2-2: The node of the capability is different from the node of the requirement.
 
-### ステップ 1-2: 次状態に適用されるルールを考察
- - connectsTo capabilityの状態によって適用されるルールが異なるので、以下の３つにケース分け
-  - Case 3-3-2-1-2-2-1: Capabilityがclosed => the goal holds because `inv-ifCPClosedThenRQUnbound(S)` reduces to false.
-  - Case 3-3-2-1-2-2-2: Capabilityがopen
-  - Case 3-3-2-1-2-2-3: Capabilityがavailable => the goal holds because `inv-ifConnectsToCPAvailableThenRQReadyOrAvailableMsg(S)` reduces to false.
+### Step 1-2: Consider which rule is applied to the global state in the current case. 
+ - Since the next applicable rule depends on the local state of the connectsTo capability, the current case should be split into following three cases:
+  - Case 3-3-2-1-2-2-1: The capability is closed => the goal holds because `inv-ifCPClosedThenRQUnbound(S)` reduces to false.
+  - Case 3-3-2-1-2-2-2: The capability is open.
+  - Case 3-3-2-1-2-2-3: The capability is available => the goal holds because `inv-ifConnectsToCPAvailableThenRQReadyOrAvailableMsg(S)` reduces to false.
  
-### ステップ 1-2: 次状態に適用されるルールを考察
- - openなconnectsTo capabilityがあるので、適用されるルールはR10。
+### Step 1-2: Consider which rule is applied to the global state in the current case. 
+ - Since there is an open connectsTo capability, the next rule should be R10.
 
-### ステップ 1-4: 最初のルールの条件節が成り立つ/成り立たないでケース分け
- - R10の条件節はcapabilityの親nodeがstartedであることを要求する
+### Step 1-4: Split the current case into cases where the condition of the rule does or does not hold. 
+ - The condition of R10 requires the parent node of the capability of idCP is started.
 
-### ステップ 1-5: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
- - capabilityの親ノードのリンクが未定なので、以下の２つにケース分けする
+### Step 1-5: When there is a dangling link, split the current case into cases where the linked object does or does not exist.
+ - Since the capability has a dangling `node` link, the current case should be split into following two cases:
    - Case 3-3-2-1-2-2-2-1: There is no such node => the goal holds because `wfs-allCPHaveND(S)` reduces to false.
    - Case 3-3-2-1-2-2-2-2: There is such a node.
 
-### ステップ 1-4: 最初のルールの条件節が成り立つ/成り立たないでケース分け
- - R09の条件節はcapabilityに対応するnodeがcreatedまたはstartedなので、以下の３つにケース分けする
-   - Case 3-3-2-1-2-2-2-2-1: capabilityの親nodeがinitial => the goal holds because  (Initial Cont Lemmaによりcont(S)がtrue)
-   - Case 3-3-2-1-2-2-2-2-2: capabilityの親nodeがcreated => the goal holds because  (元のnodeのDDSR02にcreated nodeが存在して矛盾)
-   - Case 3-3-2-1-2-2-2-2-3: capabilityの親nodeがstarted => the goal holds because  (R10が適用可能なのでcont(S)がtrue)
+### Step 1-4: Split the current case into cases where the condition of the rule does or does not hold. 
+ - The current case should be split into following three cases:
+   - Case 3-3-2-1-2-2-2-2-1: The node of the capability is initial => the goal holds because of the Initial Cont Lemma.
+   - Case 3-3-2-1-2-2-2-2-2: The node of the capability is created => the goal holds because DDSR02 of the created node includes another created node which is a contradiction.
+   - Case 3-3-2-1-2-2-2-2-3: The node of the capability is started => the goal holds because R10 is applicable and so `cont(S)` reduces to true.
 
-## その他のLemmaの証明譜(Proof-lemma.cafe)
-
-以上で、すべての十分条件が証明済みとなり、init leads-to finalが証明できた。
-
+## Proof of other lemmas (Proof-lemma.cafe)
+- Omitted.

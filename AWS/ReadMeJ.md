@@ -73,6 +73,9 @@
 
 ### ステップ 1-1: 最も一般的なケースから開始
  - 任意定数`sRS`(リソースの集合)、`sPR`(プロパティの集合)により、最も一般的な状態は`< sRS, sPR >`。
+  ```
+  :goal {eq initcont(< sRS, sPR >) = true .}
+  ```
 
 ### ステップ 1-2: 初期状態で最初に適用されるルールを考察
  - 最初のルールはR01。
@@ -97,17 +100,36 @@
 ### ステップ 1-6: 循環する状況になったらCyclic Dependency Lemmaを適用
  - ここでCase 2-1には、任意に選択したinitialリソースがあるので、これをCDL適用対象と考えて良い (新規に導入不要)。
  - 用意しておいたCycle未実行lemmaを、このinitialリソースを対象として導入する。
+
+  ```
+  :init [Cycle] by {
+    T:RSType <- trs;
+    IDRS:RSID <- idRS;
+    S:State <- < sRS, sPR >;
+  }
+  ```
+
  - このリソースのDDSに、referリンクの参照先リソースが含まれるので、矛盾が生じ、証明が完了する。
 
 ## Condition (2): inv(S) and not final(S) implies cont(SS) or final(SS) の証明譜 (Proof-contcont.cafe)
 ### ステップ 2-0: 証明すべき述語を定義
- - ccont = inv and not final implies cont' or final'
- - 次状態が存在する状態に関する条件なので、前件にcont(S)が不要であることに注意。
- - contcontを二重否定イディオムを使って定義する。
+
+  ```
+  eq ccont(S,SS)
+     = inv(S) and not final(S) implies cont(SS) or final(SS) .
+  eq contcont(S)
+     = not (S =(*,1)=>+ SS if CC suchThat
+            not ((CC implies ccont(S,SS)) == true)
+     	   { S => SS !! CC ! inv(S) ! final(S) ! cont(SS) ! final(SS) }) .
+  ```
 
 ## R01に対するCondition (2)の証明譜 (Proof-contcont-R01.cafe)
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R01のLHSは１つ以上のinitialリソースが必要なので、trs, idRS, sRS, sPRを任意定数として< (res(trs,idRS,initial) sRS), sPR >が最も一般的な状態。
+
+  ```
+  :goal { eq contcont(< (res(trs,idRS,initial) sRS), sPR >) = true . }
+  ```
 
 ### ステップ 2-2: ルールの条件節が成り立つ/成り立たないでケース分け
  - R01の条件節は「initialリソースのプロパティがすべてready」なので以下の２つにケース分けする。
@@ -132,6 +154,15 @@
 
 ### CITPテクニック(2)を使って、sPRの詳細化に対してallPROfRSInStates(sPR,idRS,ready)がtrueになることを保証しておく。
 
+  ```
+  :set(normalize-init,on)
+  :init ( ceq B1:Bool = true if not B2:Bool . ) by {
+    B1:Bool <- allPROfRSInStates(sPR,idRS,ready) ;
+    B2:Bool <- allPROfRSInStates(sPR,idRS,ready) == true ;
+  }
+  :set(normalize-init,off)
+  ```
+
 ### ステップ 2-7: 参照先が未定のリンクがあったら、参照先が無い/あるでケース分け
  - notreadyプロパティのreferリンクが未定なので、以下の３つにケース分けする
  - Case 1-2-2-1: referリンクの参照先が存在しない => 証明可能 (wfs-allPRHaveRRS(S)がfalse)
@@ -141,11 +172,27 @@
 ### ステップ 2-8: 循環する状況になったらCyclic Dependency Lemmaを適用
  - Case 1-2には、任意に選択したinitialリソースがあるので、これをCDL適用対象と考えて良い (新規に導入不要)。
  - 用意しておいたCycle未実行lemmaを、このinitialリソースを対象として導入する。
+
+  ```
+  :init [Cycle] by {
+    T:RSType <- trs';
+    IDRS:RSID <- idRS';
+    S:State <- < (res(trs,idRS,initial) sRS), sPR >;
+  }
+  ```
+
  - このリソースのDDSに、referリンクの参照先リソースが含まれるので、矛盾が生じ、証明が完了する。
 
 ## R02に対するCondition (2)の証明譜 (Proof-contcont-R02.cafe)
 ### ステップ 2-1: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R02のLHSを任意定数trs, idRRS, sRS, tpr, idPR, idRS, sPRで表現する。
+
+  ```
+  :goal {
+    eq contcont(< (res(trs,idRRS,started) sRS), 
+                  (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
+  }
+  ```
 
 ### ステップ 2-2: ルールの条件節が成り立つ/成り立たないでケース分け
  - R02は無条件ルールなので、ケース分けは不要。
@@ -165,6 +212,14 @@
  - ここでCase 2-2-1にはinitialリソースが存在するのでCDLを適用できるが、このinitialリソースは任意に選択したものではないので、CDL適用対象のinitialリソースを別に用意する必要がある。
  - sRS'を分解してCDL適用対象リソースidRS1を導入する。
 
+  ```
+  :init ( eq SRS:SetOfResource = (RS:Resource SRS':SetOfResource) . ) by {
+    SRS:SetOfResource <- sRS';
+    SRS':SetOfResource <- sRS'';
+    RS:Resource <- res(trs'',idRS1,initial);
+  }
+  ```
+
 ### ステップ 2-4: 次状態に適用されるルールを考察
  - initialリソースがあるので、適用されるルールはR01。
 
@@ -182,139 +237,181 @@
 ### ステップ 2-8: 循環する状況になったらCyclic Dependency Lemmaを適用
  - Case 2-2-1で導入したリソースのDDSに、referリンクの参照先リソースが含まれるので、矛盾が生じ、証明が完了する。
 
+  ```
+  :init [Cycle] by {
+    T:RSType <- trs'';
+    IDRS:RSID <- idRS1;
+    S:State <- < (res(trs, idRRS, started) sRS),
+                 (prop(tpr,idPR,notready,idRS,idRRS) sPR) >;
+  }
+  ```
+
 ## Condition (3): inv(S) and not final(S) implies m(S) > m(SS) の証明譜 (Proof-measure.cafe)
-### ステップ 3-0: 証明すべき述語を定義
- - mmes = inv and not final implies m > m'
- - 次状態が存在する状態に関する条件なので、前件にcont(S)が不要であることに注意。
- - mesmesを二重否定イディオムを使って定義する。
- - 自然数に対するAxiomとして N < N+1 を定義しておく。
+### ステップ 3-0: 自然数に対するAxiomを使う
+ - フレームワークが提供するモジュールNATAXIOMをprotecting importしておく。
+
+### ステップ 3-1: 証明すべき述語を定義
+
+  ```
+  eq mmes(S,SS)
+     = inv(S) and not final(S) implies m(S) > m(SS) .
+
+  pred mesmes : State .
+  eq mesmes(S)
+     = not (S =(*,1)=>+ SS if CC suchThat
+            not ((CC implies mmes(S,SS)) == true)
+     	   { S => SS !! CC ! inv(S) ! final(S) ! (m(S) > m(SS)) }) .
+  ```
 
 ## R01に対するCondition (3)の証明譜
-### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
+### ステップ 3-2: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R01のLHSを任意定数trs, idRS, sRS, sPRで表現する。
 
-### ステップ 3-2: ルールの条件節が成り立つ/成り立たないでケース分け
+  ```
+  :goal { eq mesmes(< (res(trs,idRS,initial) sRS), sPR >) = true . }
+  ```
+
+### ステップ 3-3: ルールの条件節が成り立つ/成り立たないでケース分け
  - R01の条件節は「initialリソースのプロパティがすべてready」なので以下の２つにケース分けする。
  - Case 1: initialリソースのプロパティがすべてready => 証明可能 (m(S) > m(SS)が成り立つ)
  - Case 2: initialリソースのプロパティがすべてready、ではない => 証明可能 (次状態が無い)
 
 ## R02に対するCondition (3)の証明譜
-### ステップ 3-1: 各ルールのLHSにマッチする最も一般的なケースから開始
+### ステップ 3-2: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R02のLHSを任意定数trs, idRRS, sRS, tpr, idPR, idRS, sPRで表現する。
+  ```
+  :goal {
+    eq mesmes(< (res(trs,idRRS,started) sRS), 
+                (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
+  }
+  ```
 
-### ステップ 3-2: ルールの条件節が成り立つ/成り立たないでケース分け
+### ステップ 3-3: ルールの条件節が成り立つ/成り立たないでケース分け
  - R02は無条件ルールなので、ケース分けは不要。
  - Case 1: R02のLHSにマッチする最も一般的なケース => 証明可能 (m(S) > m(SS)が成り立つ)
 
-## Condition (4): inv(S) and (cont(S) or final(S)) and m(S) = 0 implies final(S) の証明譜 (Proof-measure.cafe)
-### ステップ 4-0: 証明すべき述語を定義
- - mesfinal = inv and (cont or final) and m = 0 implies final .
+## Condition (4)(5): init(S) implies inv(S) . inv(S) implies inv(SS) .の証明譜 (Proof-inv.cafe)
+### ステップ 4-0, 5-0: 証明すべき述語を定義
 
-### ステップ 4-1: m(S)用の一般Lemmaをインスタンシエート
- - initialリソースの数が0ならば、すべてのリソースはstartedである。
+  ```
+  eq initinv(S)
+     = init(S) implies invK(S) .
+  eq iinv(S,SS)
+     = inv(S) and invK(S) implies invK(SS) .
+  eq invinv(S)
+     = not (S =(*,1)=>+ SS if CC suchThat
+            not ((CC implies iinv(S,SS)) == true)
+     	   { S => SS !! CC ! inv(S) ! invK(S) ! invK(SS) }) .
+  ```
 
-### ステップ 4-2: 自然数に対するAxiomを定義
- - 「N1 + N2 = 0」と「N1 = 0 かつ N2 = 2」が等価である。
-
-## Condition (5)(6): init(S) implies inv(S) . inv(S) implies inv(SS) .の証明譜 (Proof-inv.cafe)
- - 各invariantはinv-AAA、各wfsはwfs-BBBという述語として定義しておく。
- - (5)(6)はinvariant毎に一つずつ証明するが、証明するinvariantをinvS(S)とする。
- - Condition (5)のゴールは、initinv = init implies invS .
- - Condition (6)のゴールは、iinv = inv and invS implies invS'.とし、invinvを二重否定イディオムを使って定義する。
- - 抽象レベルで証明済みのLemmaを利用するには、具象レベルにインスタンシエートする必要があるが、現在のところ、インスタンシエーションはCafeOBJの機能を利用するように整備されていないので、手作業が必要である。
-
-## inv-ifRSStartedThenPRReadyのCondition (5)(6)の証明譜
+## inv-ifRSStartedThenPRReadyのCondition (4)(5)の証明譜
  - 対象invariantを設定する：invS = inv-ifRSStartedThenPRReady。
- - 一般Lemma m2o-lemma11をインスタンシエートし、「すべてのリソースがinitialならば、startedなリソースのプロパティはすべてreadyである」を言明する。Condition (5)で利用。
- - 一般Lemma m2o-lemma08をインスタンシエートし、「startedなリソースのプロパティはすべてreadyであることは、not readyプロパティがreadyに遷移しても変わらない」を言明する。Condition (6)のR02で利用。
 
-## inv-ifRSStartedThenPRReadyのCondition (5)の証明譜
+### ステップ 4-1, 5-1: 証明済みのlemmaをインスタンシエートしておく
+ - 一般Lemma m2o-lemma11をインスタンシエートし、「すべてのリソースがinitialならば、startedなリソースのプロパティはすべてreadyである」を言明する。Condition (4)で利用。
+ - 一般Lemma m2o-lemma08をインスタンシエートし、「startedなリソースのプロパティはすべてreadyであることは、not readyプロパティがreadyに遷移しても変わらない」を言明する。Condition (5)のR02で利用。
+
+## inv-ifRSStartedThenPRReadyのCondition (4)の証明譜
+### ステップ 4-2: 最も一般的なケースから開始
+
+  ```
+  :goal { eq initinv(< sRS,sPR >) = true . }
+  ```
+
  - lemmaにより、最も一般的なケースで証明可能。
 
-## inv-ifRSStartedThenPRReadyのR01に対するCondition (6)の証明譜
-### ステップ 6-1: 各ルールのLHSにマッチする最も一般的なケースから開始
+## inv-ifRSStartedThenPRReadyのR01に対するCondition (5)の証明譜
+### ステップ 5-2: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R01のLHSを任意定数sRS, sPRで表現する。
 
-### ステップ 6-2: ルールの条件節が成り立つ/成り立たないでケース分け
+  ```
+  :goal { eq invinv(< (res(trs,idRS,initial) sRS), sPR >) = true . }
+  ```
+
+### ステップ 5-3: ルールの条件節が成り立つ/成り立たないでケース分け
  - R01の条件節は「initialリソースのプロパティがすべてready」なので以下の２つにケース分けする。
  - Case 1: initialリソースのプロパティがすべてready
+   - Case 1-1: sPRが空      => 証明可能 (invS(SS)がtrue)
+   - Case 1-2: sPRが空でない => 証明可能 (invS(S) implies invS(SS)が成り立つ)
  - Case 2: initialリソースのプロパティがすべてready、ではない => 証明可能 (次状態が無い)
 
-### ステップ 6-3: ルール適用後の次状態がinvSになる/ならないでケース分け
- - ifRSStartedThenPRReadyは、sPRが空か否かで定義が異なる。
- - Case 1-1: sPRが空      => 証明可能 (invS(SS)がtrue)
- - Case 1-2: sPRが空でない => 証明可能 (invS(S) implies invS(SS)が成り立つ)
-
-## inv-ifRSStartedThenPRReadyのR02に対するCondition (6)の証明譜
-### ステップ 6-1: 各ルールのLHSにマッチする最も一般的なケースから開始
+## inv-ifRSStartedThenPRReadyのR02に対するCondition (5)の証明譜
+### ステップ 5-2: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R02のLHSを任意定数trs, idRRS, sRS, tpr, idPR, idRS, sPRで表現する。
 
-### ステップ 6-2: ルールの条件節が成り立つ/成り立たないでケース分け
+  ```
+  :goal {
+    eq invinv(< (res(trs,idRRS,started) sRS), 
+                (prop(tpr,idPR,notready,idRS,idRRS) sPR) >) = true .
+  }
+  ```
+
+### ステップ 5-3: ルールの条件節が成り立つ/成り立たないでケース分け
  - R02は無条件ルールなので、ケース分けは不要。
  - Case 1: R02のLHSにマッチする最も一般的なケース => 証明可能 (invS(S) implies invS(SS)が成り立つ)
 
-## wfs-allPRHaveRSのCondition (5)(6)の証明譜
- - wfs-*はinitに含まれているのでCondition (5)の証明は不要。
+## wfs-allPRHaveRSのCondition (4)(5)の証明譜
+ - wfs-*はinitに含まれているのでCondition (4)の証明は不要。
  - 対象invariantを設定する：invS = wfs-allPRHaveRS。
- - 一般Lemma m2o-lemma12をインスタンシエートし、「すべてのプロパティが親リソースを持つことは、initialリソースがstartedに遷移しても変わらない」を言明する。Condition (6)のR01で利用。
+ - 一般Lemma m2o-lemma12をインスタンシエートし、「すべてのプロパティが親リソースを持つことは、initialリソースがstartedに遷移しても変わらない」を言明する。Condition (5)のR01で利用。
 
-## wfs-allPRHaveRSのR01に対するCondition (6)の証明譜
-### ステップ 6-1: 各ルールのLHSにマッチする最も一般的なケースから開始
+## wfs-allPRHaveRSのR01に対するCondition (5)の証明譜
+### ステップ 5-2: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R01のLHSを任意定数sRS, sPRで表現する。
 
-### ステップ 6-2: ルールの条件節が成り立つ/成り立たないでケース分け
+### ステップ 5-3: ルールの条件節が成り立つ/成り立たないでケース分け
  - R01の条件節は「initialリソースのプロパティがすべてready」なので以下の２つにケース分けする。
  - Case 1: initialリソースのプロパティがすべてready         => 証明可能 (lemmaによる)
  - Case 2: initialリソースのプロパティがすべてready、ではない => 証明可能 (次状態が無い)
 
-## wfs-allPRHaveRSのR02に対するCondition (6)の証明譜
-### ステップ 6-1: 各ルールのLHSにマッチする最も一般的なケースから開始
+## wfs-allPRHaveRSのR02に対するCondition (5)の証明譜
+### ステップ 5-2: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R02のLHSを任意定数trs, idRRS, sRS, tpr, idPR, idRS, sPRで表現する。
 
-### ステップ 6-2: ルールの条件節が成り立つ/成り立たないでケース分け
+### ステップ 5-3: ルールの条件節が成り立つ/成り立たないでケース分け
  - R02は無条件ルールなので、ケース分けは不要。
  - Case 1: R02のLHSにマッチする最も一般的なケース => 証明可能 (invS(S) implies invS(SS)が成り立つ)
 
-## wfs-allPRHaveRRSのCondition (5)(6)の証明譜
- - wfs-*はinitに含まれているのでCondition (5)の証明は不要。
+## wfs-allPRHaveRRSのCondition (4)(5)の証明譜
+ - wfs-*はinitに含まれているのでCondition (4)の証明は不要。
  - 対象invariantを設定する：invS = wfs-allPRHaveRRS。
- - 一般Lemma m2o-lemma12をインスタンシエートし、「すべてのプロパティが参照リソースを持つことは、initialリソースがstartedに遷移しても変わらない」を言明する。Condition (6)のR01で利用。
+ - 一般Lemma m2o-lemma12をインスタンシエートし、「すべてのプロパティが参照リソースを持つことは、initialリソースがstartedに遷移しても変わらない」を言明する。Condition (5)のR01で利用。
 
-## wfs-allPRHaveRRSのR01に対するCondition (6)の証明譜
-### ステップ 6-1: 各ルールのLHSにマッチする最も一般的なケースから開始
+## wfs-allPRHaveRRSのR01に対するCondition (5)の証明譜
+### ステップ 5-2: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R01のLHSを任意定数sRS, sPRで表現する。
 
-### ステップ 6-2: ルールの条件節が成り立つ/成り立たないでケース分け
+### ステップ 5-3: ルールの条件節が成り立つ/成り立たないでケース分け
  - R01の条件節は「initialリソースのプロパティがすべてready」なので以下の２つにケース分けする。
  - Case 1: initialリソースのプロパティがすべてready         => 証明可能 (lemmaによる)
  - Case 2: initialリソースのプロパティがすべてready、ではない => 証明可能 (次状態が無い)
 
-## wfs-allPRHaveRRSのR02に対するCondition (6)の証明譜
-### ステップ 6-1: 各ルールのLHSにマッチする最も一般的なケースから開始
+## wfs-allPRHaveRRSのR02に対するCondition (5)の証明譜
+### ステップ 5-2: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R02のLHSを任意定数trs, idRRS, sRS, tpr, idPR, idRS, sPRで表現する。
 
-### ステップ 6-2: ルールの条件節が成り立つ/成り立たないでケース分け
+### ステップ 5-3: ルールの条件節が成り立つ/成り立たないでケース分け
  - R02は無条件ルールなので、ケース分けは不要。
  - Case 1: R02のLHSにマッチする最も一般的なケース => 証明可能 (invS(S) implies invS(SS)が成り立つ)
 
-## wfs-atLeastOneRSのCondition (5)(6)の証明譜
- - wfs-*はinitに含まれているのでCondition (5)の証明は不要。
+## wfs-atLeastOneRSのCondition (4)(5)の証明譜
+ - wfs-*はinitに含まれているのでCondition (4)の証明は不要。
  - 対象invariantを設定する：invS = wfs-atLeastOneRS。
 
-## wfs-atLeastOneRSのR01に対するCondition (6)の証明譜
-### ステップ 6-1: 各ルールのLHSにマッチする最も一般的なケースから開始
+## wfs-atLeastOneRSのR01に対するCondition (5)の証明譜
+### ステップ 5-2: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R01のLHSを任意定数sRS, sPRで表現する。
 
-### ステップ 6-2: ルールの条件節が成り立つ/成り立たないでケース分け
+### ステップ 5-3: ルールの条件節が成り立つ/成り立たないでケース分け
  - R01の条件節は「initialリソースのプロパティがすべてready」なので以下の２つにケース分けする。
  - Case 1: initialリソースのプロパティがすべてready         => 証明可能 (invS(SS)がtrue)
  - Case 2: initialリソースのプロパティがすべてready、ではない => 証明可能 (次状態が無い)
 
-## wfs-atLeastOneRSのR02に対するCondition (6)の証明譜
-### ステップ 6-1: 各ルールのLHSにマッチする最も一般的なケースから開始
+## wfs-atLeastOneRSのR02に対するCondition (5)の証明譜
+### ステップ 5-2: 各ルールのLHSにマッチする最も一般的なケースから開始
  - R02のLHSを任意定数trs, idRRS, sRS, tpr, idPR, idRS, sPRで表現する。
 
-### ステップ 6-2: ルールの条件節が成り立つ/成り立たないでケース分け
+### ステップ 5-3: ルールの条件節が成り立つ/成り立たないでケース分け
  - R02は無条件ルールなので、ケース分けは不要。
  - Case 1: R02のLHSにマッチする最も一般的なケース => 証明可能 (invS(SS)がtrue)
 
