@@ -132,7 +132,7 @@
      true = false if someNDInStates(DDSC(node(T:NDType,I:NDID,initial),S:State),initial) .
   ```
 
-- Prepare a nonexec lemma which means that `DDS` of a specified created node never includes other created nodes for rule R02.
+ - Prepare a nonexec lemma which means that `DDS` of a specified created node never includes other created nodes for rule R02.
 
   ```
   ceq [CycleR02 :nonexec]: 
