@@ -8,6 +8,9 @@ This package includes following files:
 
 - README.md: This file.
 
+- JAISTDoctoralDissertation.pdf: My Doctoral Dissertation.
+- UserGuide.pdf: User Guide for the framework.
+
 - lib/Template.cafe: Template modules of objects.
 - lib/SET.cafe: Utility module defining general sets.
 - lib/BAG.cafe: Utility module defining general bags.
@@ -22,8 +25,8 @@ This package includes following files:
 - AWS/Proof-contcont.cafe: Common definitions for condition (2).
 - AWS/Proof-contcont-R01.cafe: Proof scores for condition (2) for Rule R01.
 - AWS/Proof-contcont-R02.cafe: Proof scores for condition (2) for Rule R02.
-- AWS/Proof-measure.cafe: Proof scores for condition (3) and (4).
-- AWS/Proof-inv.cafe: Proof scores for condition (5) and (6).
+- AWS/Proof-measure.cafe: Proof scores for condition (3).
+- AWS/Proof-inv.cafe: Proof scores for condition (4) and (5).
 - AWS/all.cafe: Execute all proof scores.
 
 - TOSCA/Domain.cafe: Specification of an OASIS TOSCA Topology.
@@ -43,10 +46,12 @@ This package includes following files:
 - TOSCA/Proof-contcont-R10.cafe: Proof scores for condition (2) for Rule R10.
 - TOSCA/Proof-contcont-R11.cafe: Proof scores for condition (2) for Rule R11.
 - TOSCA/Proof-contcont-R12.cafe: Proof scores for condition (2) for Rule R12.
-- TOSCA/Proof-measure.cafe: Proof scores for condition (3) and (4).
-- TOSCA/Proof-inv.cafe: Proof scores for condition (5) and (6).
+- TOSCA/Proof-measure.cafe: Proof scores for condition (3).
+- TOSCA/Proof-inv.cafe: Proof scores for condition (4) and (5).
 - TOSCA/Proof-lemma.cafe: Proof scores for lemmas specific to this problem.
 - TOSCA/Proof-cyclelemma.cafe: Proof scores for two special lemmas.
 - TOSCA/all.cafe: Execute all proof scores.
+
+- JAISTDoctoralDissertation.pdf: My doctoral dissertation on this work.
 
 CafeOBJ system can be downloaded at http://cafeobj.org.

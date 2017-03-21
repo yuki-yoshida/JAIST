@@ -200,7 +200,7 @@ module! STATEfuns {
   	       		sort SetOfObject -> SetOfResource,
   	       		op empObj -> empRS,
   	       		op getAllObjInState -> getAllRSInState})
-  	* {op noCycle -> noRSCycle}
+  	* {op noCycleC -> noRSCycle}
   	)
 
   pred wfs-atLeastOneRS : State

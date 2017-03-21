@@ -607,20 +607,20 @@ module! CYCLEPRED(P :: PRMCYCLE) {
   vars V OS : SetOfObject
   var S : State
 
-  pred noCycle : State
-  pred noCycle : Object State
-  pred noCycle : SetOfObject SetOfObject State
+  pred noCycleC : State
+  pred noCycleC : Object State
+  pred noCycleC : SetOfObject SetOfObject State
 
-  eq noCycle(S)
-     = noCycle(getAllObjInState(S),empObj,S) .
+  eq noCycleC(S)
+     = noCycleC(getAllObjInState(S),empObj,S) .
 
-  eq noCycle(O,S)
-     = noCycle(O,empObj,S) .
+  eq noCycleC(O,S)
+     = noCycleC(O,empObj,S) .
 
-  eq noCycle(empObj,V,S)
+  eq noCycleC(empObj,V,S)
      = true .
-  eq noCycle((O OS),V,S)
-     = if O \in V then false else noCycle(DDSC(O,S),(O V),S) fi
-       and noCycle(OS,V,S) .
+  eq noCycleC((O OS),V,S)
+     = if O \in V then false else noCycleC(DDSC(O,S),(O V),S) fi
+       and noCycleC(OS,V,S) .
 }
 

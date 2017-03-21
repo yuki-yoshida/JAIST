@@ -29,11 +29,11 @@ eq s1 =
       prop(ptype,prop2,notready,myInstance,myEIP)) > .
       
 red s1 .
-red wfs(s1) = false . -- It is cyclic!
+red wfs(s1) . 
 red init(s1) = false . -- It is cyclic!
 red final(s1) = false .
 exec s1 .
-exec wfs(s1) = false . -- It is cyclic!
+exec wfs(s1) . 
 exec init(s1) = false . -- It is cyclic!
 exec final(s1) = false .
 

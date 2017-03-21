@@ -388,7 +388,7 @@ module! STATEfuns {
 	       		sort SetOfObject -> SetOfNode,
 	       		op empObj -> empND,
 	       		op getAllObjInState -> getAllNDInState})
-	* {op noCycle -> noNDCycle}
+	* {op noCycleC -> noNDCycle}
 	)
 
   var ND : Node

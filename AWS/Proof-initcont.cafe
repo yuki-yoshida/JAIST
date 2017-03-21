@@ -48,10 +48,10 @@ select ProofInitCont .
 -- Note that res(trs,idRS,initial) is arbitrary selected.
 -- Thus, we can assume that all of DDSC(res(trs,idRS,initial),S) are not initial,
 -- which the Cyclic Dependency Lemma assures.
---> **************************************************
+--> *********************************************************
 --> Step 1-4: Split the current case into cases where
--->  the condition of the rule does or does not hold. 
---> **************************************************
+-->  the condition of the current rule does or does not hold. 
+--> *********************************************************
 -- The condition of R01 is allPROfRSInStates(sPR,idRS,ready) .
 :csp { 
   eq allPROfRSInStates(sPR,idRS,ready) = true .
